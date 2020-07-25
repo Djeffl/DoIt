@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoIt.Api", "DoIt.Api\DoIt.Api.csproj", "{A0D42846-83ED-4DAA-B364-63D31247B387}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{9727350A-33D7-409D-99C5-035C6A93ECB2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{CCBB0BE4-1373-42F7-9146-8E591C4BC2C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoIt.Client", "DoIt.Client\DoIt.Client.csproj", "{9A8F321B-745F-462C-8E0E-948FBAA26095}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +21,17 @@ Global
 		{A0D42846-83ED-4DAA-B364-63D31247B387}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0D42846-83ED-4DAA-B364-63D31247B387}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0D42846-83ED-4DAA-B364-63D31247B387}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A8F321B-745F-462C-8E0E-948FBAA26095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A8F321B-745F-462C-8E0E-948FBAA26095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A8F321B-745F-462C-8E0E-948FBAA26095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A8F321B-745F-462C-8E0E-948FBAA26095}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A0D42846-83ED-4DAA-B364-63D31247B387} = {9727350A-33D7-409D-99C5-035C6A93ECB2}
+		{9A8F321B-745F-462C-8E0E-948FBAA26095} = {CCBB0BE4-1373-42F7-9146-8E591C4BC2C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {685C50F0-99A4-4575-958B-1DCD025BA3A0}
