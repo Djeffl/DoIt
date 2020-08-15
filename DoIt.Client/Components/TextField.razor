@@ -1,0 +1,7 @@
+﻿@inherits InputBase<string>
+
+	<div class="text-field field">
+		<label for="@Label">@LabelView</label>
+		<input name="@Label" @bind="@CurrentValue" type="text" autocomplete="off" />
+		<ValidationMessage  For="@ValidationFor" />
+	</div>

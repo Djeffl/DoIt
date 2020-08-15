@@ -1,0 +1,39 @@
+[
+	{
+		"id": 1,
+		"title": "Design Opus landing page",
+		"description": "Do it.",
+		"isFinished": false
+	},
+	{
+		"id": 2,
+		"title": "Buy house",
+		"description": "Do it.",
+		"isFinished": false
+	},
+	{
+		"id": 3,
+		"title": "Visit parents",
+		"description": "Do it.",
+		"isFinished": false
+	},
+	{
+		"id": 4,
+		"title": "Do push ups",
+		"description": "Do it.",
+		"isFinished": false
+	},
+	{
+		"id": 5,
+		"title": "Study AI",
+		"description": "Do it.",
+		"isFinished": false
+	},
+	{
+		"id": 6,
+		"title": "Take pills",
+		"description": "Do it.",
+		"isFinished": true
+	}
+
+]
