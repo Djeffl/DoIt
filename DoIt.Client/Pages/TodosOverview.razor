@@ -1,9 +1,9 @@
 ﻿@page "/todos"
 
 @using Models;
-@using Newtonsoft.Json;
+@using Services;
 
-@inject HttpClient Http;
+@inject ITodoService TodoService;
 @inject DoIt.ComponentLibrary.Modal.ModalService ModalService
 
 
@@ -29,21 +29,21 @@ else
 
 
 @code {
-	private Todo[] todos;
+    private List<Todo> todos;
 
-	protected override async Task OnInitializedAsync()
-	{
-		todos = await Http.GetFromJsonAsync<Todo[]>("api/todos");
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        todos = await TodoService.GetAllAsync();
+    }
 
-	private async Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
-	{
-		Console.WriteLine($"Updating todo - Id: '{id}. Todo.IsFinished set to {updatedIsFinished}");
-		await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
-	}
+    private async Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
+    {
+        //Console.WriteLine($"Updating todo - Id: '{id}. Todo.IsFinished set to {updatedIsFinished}");
+        //await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
+    }
 
-	private void OpenDetailTodo(int id)
-	{
-		ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
-	}
+    private void OpenDetailTodo(int id)
+    {
+        ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
+    }
 }
