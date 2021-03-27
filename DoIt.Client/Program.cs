@@ -2,7 +2,10 @@ using DoIt.Client.Services;
 using DoIt.Client.Services.Mocks;
 using DoIt.ComponentLibrary;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,18 +24,23 @@ namespace DoIt.Client
             if (builder.HostEnvironment.IsDevelopment())
             {
                 AddMockingServices(builder);
-            } else
+            }
+            else
             {
                 AddImplementedServices(builder);
             }
 
-            
+
 
             await builder.Build().RunAsync();
         }
 
         private static void AddCoreServices(WebAssemblyHostBuilder builder)
         {
+            builder.Services.AddOidcAuthentication(options =>
+            {
+                builder.Configuration.Bind("Authentication:Google", options.ProviderOptions);
+            });
             builder.Services.AddModal();
         }
 

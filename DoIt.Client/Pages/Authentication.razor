@@ -1,0 +1,47 @@
+﻿@page "/authentication/{action}"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+
+
+@attribute [AllowAnonymous]
+
+<RemoteAuthenticatorView Action="@Action">
+    
+    @* https://docs.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/additional-scenarios?view=aspnetcore-3.1#customize-the-authentication-user-interface  *@
+    @*authentication/logout*@
+    @* https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.webassembly.authentication.remoteauthenticationactions?view=aspnetcore-5.0 *@
+    @* https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.webassembly.authentication.remoteauthenticatorview?view=aspnetcore-5.0 *@
+    
+</RemoteAuthenticatorView>
+@code {
+    [Parameter]
+    public string Action { get; set; }
+
+    protected override void OnInitialized()
+    {
+    }
+
+
+
+    /// <summary>
+    /// http://www.mattruma.com/adventures-with-blazor-login-and-logout-events/
+    /// </summary>
+    public async void OnLogInSucceeded()
+    {
+        //var user =
+        //    (await AuthenticationState).User;
+
+        //if (user.Identity.IsAuthenticated)
+        //{
+        //    // Do some stuff
+        //}
+    }
+
+    /// <summary>
+    /// http://www.mattruma.com/adventures-with-blazor-login-and-logout-events/
+    /// </summary>
+    public async void OnLogOutSucceeded()
+    {
+        // Do some stuff
+    }
+}

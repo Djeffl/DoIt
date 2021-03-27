@@ -7,7 +7,7 @@ namespace DoIt.ComponentLibrary
 	{
 		public static IServiceCollection AddModal(this IServiceCollection services)
 		{
-			return services.AddScoped<ModalService>();
+			return services.AddSingleton<ModalService>();
 		}
 	}
 }

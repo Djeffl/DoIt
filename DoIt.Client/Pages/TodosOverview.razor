@@ -19,10 +19,11 @@ else
 	<section class="todos">
 		@foreach (var todo in todos)
 		{
-			<article class="todo">
-				<input type="checkbox" @oninput="() => UpdateTodoIsFinished(todo.Id, !todo.IsFinished)" @bind="todo.IsFinished" class="is-finished" />
-				<p @onclick="() => OpenDetailTodo(todo.Id)">@todo.Title</p>
-			</article>
+        <article class="todo">
+            <input type="checkbox" @oninput="() => UpdateTodoIsFinished(todo.Id, !todo.IsFinished)" @bind="todo.IsFinished" class="is-finished" />
+            <p @onclick="() => OpenDetailTodo(todo.Id)">@todo.Title</p>
+            <p @onclick="() => PopIt()">Pop IT!</p>
+        </article>
 		}
 	</section>
 }
@@ -34,6 +35,9 @@ else
     protected override async Task OnInitializedAsync()
     {
         todos = await TodoService.GetAllAsync();
+
+        ModalService.OnShow += HelloWorld;
+        ModalService.OnClose += Test;
     }
 
     private async Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
@@ -42,8 +46,26 @@ else
         //await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
     }
 
+    private async Task PopIt()
+    {
+        Console.WriteLine(ModalService.Value);
+    }
+
     private void OpenDetailTodo(int id)
     {
         ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
+    }
+
+    private void HelloWorld(string t, RenderFragment fragment)
+    {
+        Console.WriteLine("Hello world");
+        Console.WriteLine($"string t= '{t}'");
+        Console.WriteLine($"fragment", fragment);
+    }
+
+    private void Test()
+    {
+        Console.WriteLine(ModalService.Value);
+
     }
 }

@@ -41,6 +41,7 @@ main {
     overflow-y: scroll;
     height: 100vh;
     width: 5rem;
+    padding: 0;
 }
 
     .navbar.expanded {
@@ -63,6 +64,7 @@ main {
         background: #1e1e24;
     }
 
+
 .navbar-nav {
     list-style: none;
     padding: 0;
@@ -71,15 +73,26 @@ main {
     flex-direction: column;
     align-items: center;
     height: 100%;
+    width: 100%;
 }
 
 .nav-item {
     width: 100%;
 }
 
-    .nav-item:last-child {
+    .align-bottom {
         margin-top: auto;
     }
+
+    .nav-item.align-bottom {
+        position: absolute;
+    }
+.nav-item.align-bottom.order-last-2 {
+    bottom: 5rem;
+}
+.nav-item.align-bottom.order-last-1 {
+    bottom: 0;
+}
 
 .nav-link {
     display: flex;

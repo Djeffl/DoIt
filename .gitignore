@@ -338,3 +338,11 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Serilog_demo.BlazorWasm
+/Serilog
+/Modal_Demo
+/HelloWorld
+/Event_Action_Demo
+/BlazorAuthentication_Demo
+/DoIt.Client/wwwroot/appsettings.json
+/DoIt.Client/wwwroot/appsettings.development.json

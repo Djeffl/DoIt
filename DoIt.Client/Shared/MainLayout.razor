@@ -1,10 +1,22 @@
 ﻿@inherits LayoutComponentBase
+
 @using DoIt.ComponentLibrary.Modal;
 
-<Modal />
+<AuthorizeView>
+    <Authorized>
+        <Modal />
+        <NavMenu />
+        <main>
+            @Body
+        </main>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin></RedirectToLogin>
+    </NotAuthorized>
+</AuthorizeView>
 
-<NavMenu />
 
-<main>
-    @Body
-</main>
+
+@code {
+
+}
