@@ -1,0 +1,18 @@
+﻿<div class="progress">
+	<div class="progress-bar" style="width: @progressBarWidth">@completionText</div>
+</div>
+
+@code {
+	[Parameter]
+	public double Completion { get; set; }
+
+	private string completionText;
+	private string progressBarWidth;
+
+	protected override void OnInitialized() {
+		base.OnInitialized();
+
+		completionText = $"{Completion * 100}%";
+		progressBarWidth = $"{Completion * 100}%";
+	}
+}

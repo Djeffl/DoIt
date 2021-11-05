@@ -1,0 +1,68 @@
+﻿@page "/goals/{GoalId}"
+
+@using DoIt.Client.Models.Goals;
+@using DoIt.Client.Services.Goals;
+@using DoIt.Client.Components.Fields;
+
+@inject IGoalService GoalService
+@inject NavigationManager NavManager
+
+@if (Goal != null)
+{
+	<article class="goal-detail">
+		<section class="goal-detail-header">
+			<h1>@Goal.Title</h1>
+		</section>
+
+		<section class="description">
+			<h2>Description</h2>
+			<div class="section-content">
+				<textarea>@Goal.Description</textarea>
+			</div>
+		</section>
+
+		<section class="todos">
+			<h2>Todos</h2>
+			<div class="section-content">
+				@if (Goal.Tasks != null)
+				{
+					<ul>
+						@foreach (var task in Goal.Tasks)
+						{
+							<li>
+								<CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(e)" Label="@task.Title" />
+								@*@task.Title*@
+							</li>
+						}
+						@* Possibility to add a new task *@
+						<li>
+							<input type="text" />
+							<button>Add</button>
+						</li>
+					</ul>
+				}
+			</div>
+		</section>
+	</article>
+}
+
+@code {
+	[Parameter]
+	public string GoalId { get; set; }
+
+	public GoalDetail Goal { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		Goal = await GoalService.GetGoalByIdAsync(long.Parse(GoalId));
+	}
+
+	private Task ChangeTaskProgressAsync(ChangeEventArgs eventArgs)
+	{
+		var isCompleted = (bool)eventArgs.Value;
+		Console.WriteLine($"Task is completed: {isCompleted}");
+		return Task.CompletedTask;
+	}
+}

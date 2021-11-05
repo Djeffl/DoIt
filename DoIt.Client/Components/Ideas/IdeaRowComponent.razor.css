@@ -1,0 +1,29 @@
+﻿article.idea {
+	display: flex;
+	flex-direction: column;
+}
+
+	article.idea div.idea-description {
+		font-size: 10px;
+		color: #828282;
+	}
+
+.options-menu {
+	list-style: none;
+	padding: 0px;
+	background: white;
+	position: absolute;
+}
+
+	.options-menu button {
+		width: 175px;
+		height: 33px;
+		background: none;
+		border: 1px 0px 1px 0px solid gray;
+		border-top: 1px;
+		border-bottom: 1px;
+		border-left: 0px;
+		border-right: 0px;
+		border-color: #c5c5c5;
+		border-style: solid;
+	}

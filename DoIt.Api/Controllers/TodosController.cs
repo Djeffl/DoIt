@@ -44,7 +44,7 @@ namespace DoIt.Api.Controllers
 		[Route("{id}")]
 		public async Task<IActionResult> GetTodoById(int id)
 		{
-			var todo = context.Todos.Where(x => x.Id == id);
+			var todo = await context.Todos.Where(x => x.Id == id).FirstOrDefaultAsync();
 
 			if (todo == null)
 			{

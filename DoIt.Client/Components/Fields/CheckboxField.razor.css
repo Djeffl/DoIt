@@ -1,0 +1,12 @@
+﻿div.checkbox-field {
+	display: flex;
+	font-size: 18px;
+	margin: 10px 10px 10px 0px;
+}
+
+
+input {
+	width: 1.75rem;
+	height: 1.75rem;
+	margin-right: 1rem;
+}

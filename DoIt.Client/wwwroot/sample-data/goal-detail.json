@@ -1,0 +1,32 @@
+{
+	"id": 1,
+	"title": "Run 30 Minutes",
+	"description": "Run for 30 minutes without a break at a moderate pace.",
+	"dueAt": "2012-04-23T18:25:43.511Z",
+	"createdAt": "2012-04-23T18:25:43.511Z",
+	"tasks": [
+		{
+			"id": 1,
+			"title": "Walk",
+			"description": "",
+			"createdAt": "2012-04-23T18:25:43.511Z",
+			"state": "Finished",
+			"isFinished":  true
+		},
+		{
+			"id": 2,
+			"title": "Put on Clothes",
+			"description": "Sport shorts",
+			"createdAt": "2012-04-23T18:25:43.511Z",
+			"state": "Progress"
+		},
+		{
+			"id": 3,
+			"title": "Walk",
+			"description": "",
+			"createdAt": "2012-04-23T18:25:43.511Z",
+			"state": "Unfulfilled"
+		}
+	],
+	"isFinished": false
+}

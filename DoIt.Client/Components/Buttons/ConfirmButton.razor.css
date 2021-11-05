@@ -1,0 +1,10 @@
+﻿.confirm-button {
+	border: none 1px;
+	outline: none;
+	color: white;
+	background-color: #e49999;
+}
+
+	.confirm-button:hover {
+		background-color: #ce5151;
+	}

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DoIt.Api.Data;
 using DoIt.Api.Extensions;
+using DoIt.Api.Services;
+using DoIt.Api.Services.Idea;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -47,6 +49,9 @@ namespace DoIt.Api
 			services.AddSwaggerGen();
 
 			services.AddDbContext<DoItContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DoItContext")));
+
+			services.AddScoped<IGoalService, GoalService>();
+			services.AddScoped<IIdeaService, IdeaService>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,0 +1,18 @@
+﻿div.select-field {
+	margin: 10px 0px;
+}
+
+label {
+	color: #c6c6c6;
+	display:block;
+}
+
+select {
+	display: block;
+	border: none;
+	width: 320px;
+	border-bottom: 1px solid #c6c6c6;
+	font-size: 18px;
+	outline: none;
+	background: none;
+}

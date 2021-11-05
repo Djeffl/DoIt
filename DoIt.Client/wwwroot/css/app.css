@@ -11,7 +11,7 @@
 
 body {
     color: black;
-    background-color: white;
+    background-color: #ececec;
     margin: 0;
     padding: 0;
 }
@@ -199,34 +199,7 @@ main {
     }
 
 
-/* Input field */
 
-.text-field.field {
-    margin: 4px 3px;
-    padding: 6px;
-    position: relative;
-}
-
-    .text-field.field label {
-        position: absolute;
-        top: -4px;
-        left: 20px;
-        background: white;
-        font-size: 0.80rem;
-        letter-spacing: 1.5px;
-    }
-
-    .text-field.field input {
-        width: 16rem;
-        height: 2rem;
-        font-size: 1rem;
-    }
-
-    .text-field.field .validation-message {
-        color: red;
-        letter-spacing: 0.5px;
-        font-size: 0.75rem;
-    }
 
 
 /*MODAL */

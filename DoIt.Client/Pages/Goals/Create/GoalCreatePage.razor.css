@@ -1,0 +1,18 @@
+﻿.new-goal {
+	padding: 7px;
+}
+button.submit-button {
+	border-radius: 4px;
+	outline-style: none;
+	width: 165px;
+	font-weight: 700;
+	height: 55px;
+	color: #cea9a9;
+	border: 2px black solid;
+	box-shadow: 2px 2px 1px 1px;
+	background: none;
+}
+
+	button.submit-button:active {
+		box-shadow: 2px 2px 1px 2px;
+	}

@@ -1,0 +1,23 @@
+﻿<div class="progress">
+	<div class="progress-circle">
+		<h3>
+			@completionText
+		</h3>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public double Completion { get; set; }
+
+	private string completionText;
+	private string progressBarWidth;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		completionText = $"{Completion * 100}%";
+		
+	}
+}

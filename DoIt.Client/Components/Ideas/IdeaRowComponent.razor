@@ -1,0 +1,53 @@
+﻿@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Components.Buttons;
+
+<article class="idea">
+	<div class="idea-data">
+		<div class="idea-title">
+			@Idea.Title
+		</div>
+		<div class="idea-description">
+			@Idea.Description
+		</div>
+	</div>
+	<div class="idea-actions">
+		<ul class="options-menu">
+			<li>
+				<button @onclick="async () => await PromoteToGoal(Idea.Id)">Promote</button>
+			</li>
+			<li>
+				<button @onclick="async () => await DeleteIdea(Idea.Id)">Delete</button>
+			</li>
+		</ul>
+	</div>
+</article>
+
+@code {
+	[Parameter]
+	public IdeaDto Idea { get; set; }
+
+	protected override void OnInitialized()
+	{
+		if (Idea != null)
+		{
+			if (Idea.Title == null)
+			{
+				Idea.Title = "No title found.";
+			}
+
+			if (Idea.Description == null)
+			{
+				Idea.Description = "No description found.";
+			}
+
+		}
+	}
+
+	public delegate Task ActionDelegate(long id);
+
+	[Parameter]
+	public ActionDelegate PromoteToGoal { get; set; }
+
+	[Parameter]
+	public ActionDelegate DeleteIdea {get;set;}
+}

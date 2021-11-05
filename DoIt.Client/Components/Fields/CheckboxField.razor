@@ -1,0 +1,31 @@
+﻿@using DoIt.Client.Models.Fields;
+
+<div class="checkbox-field field">
+	<input name="@Label" type="checkbox" checked=@Checked @onchange="@OnCheckChangedCallback" />
+	<label for="@Label">@Label</label>
+</div>
+
+@code {
+	[Parameter]
+	public string Label { get; set; }
+
+	[Parameter]
+	public bool Checked { get; set; }
+
+	[Parameter]
+	public EventCallback<ChangeEventArgs> OnCheckChangedCallback { get; set; }
+
+	[Parameter]
+	public LabelPosition? PositionLabel { get; set; }
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		// This positioning should be done in coding
+		//if (PositionLabel.HasValue)
+		//{
+
+		//}
+	}
+}

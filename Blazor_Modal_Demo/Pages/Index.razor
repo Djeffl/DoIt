@@ -1,0 +1,18 @@
+﻿@using Blazor_Modal_Demo.Components; 
+
+@inject ModalService Modal
+
+@page "/"
+
+<Modal/>
+<h1>Hello, world!</h1>
+
+<button @onclick="DisplayModal">Click!</button>
+
+@code{
+
+
+	private void DisplayModal() {
+		Modal.Show<TestPopUpComponent>("Hello");
+	}
+}

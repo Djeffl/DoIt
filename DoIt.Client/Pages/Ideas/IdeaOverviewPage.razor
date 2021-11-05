@@ -1,0 +1,118 @@
+﻿@page "/ideas"
+
+@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Services.Ideas;
+@using DoIt.Client.Pages.Ideas.Detail;
+
+@using DoIt.Client.Services.Modals;
+
+@using DoIt.Client.Services.Goals;
+
+@using DoIt.Client.Components.Modals.Confirm;
+
+
+
+
+@inject IIdeaService IdeaService;
+@inject IGoalService GoalService;
+@inject ModalService Modal;
+@inject NavigationManager NavigationManager;
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
+
+@if (Ideas == null)
+{
+	// Spinner Loading
+}
+else
+{
+	<section class="goals">
+		<ul class="goals-list">
+			@if (Ideas.Any())
+			{
+				@foreach (var idea in Ideas)
+				{
+					<li class="goals-list-item" @onclick="() => OpenDetailGoal(idea.Id)">
+						<article class="idea">
+							<div class="idea-data">
+								<div class="idea-title">
+									@idea.Title
+								</div>
+								<div class="idea-description">
+									@idea.Description
+								</div>
+							</div>
+							<div class="idea-actions">
+								<ul class="actions">
+									<li>
+										<button class="action" @onclick:stopPropagation="true" @onclick="async () => await PromoteIdea(idea.Id)">P</button>
+									</li>
+									<li>
+										<button class="action" @onclick:stopPropagation="true" @onclick="() => DeleteIdea(idea.Id)">D</button>
+									</li>
+								</ul>
+							</div>
+						</article>
+					</li>
+				}
+			}
+		</ul>
+	</section>
+}
+
+@code {
+	public List<IdeaDto> Ideas { get; set; }
+	private IdeaDto ideaToDelete;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var getIdeasResponse = await IdeaService.GetAllAsync();
+		this.Ideas = getIdeasResponse.Data;
+
+		Modal.OnClose += OnModalClose;
+	}
+
+	private async void OnModalClose(object response)
+	{
+		if (response is IdeaDto)
+		{
+			var newIdea = response as IdeaDto;
+			Ideas.Add(newIdea);
+			StateHasChanged();
+		}
+
+		if (response is bool && (bool)response && ideaToDelete != null)
+		{
+			await IdeaService.DeleteAsync(ideaToDelete.Id);
+
+			Ideas.Remove(ideaToDelete);
+			StateHasChanged();
+			ideaToDelete = null;
+		}
+	}
+
+	private void DeleteIdea(long id)
+	{
+		ideaToDelete = GetIdeaFromList(id);
+
+		Modal.Show<ConfirmModalComponent, ConfirmModalParameter, bool>(new ConfirmModalParameter() { Description = "Are you sure you want to delete this idea?" });
+	}
+
+	private async Task PromoteIdea(long id)
+	{
+		var idea = GetIdeaFromList(id);
+
+		await SessionStorage.SetItemAsync<IdeaDto>("PromotedIdea", idea);
+
+		NavigationManager.NavigateTo("/goals");
+	}
+
+	private IdeaDto GetIdeaFromList(long id)
+	{
+		return Ideas.Single(x => x.Id == id);
+	}
+
+	private void OpenDetailGoal(long id)
+	{
+		Modal.Show<IdeaDetailPage, IdeaDetailParameter>(new IdeaDetailParameter() { IdeaId = id });
+	}
+}

@@ -1,0 +1,36 @@
+﻿@using System.Linq.Expressions;
+
+@inherits InputBase<DateTime>
+
+<div class="date-field field">
+	<label for="@Label">@LabelView</label>
+	<input name="@Label" @bind="@CurrentValue" type="date" />
+	<span class="bar"></span>
+	<ValidationMessage For="@ValidationFor" />
+</div>
+
+@code {
+	[Parameter]
+	public string Label { get; set; }
+
+	[Parameter]
+	public Expression<Func<DateTime>> ValidationFor { get; set; }
+
+	[Parameter]
+	public bool IsMandatory { get; set; }
+
+	private string LabelView
+	{
+		get
+		{
+			return IsMandatory ? $"{Label}(*)" : Label;
+		}
+	}
+
+	protected override bool TryParseValueFromString(string value, out DateTime result, out string validationErrorMessage)
+	{
+		result = DateTime.Parse(value);
+		validationErrorMessage = null;
+		return true;
+	}
+}

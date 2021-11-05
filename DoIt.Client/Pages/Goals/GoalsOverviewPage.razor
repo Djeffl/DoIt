@@ -1,0 +1,88 @@
+﻿@page "/goals"
+
+@using Services.Goals;
+@using DoIt.Client.Components.Goals;
+@using DoIt.Client.Extensions;
+@using Blazored.SessionStorage;
+@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Services.Modals;
+@using DoIt.Client.Pages.Goals.Create;
+@using DoIt.Client.Models.Goals;
+
+@inject IGoalService GoalService;
+@inject NavigationManager NavManager;
+@inject ISessionStorageService SessionStorage;
+@inject ModalService ModalService; 
+
+
+@if (Goals == null)
+{
+	// Spinner Loading
+}
+else
+{
+<section class="goals">
+	@foreach (var goal in Goals)
+	{
+		<GoalComponentTwo Goal="goal"></GoalComponentTwo>
+	}
+
+	@*<section class="goals-category">
+		<h2>Pinned</h2>
+		<div class="goal-category-list">
+
+			@foreach (var goal in Goals)
+			{
+				<GoalComponentTwo Goal="goal"></GoalComponentTwo>
+			}
+		</div>
+	</section>*@
+</section>
+}
+
+@code {
+	private bool promoteIdea;
+	public List<GoalDto> Goals;
+
+	protected override async Task OnInitializedAsync()
+	{
+		ModalService.OnClose += OnModalClose;
+
+		var getGoalsResponse = await GoalService.GetAllAsync();
+		Goals = getGoalsResponse.Data;
+
+		await OpenCreateGoalModalIfIdeaWasPromotedAsync();
+	}
+
+	public async Task OpenCreateGoalModalIfIdeaWasPromotedAsync()
+	{
+		const string promotedIdea = "PromotedIdea";
+		var ideaToBePromotedToGoal = await SessionStorage.GetItemAsync<IdeaDto>(promotedIdea);
+
+		if (ideaToBePromotedToGoal == null)
+		{
+			return;
+		}
+
+		ModalService.Show<GoalCreatePage, GoalCreateParameter>(new GoalCreateParameter()
+		{
+			Idea = ideaToBePromotedToGoal
+		});
+
+		await SessionStorage.SetItemAsync<IdeaDto>(promotedIdea, null);
+	}
+
+	private void OnModalClose(object response)
+	{
+		if (response is GoalDto)
+		{
+			var newGoal = response as GoalDto;
+			Goals.Add(newGoal);
+			StateHasChanged();
+		}
+	}
+
+	private void OpenDetailGoal(int id)
+	{
+	}
+}

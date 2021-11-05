@@ -1,0 +1,41 @@
+﻿@using Models.Goals;
+
+<svg>
+	<image href=@iconUrl height="24px" width="24px">
+	</image>
+</svg>
+
+@code {
+	[Parameter]
+	public GoalType GoalType { get; set; }
+
+	private string iconUrl;
+
+	private Random random = new Random();
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+
+	}
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+		this.GoalType = GoalType.Sport;
+		if (this.GoalType == GoalType.Sport)
+		{
+			var list = new[]{
+			"directions_bike-24px.svg",
+			"downhill_skiing-24px.svg",
+			"fitness_center-24px.svg",
+			"hiking-24px.svg",
+			"kayaking-24px.svg",
+			"kitesurfing-24px.svg"
+			};
+
+			var randomIconSvgName = list[random.Next(list.Count())];
+		}
+	}
+}

@@ -1,0 +1,44 @@
+﻿.cascading-modal-wrapper {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #00000029;
+}
+
+.cascading-modal {
+	background-color: white;
+	min-width: 375px;
+	min-height: 225px;
+	display: grid;
+	grid-template-rows: [first] 44px[Rest] auto;
+}
+
+
+.cascading-modal-center {
+	left: 50%;
+	top: 50%;
+	position: absolute;
+	width: auto;
+	height: auto;
+	transform: translate(-50%, -50%);
+}
+
+.close-modal {
+	display: flex;
+	justify-content: flex-end;
+	padding: 10px;
+}
+
+	.close-modal button {
+		border: none;
+		background: none;
+		right: 0px;
+		display: flex;
+		flex: initial;
+		justify-content: flex-end;
+	}
+
+.content-modal {
+}

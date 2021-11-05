@@ -1,0 +1,17 @@
+﻿h2 {
+	margin: 10px;
+}
+
+div.section-content {
+	margin: 20px 25px;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+textarea {
+	width: 450px;
+	height: 200px;
+}

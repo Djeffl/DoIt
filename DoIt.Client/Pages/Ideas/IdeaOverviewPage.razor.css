@@ -1,0 +1,50 @@
+﻿.goals-list {
+	border: 1px solid #828282;
+	list-style: none;
+	padding: 0;
+}
+
+.goals-list-item {
+	background-color: white;
+	padding: 6px 10px;
+}
+
+	.goals-list-item:hover {
+		background-color: #b5b5b51c;
+	}
+
+
+article.idea {
+	display: grid;
+	grid-template-columns: [idea-data] 90% [idea-actions] 10%;
+}
+
+	article.idea div.idea-description {
+		font-size: 10px;
+		color: #828282;
+	}
+
+.actions {
+	list-style: none;
+	padding: 0px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+	.actions li {
+		border: none;
+	}
+
+		.actions li:hover {
+			background: none;
+		}
+
+.action {
+	background: none;
+	border: 0px;
+	outline: none;
+}
+
+	.action:hover {
+		color: #003000;
+	}

@@ -1,0 +1,10 @@
+﻿<button class="confirm-button button" type="submit" @onclick="OnClick">Confirm</button>
+
+@code {
+	[Parameter]
+	public Action OnClick { get; set; }
+
+	protected override void OnInitialized()
+	{
+	}
+}

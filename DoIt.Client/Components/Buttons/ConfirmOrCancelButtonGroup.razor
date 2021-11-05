@@ -1,0 +1,11 @@
+﻿<div class="button-group">
+	<ConfirmButton OnClick="ConfirmButtonOnClick"></ConfirmButton>
+	<CancelButton OnClick="CancelButtonOnClick"></CancelButton>
+</div>
+@code {
+	[Parameter]
+	public Action ConfirmButtonOnClick { get; set; } = () => { };
+
+	[Parameter]
+	public Action CancelButtonOnClick { get; set; } = () => { };
+}

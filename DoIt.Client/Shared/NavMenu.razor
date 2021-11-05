@@ -1,96 +1,128 @@
 ﻿
 
 @inject IJSRuntime JSRuntime
-@inject DoIt.ComponentLibrary.Modal.ModalService ModalService
 
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using DoIt.Client.Services.Modals;
+@using DoIt.Client.Pages.Todos;
+@using DoIt.Client.Pages.Goals;
+@using DoIt.Client.Pages.Ideas;
 
 @inject NavigationManager NavManager
 @inject SignOutSessionStateManager SignOutManager
+@inject ModalService Modal;
 
 
 <nav class="@navbarClass">
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
-            </NavLink>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="/todos">
-                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24" /></g><g><g><path d="M16.24,11.51l1.57-1.57l-3.75-3.75l-1.57,1.57L8.35,3.63c-0.78-0.78-2.05-0.78-2.83,0l-1.9,1.9 c-0.78,0.78-0.78,2.05,0,2.83l4.13,4.13L3,17.25V21h3.75l4.76-4.76l4.13,4.13c0.95,0.95,2.23,0.6,2.83,0l1.9-1.9 c0.78-0.78,0.78-2.05,0-2.83L16.24,11.51z M9.18,11.07L5.04,6.94l1.89-1.9c0,0,0,0,0,0l1.27,1.27L7.02,7.5l1.41,1.41l1.19-1.19 l1.45,1.45L9.18,11.07z M17.06,18.96l-4.13-4.13l1.9-1.9l1.45,1.45l-1.19,1.19l1.41,1.41l1.19-1.19l1.27,1.27L17.06,18.96z" /><path d="M20.71,7.04c0.39-0.39,0.39-1.02,0-1.41l-2.34-2.34c-0.47-0.47-1.12-0.29-1.41,0l-1.83,1.83l3.75,3.75L20.71,7.04z" /></g><g /></g></svg>
-            </NavLink>
-            <button class="sub-link" @onclick="() => OpenAddNewTodo()">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
-            </button>
-        </li>
-        <li class="nav-item">
-            <NavLink class="nav-link" href="/goals">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z" /></svg>
-            </NavLink>
-        </li>
-        <li class="nav-item align-bottom order-last-2">
-            <AuthorizeView>
-                <Authorized>
-                    <button class="nav-link" @onclick="(e) => SignOut(e)">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none" /><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" /></svg>
-                    </button>
-                </Authorized>
-            </AuthorizeView>
-        </li>
-        <li class="nav-item align-bottom order-last-1">
-            <button @onclick="() => expand()" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24" /></g><g><g><polygon points="15.5,5 11,5 16,12 11,19 15.5,19 20.5,12" /><polygon points="8.5,5 4,5 9,12 4,19 8.5,19 13.5,12" /></g></g></svg>
-            </button>
-        </li>
-    </ul>
+	<ul class="navbar-nav">
+		<li class="nav-item">
+			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+				<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" /></svg>
+			</NavLink>
+		</li>
+		<li class="nav-item">
+			<NavLink class="nav-link" href="/todos">
+				<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24" /></g><g><g><path d="M16.24,11.51l1.57-1.57l-3.75-3.75l-1.57,1.57L8.35,3.63c-0.78-0.78-2.05-0.78-2.83,0l-1.9,1.9 c-0.78,0.78-0.78,2.05,0,2.83l4.13,4.13L3,17.25V21h3.75l4.76-4.76l4.13,4.13c0.95,0.95,2.23,0.6,2.83,0l1.9-1.9 c0.78-0.78,0.78-2.05,0-2.83L16.24,11.51z M9.18,11.07L5.04,6.94l1.89-1.9c0,0,0,0,0,0l1.27,1.27L7.02,7.5l1.41,1.41l1.19-1.19 l1.45,1.45L9.18,11.07z M17.06,18.96l-4.13-4.13l1.9-1.9l1.45,1.45l-1.19,1.19l1.41,1.41l1.19-1.19l1.27,1.27L17.06,18.96z" /><path d="M20.71,7.04c0.39-0.39,0.39-1.02,0-1.41l-2.34-2.34c-0.47-0.47-1.12-0.29-1.41,0l-1.83,1.83l3.75,3.75L20.71,7.04z" /></g><g /></g></svg>
+			</NavLink>
+			<button class="sub-link" @onclick="() => OpenAddNewTodo()">
+				<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
+			</button>
+		</li>
+		<li class="nav-item">
+			<NavLink class="nav-link" href="/goals">
+				<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z" /></svg>
+			</NavLink>
+			<button class="sub-link" @onclick="() => OpenAddNewGoal()">
+				<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
+			</button>
+		</li>
+		<li class="nav-item">
+			<NavLink class="nav-link" href="/ideas">
+				<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none" /><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z" /></svg>
+			</NavLink>
+			<button class="sub-link" @onclick="() => OpenAddNewIdea()">
+				<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none" /><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
+			</button>
+		</li>
+		<li class="nav-item">
+			<NavLink class="nav-link" href="/demo">
+				Demo
+			</NavLink>
+		</li>
+		<li class="nav-item align-bottom order-last-2">
+			<AuthorizeView>
+				<Authorized>
+					<button class="nav-link" @onclick="(e) => SignOut(e)">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none" /><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" /></svg>
+					</button>
+				</Authorized>
+			</AuthorizeView>
+		</li>
+		<li class="nav-item align-bottom order-last-1">
+			<button @onclick="() => expand()" class="nav-link">
+				<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24" /></g><g><g><polygon points="15.5,5 11,5 16,12 11,19 15.5,19 20.5,12" /><polygon points="8.5,5 4,5 9,12 4,19 8.5,19 13.5,12" /></g></g></svg>
+			</button>
+		</li>
+	</ul>
 </nav>
 
 
 @code {
 
-    string navbarClass;
-    bool isExpanded = true;
+	string navbarClass;
+	bool isExpanded = true;
+	//[CascadingParameter] public IModalService Modal { get; set; }
 
-    public NavMenu()
-    {
-        SetNavbarClass();
-    }
+	public NavMenu()
+	{
+		SetNavbarClass();
+	}
 
-    private async Task SignOut(MouseEventArgs args)
-    {
-        await SignOutManager.SetSignOutState();
-        NavManager.NavigateTo("/authentication/logout", true);
-    }
+	private async Task SignOut(MouseEventArgs args)
+	{
+		await SignOutManager.SetSignOutState();
+		NavManager.NavigateTo("/authentication/logout", true);
+	}
 
-    public void expand()
-    {
-        isExpanded = !isExpanded;
-        SetNavbarClass();
-    }
+	public void expand()
+	{
+		isExpanded = !isExpanded;
+		SetNavbarClass();
+	}
 
-    public void SetNavbarClass()
-    {
-        if (isExpanded)
-        {
-            this.navbarClass = "navbar";
-        }
-        else
-        {
-            this.navbarClass = "navbar expanded";
-        }
-    }
+	public void SetNavbarClass()
+	{
+		if (isExpanded)
+		{
+			this.navbarClass = "navbar";
+		}
+		else
+		{
+			this.navbarClass = "navbar expanded";
+		}
+	}
 
-    //public void SetActive(ElementReference element)
-    //{
-    //    JSRuntime.InvokeAsync<object>("setElementClass", new object[] { element, "active" });
-    //}
+	//public void SetActive(ElementReference element)
+	//{
+	//    JSRuntime.InvokeAsync<object>("setElementClass", new object[] { element, "active" });
+	//}
 
-    private void OpenAddNewTodo()
-    {
-        ModalService.Show("New Todo", typeof(DoIt.Client.Pages.TodoCreate));
-    }
+	private void OpenAddNewTodo()
+	{
+		//ModalService.Show("New Todo", typeof(DoIt.Client.Pages.TodoCreate));
+		//Modal.Show<TodoCreatePage>("New Todo");
+	}
+
+	private void OpenAddNewGoal()
+	{
+		//Modal.Show<GoalCreatePage>("New Goal");
+	}
+
+	private void OpenAddNewIdea()
+	{
+		Modal.Show<IdeaCreatePage>();
+	}
 
 
 }

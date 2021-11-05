@@ -11,20 +11,21 @@ namespace DoIt.Api.Data
 	{
 		public DbSet<Todo> Todos { get; set; }
 
+		public DbSet<Goal> Goals { get; set; }
+
+		public DbSet<Idea> Ideas { get; set; }
+
+
 		public DoItContext(DbContextOptions<DoItContext> options) : base(options)
 		{
 
 		}
 
-		//protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		//{
-		//	optionsBuilder.UseSqlServer(
-		//		@"Server=DESKTOP-GJ7Q92P;Database=DoIt;Trusted_Connection=True;MultipleActiveResultSets=true");
-		//}
-
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Todo>().ToTable("Todo");
+			modelBuilder.Entity<Todo>().ToTable("Todo", schema: "dbo");
+			modelBuilder.Entity<Goal>().ToTable("Goals", schema: "dbo");
+			modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo");
 		}
 	}
 }

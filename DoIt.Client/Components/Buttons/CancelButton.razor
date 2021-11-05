@@ -1,0 +1,10 @@
+﻿<button class="cancel-button button" @onclick="OnClick">Cancel</button>
+
+@code {
+	[Parameter]
+	public Action OnClick { get; set; }
+
+	protected override void OnInitialized()
+	{
+	}
+}

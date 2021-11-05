@@ -9,7 +9,7 @@ namespace DoIt.Api.Domain
 	{
 		public int Id { get; set; }
 
-		public string Name { get; set; }
+		public string Title { get; set; }
 
 		public string Description { get; set; }
 
@@ -20,7 +20,7 @@ namespace DoIt.Api.Domain
 			return new Goal()
 			{
 				CreatedAt = DateTime.UtcNow,
-				Name = Name,
+				Title = Title,
 				Description = Description
 			};
 		}

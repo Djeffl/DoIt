@@ -1,0 +1,35 @@
+[
+	{
+		"id": 1,
+		"title": "Run 30 Minutes",
+		"description": "Run for 30 minutes without a break at a moderate pace.",
+		"dueAt": "2012-04-23T18:25:43.511Z",
+		"createdAt": "2012-04-23T18:25:43.511Z",
+		"tasksIds": [ 1, 2, 3, 4, 5 ],
+		"completedTasksIds": [ 1, 2 ],
+		"openTasksIds": [ 3, 4, 5 ],
+		"isFinished": false
+	},
+	{
+		"id": 2,
+		"title": "Get Azure Base Certificate",
+		"description": "Get the most basic Azure certificate.",
+		"dueAt": "2012-04-23T18:25:43.511Z",
+		"createdAt": "2012-04-23T18:25:43.511Z",
+		"tasksIds": [ 1, 2, 3, 4, 5 ],
+		"completedTasksIds": [ 1, 2, 3 ],
+		"openTasksIds": [ 4, 5 ],
+		"isFinished": false
+	},
+	{
+		"id": 3,
+		"title": "Renovate Bathroom",
+		"description": "Fix the tiles in the bathroom.",
+		"dueAt": "2012-04-23T18:25:43.511Z",
+		"createdAt": "2012-04-23T18:25:43.511Z",
+		"tasksIds": [ 1, 2, 3, 4, 5 ],
+		"completedTasksIds": [ 1, 2, 3, 4 ],
+		"openTasksIds": [ 5 ],
+		"isFinished": false
+	}
+]

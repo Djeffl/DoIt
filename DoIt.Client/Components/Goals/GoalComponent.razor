@@ -1,0 +1,48 @@
+﻿@using Models.Goals;
+
+@inject NavigationManager NavManager
+
+<article class="goal" @onclick="NavigateGoalDetailPage">
+	<header>
+		<h1>@Goal.Title</h1>
+	</header>
+	@*<div class="goal-type">
+		<GoalTypeIconComponent GoalType="Goal.Type" />
+	</div>*@
+	<section class="goal-progress">
+		<DoIt.Client.Components.Progress.ProgressBarComponent Completion="0.25" />
+	</section>
+	<section class="goal-details">
+		<p>Days left: <b>@daysLeftText</b></p>
+		<p>Due at: <i>@dueDateText</i></p>
+	</section>
+	@*<section class="tasks-short-list">
+			<ul>
+				<li>[] Get skills</li>
+				<li>[] Get good</li>
+				<li>[] Get better</li>
+			</ul>
+		</section>*@
+</article>
+
+@code {
+	[Parameter]
+	public GoalDto Goal { get; set; }
+
+	private string daysLeftText;
+	private string dueDateText;
+
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+
+		daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
+		dueDateText = Goal.DueAt.ToString("d");
+	}
+
+	private void NavigateGoalDetailPage()
+	{
+		NavManager.NavigateTo($"/goals/{Goal.Id}", true);
+	}
+}

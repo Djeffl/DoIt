@@ -1,0 +1,39 @@
+﻿div.confirm-modal {
+	display: grid;
+	grid-template-rows: [First] auto [Last] 40px;
+	height: 100%;
+	width: 100%;
+}
+
+div.description {
+	padding: 10px;
+	text-align: center;
+	font-size: 27px;
+}
+
+.confirm-modal-buttons {
+	display: grid;
+	grid-template-columns: [one] 50% [two] 50%;
+}
+
+	.confirm-modal-buttons button {
+		border: none 1px;
+		outline: none;
+		color: white;
+	}
+
+		.confirm-modal-buttons button.confirm-modal-button-confirm {
+			background-color: #e49999;
+		}
+
+			.confirm-modal-buttons button.confirm-modal-button-confirm:hover {
+				background-color: #ce5151;
+			}
+
+		.confirm-modal-buttons button.confirm-modal-button-cancel {
+			background-color: #717171;
+		}
+
+			.confirm-modal-buttons button.confirm-modal-button-cancel:hover {
+				background-color: #5a5a5a;
+			}

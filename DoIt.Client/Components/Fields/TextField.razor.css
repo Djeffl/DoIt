@@ -1,0 +1,50 @@
+﻿:root {
+	--input-width: 320px;
+}
+
+.text-field {
+	margin: 10px 0px;
+}
+
+label {
+	color: #c6c6c6
+}
+
+input, textarea {
+	background: none;
+	font-size: 18px;
+	display: block;
+	width: var(--input-width);
+	border: none;
+	border-radius: 0;
+	border-bottom: 1px solid #c6c6c6;
+}
+
+textarea {
+	resize: none;
+	height: 165px;
+}
+
+	input:focus, textarea:focus {
+		outline: none;
+	}
+
+		input:focus ~ .bar:before, textarea:focus ~ .bar:before {
+			width: var(--input-width);
+		}
+
+.bar {
+	position: relative;
+	display: block;
+	width: var(--input-width);
+}
+
+	.bar:before {
+		content: "";
+		height: 2px;
+		width: 0;
+		position: absolute;
+		background: #cea9a9;
+		transition: 300ms ease all;
+		left: 0%;
+	}

@@ -1,0 +1,26 @@
+﻿@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Services.Ideas;
+
+@inherits BaseModalComponent<IdeaDetailParameter>
+
+@inject IIdeaService IdeaService;
+
+<section class="idea-detail">
+	<div class="title">
+		<h1>@Idea.Title</h1>
+	</div>
+	<div class="description">
+		<p>@Idea.Description</p>
+	</div>
+</section>
+
+@code {
+	public IdeaDto Idea { get; set; } = new IdeaDto();
+
+	protected async override Task OnInitializedAsync()
+	{
+		base.OnInitialized();
+		Console.WriteLine(Parameter.IdeaId);
+		Idea = await IdeaService.GetAsync(Parameter.IdeaId);
+	}
+}

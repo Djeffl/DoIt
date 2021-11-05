@@ -1,0 +1,37 @@
+﻿@page "/ideas/create"
+
+@using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Services.Ideas;
+@using DoIt.Client.Components.Fields;
+
+@inherits BaseModalComponent
+
+@inject IIdeaService IdeaService
+
+<EditForm Model="NewIdea" OnValidSubmit="CreateIdeaAsync">
+	<div class="fields">
+		@* What is this? *@
+		<DataAnnotationsValidator />
+		<div class="field title-field">
+			<TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" ValidationFor="@(() => NewIdea.Title)" />
+		</div>
+		<div class="field description-field">
+			<TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="450px" ValidationFor="@(() => NewIdea.Description)" />
+		</div>
+	</div>
+
+	<ConfirmOrCancelButtonGroup></ConfirmOrCancelButtonGroup>
+</EditForm>
+
+@code {
+	public IdeaCreateDto NewIdea = new IdeaCreateDto();
+
+	private async Task CreateIdeaAsync()
+	{
+		var response = await IdeaService.CreateAsync(NewIdea);
+
+		Console.WriteLine("Closing modal now...");
+		this.CloseModal(response);
+	}
+}

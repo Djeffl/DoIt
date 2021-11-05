@@ -1,0 +1,4 @@
+﻿div.button-group {
+	display: grid;
+	grid-template-columns: [one] 50% [two] 50%;
+}
