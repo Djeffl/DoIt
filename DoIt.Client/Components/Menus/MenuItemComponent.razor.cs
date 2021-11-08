@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace DoIt.Client.Components.Menus
 {
-	public partial class MenuItem : ComponentBase
+	public partial class MenuItemComponent : ComponentBase
 	{
 		[Parameter]
 		public string Title { get; set; }
