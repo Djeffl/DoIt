@@ -15,6 +15,6 @@ namespace DoIt.Api.Dto.Request
 
 		public DateTime DueAt { get; set; }
 
-		public long IdeaId { get; set; }
+		public long? IdeaId { get; set; }
 	}
 }

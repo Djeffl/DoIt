@@ -22,7 +22,7 @@ namespace DoIt.Client.Services.Goals
             return Task.Run(() => new GoalDto
             {
                 CreatedAt = DateTime.Now,
-                DueAt = goal.DueAt,
+                //DueAt = goal.DueAt,
                 Description = goal.Description,
                 Title = goal.Title,
                 //Type = Enum.Parse<GoalType>(goal.Type)

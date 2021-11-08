@@ -1,29 +1,22 @@
 ﻿@page "/demo"
 
-@using DoIt.Client.Services.Modals;
+@using  DoIt.Client.Components.Menus;
 
-@using DoIt.Client.Components.Modals.Confirm;
-
-@inject ModalService ModalService;
-
-<button @onclick="() => OpenModal()" @onclick:preventDefault="true">Click me</button>
-
-<OptionsMenuButton OffsetY="true">
-	<MenuItem OnClick="() => OpenModal()">Hi</MenuItem>
-	<MenuItem OnClick="() => OpenModal()">Bye</MenuItem>
-</OptionsMenuButton>
+<MenuComponent>
+    <MenuItems>
+        <MenuItemComponent Title="Log Hello" OnClick="LogHello"></MenuItemComponent>
+        <MenuItemComponent Title="Log Test" OnClick="LogTest"></MenuItemComponent>
+    </MenuItems>
+</MenuComponent>
 
 @code {
+    private void LogHello()
+    {
+        Console.WriteLine("Hello");
+    }
 
-
-
-	public void OpenModal()
-	{
-		ModalService.Show<ConfirmModalComponent>();
-
-		ModalService.OnClose += (object o) =>
-		{
-			Console.WriteLine($"Response ConfirmModal: {(bool?)o}");
-		};
-	}
+    private void LogTest()
+    {
+        Console.WriteLine("Test");
+    }
 }

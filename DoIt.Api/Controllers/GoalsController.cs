@@ -7,6 +7,7 @@ using DoIt.Api.Dto.Response;
 using DoIt.Api.Dto.Response.Goals;
 using DoIt.Api.Services;
 using DoIt.Api.Services.Goal.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,7 @@ namespace DoIt.Api.Controllers
 
 		[HttpGet]
 		[Route("")]
+		[AllowAnonymous]
 		public async Task<ActionResult<GoalsResponseDto>> GetGoals()
 		{
 			var result = await _goalService.GetGoalsAsync(new GetGoalsDto());
@@ -69,6 +71,7 @@ namespace DoIt.Api.Controllers
 
 		[HttpPost]
 		[Route("")]
+		[AllowAnonymous]
 		public async Task<ActionResult<GoalResponseDto>> CreateGoal(CreateGoalRequest request)
 		{
 			//var isParsed = Enum.TryParse<GoalType>(request.Type, ignoreCase: true, out var goalType);

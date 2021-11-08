@@ -7,6 +7,7 @@
 @using DoIt.Client.Services.Modals;
 @using DoIt.Client.Pages.Todos;
 @using DoIt.Client.Pages.Goals;
+@using DoIt.Client.Pages.Goals.Create
 @using DoIt.Client.Pages.Ideas;
 
 @inject NavigationManager NavManager
@@ -116,7 +117,7 @@
 
 	private void OpenAddNewGoal()
 	{
-		//Modal.Show<GoalCreatePage>("New Goal");
+		Modal.Show<GoalCreatePage>();
 	}
 
 	private void OpenAddNewIdea()

@@ -10,7 +10,7 @@ namespace DoIt.Client.Models.Goals
 
 		public string Type { get; set; }
 
-		public DateTime DueAt { get; set; }
+		public DateTime? DueAt { get; set; }
 
 		public long? IdeaId { get; set; }
 	}

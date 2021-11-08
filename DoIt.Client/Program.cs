@@ -53,7 +53,7 @@ namespace DoIt.Client
 
         private static void AddImplementedServices(WebAssemblyHostBuilder builder)
         {
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44318") });
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:1001") });
             builder.Services.AddScoped(typeof(ITodoService), typeof(TodoService));
             builder.Services.AddScoped(typeof(IGoalService), typeof(GoalService));
             builder.Services.AddScoped(typeof(IIdeaService), typeof(IdeaService));

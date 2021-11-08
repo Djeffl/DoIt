@@ -16,7 +16,7 @@
 		<div class="description-field">
 			<TextField @bind-Value="NewGoal.Description" Label="Description" Multiline="true" Width="450px" ValidationFor="@(() => NewGoal.Description)" InitialValue=@NewGoal.Description />
 		</div>
-		<DateField @bind-Value="NewGoal.DueAt" Label="Due At" IsMandatory="true" ValidationFor="@(() => NewGoal.DueAt)" />
+		@*<DateField @bind-Value="NewGoal.DueAt" Label="Due At" IsMandatory="true" ValidationFor="@(() => NewGoal.DueAt)" />*@
 		@*<SelectField @bind-Value="NewGoal.Type" Label="Type" Options="options" />*@
 
 
@@ -47,6 +47,8 @@
 	private async Task CreateGoalAsync()
 	{
 		var response = await GoalService.CreateGoalAsync(NewGoal);
+
+		Console.WriteLine("Closing modal now...");
 		this.CloseModal();
 	}
 }

@@ -35,10 +35,11 @@ else
 		todos = await TodoService.GetAllAsync();
 	}
 
-	private async Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
+	private Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
 	{
-		//Console.WriteLine($"Updating todo - Id: '{id}. Todo.IsFinished set to {updatedIsFinished}");
-		//await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
+		return Task.CompletedTask;
+    //Console.WriteLine($"Updating todo - Id: '{id}. Todo.IsFinished set to {updatedIsFinished}");
+    //await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
 	}
 
 	private void OpenDetailTodo(int id)
