@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30114.105
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoIt.Api", "DoIt.Api\DoIt.Api.csproj", "{A0D42846-83ED-4DAA-B364-63D31247B387}"
 EndProject
@@ -24,6 +24,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Event_Action_Demo", "Event_Action_Demo\Event_Action_Demo.csproj", "{423A9421-4B43-4378-835F-3E105A73E683}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DropdownMenu_Demo", "DropdownMenu_Demo\DropdownMenu_Demo.csproj", "{51FF2686-9583-4A9E-83CD-549B46114092}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EFDB5729-FC95-4653-8E87-B0CDD02672E6}"
+	ProjectSection(SolutionItems) = preProject
+		run-api.ps1 = run-api.ps1
+		run-services.bat = run-services.bat
+		run-ui.ps1 = run-ui.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
