@@ -1,0 +1,31 @@
+﻿@page "/demo"
+
+@using DoIt.Client.Components.Menus;
+@using DoIt.Client.Models.Icons;
+@using DoIt.Client.Components.Icons;
+
+<MenuComponent>
+    <MenuItems>
+        <MenuItemComponent Icon=IconType.Bike Title="Log Hello" OnClick="LogHello"></MenuItemComponent>
+        <MenuItemComponent Icon=IconType.Surf Title="Log Test" OnClick="LogTest"></MenuItemComponent>
+    </MenuItems>
+</MenuComponent>
+<div style="border: 1px solid black;">
+    <IconComponent Icon=IconType.Bike></IconComponent>
+</div>
+
+<div style="border: 1px solid red;">
+    <img src="https://localhost:5001/svg/sport/directions_bike-24px.svg" width="24" height="24"/>
+</div>
+
+@code {
+    private void LogHello()
+    {
+        Console.WriteLine("Hello");
+    }
+
+    private void LogTest()
+    {
+        Console.WriteLine("Test");
+    }
+}

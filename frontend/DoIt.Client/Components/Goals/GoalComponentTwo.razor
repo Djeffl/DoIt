@@ -1,0 +1,104 @@
+﻿@using DoIt.Client.Components.Modals.Confirm
+@using Models.Goals;
+@using DoIt.Client.Components.Progress;
+@using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Services.Goals;
+@using DoIt.Client.Models.Menus;
+@using DoIt.Client.Components.Menus;
+@using DoIt.Client.Services.Modals;
+
+@inject NavigationManager NavManager
+@inject IGoalService GoalService
+@inject ModalService ModalService;
+
+<article class="goal" @onclick="NavigateGoalDetailPage">
+    <section class="goal-top">
+        @*<div class="goal-type">
+            <GoalTypeIconComponent GoalType="Goal.Type" />
+            </div>*@
+        <div class="goal-options">
+            <MenuComponent Icon=Models.Icons.IconType.MoreOptions>
+                <MenuItems>
+                    <MenuItemComponent OnClick=RemoveGoal Icon=Models.Icons.IconType.Delete Title="Delete"></MenuItemComponent>
+                    <MenuItemComponent OnClick=CompleteGoal Icon=Models.Icons.IconType.CompleteAll Title="Complete"></MenuItemComponent>
+                </MenuItems>
+            </MenuComponent>
+            @*<MoreOptionsMenuButton OptionsMenuList="MenuOptions"  />*@
+            @*<OptionsMenuComponent>
+                <MenuOptions>
+                <MenuOptionComponent Id="remove-goal" Title="Remove Goal" OnClick="RemoveGoal" />
+                </MenuOptions>
+                </OptionsMenuComponent>*@
+        </div>
+    </section>
+    <section class="goal-center goal-progress">
+        <ProgressCircleComponent Completion="0.25" />
+    </section>
+    <section class="goal-header">
+        <header>
+            <h1>@Goal.Title</h1>
+        </header>
+    </section>
+    <section class="goal-details">
+    </section>
+    @*<section class="goal-details">
+        <p>Days left: <b>@daysLeftText</b></p>
+        <p>Due at: <i>@dueDateText</i></p>
+        </section>*@
+</article>
+
+@code {
+    [Parameter]
+    public GoalDto Goal { get; set; }
+
+    private string daysLeftText;
+    private string dueDateText;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
+        dueDateText = Goal.DueAt.ToString("d");
+    }
+
+    private void NavigateGoalDetailPage()
+    {
+        NavManager.NavigateTo($"/goals/{Goal.Id}", true);
+    }
+
+    private void CompleteGoal()
+    {
+        ModalService.Show<ConfirmModalComponent>();
+        ModalService.OnClose += OnConfirmCompleteGoalModalClose;
+    }
+
+    private void RemoveGoal()
+    {
+        ModalService.Show<ConfirmModalComponent>();
+        ModalService.OnClose += OnConfirmRemoveGoalModalClose;
+    }
+
+    private void OnConfirmRemoveGoalModalClose(object response)
+    {
+        var isConfirmed = (bool?)response;
+        if (isConfirmed.HasValue && isConfirmed.Value)
+        {
+            Console.WriteLine("Deleting...");
+        }
+
+        ModalService.OnClose -= OnConfirmRemoveGoalModalClose;
+    }
+
+    private void OnConfirmCompleteGoalModalClose(object response)
+    {
+        var isConfirmed = (bool?)response;
+        if (isConfirmed.HasValue && isConfirmed.Value)
+        {
+            Console.WriteLine("Completing goal...");
+        }
+
+        ModalService.OnClose -= OnConfirmCompleteGoalModalClose;
+    }
+
+}

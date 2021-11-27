@@ -1,0 +1,44 @@
+﻿@using DoIt.Client.Models.Icons
+@using DoIt.Client.Services.Icons;
+
+<img src=@IconUrl style=@IconColorStyle height=@HeightAndWith width=@HeightAndWith />
+@code {
+    [Parameter]
+    public IconType Icon { get; set; }
+
+    [Parameter]
+    public int? HeightAndWith { get; set; }
+
+    [Parameter]
+    public IconColor Color { get; set; }
+
+    public string IconUrl => IconLocationUrlProvider.GetUrl(Icon);
+
+    public string IconColorStyle
+    {
+        get
+        {
+            switch(Color)
+            {
+                // https://isotropic.co/hex-color-to-css-filter/
+                case IconColor.Black:
+                    return "filter: invert(0%) sepia(8%) saturate(7467%) hue-rotate(46deg) brightness(110%) contrast(107%);";
+                case IconColor.Gray:
+                    return "filter: invert(40%) sepia(0%) saturate(2425%) hue-rotate(20deg) brightness(95%) contrast(81%);";
+                case IconColor.White:
+                    return "filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(146deg) brightness(108%) contrast(101%);";
+                default: return "";
+            }
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if(HeightAndWith == null)
+        {
+            HeightAndWith = 24;
+        }
+    }
+}

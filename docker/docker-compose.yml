@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  doitdb:
+    container_name: doitdb
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.db.local
+    # ports: 
+    #   - "1434:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Password123!"
+      MSSQL_PID: "Developer"
+    # networks:
+    #   - doitnet
+    
+  doitapi:
+    container_name: doitapi
+    depends_on:
+      - doitdb
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.api.local
+    ports:
+      - "82:80"
+    # networks:
+    #   - doitnet
+# networks:
+#   doitnet:
+#       driver: bridge
+
+  # doitui:
+  #   build:
+  #     context: ../frontend
+  #     dockerfile: Dockerfile.ui.local
+  #   ports:
+  #     - "81:80"

@@ -1,0 +1,15 @@
+# https://dotnetthoughts.net/how-to-nginx-reverse-proxy-with-docker-compose/
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY . .
+WORKDIR /src/DoIt.Api
+
+FROM build AS publish
+RUN dotnet publish "DoIt.Api.csproj" -c Release -o /app/release
+
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 as final
+WORKDIR /app
+COPY --from=publish /app/release .
+EXPOSE 5000 5001
+ENTRYPOINT ["dotnet", "DoIt.Api.dll"]

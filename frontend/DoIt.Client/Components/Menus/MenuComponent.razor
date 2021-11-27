@@ -1,0 +1,55 @@
+﻿@using DoIt.Client.Models.Icons
+@using DoIt.Client.Components.Icons;
+
+<div class="menu">
+    <button @onclick="ToggleMenu" @onclick:stopPropagation>
+        <IconComponent Icon=@Icon Color=IconColor.Gray></IconComponent>
+        @if (!string.IsNullOrEmpty(@Name))
+        {
+            <span>@Name</span>
+        }
+    </button>
+    @if (_isOpen)
+    {
+        <div class="hidden-menu-overlay" @onclick="ToggleMenu">
+            <div style=@_menuOverlayStyle class="menu-overlay">
+                @MenuItems
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string _menuOverlayStyle;
+
+    private bool _isOpen = false;
+
+    [Parameter]
+    public RenderFragment MenuItems { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public IconType Icon { get; set; }
+
+    public void CloseMenu()
+    {
+        _isOpen = false;
+        StateHasChanged();
+    }
+
+    public void OpenMenu(MouseEventArgs args)
+    {
+        _isOpen = true;
+        _menuOverlayStyle = $"top: {args.ClientY}px; left: {args.ClientX}px;";
+        Console.WriteLine(JsonConvert.SerializeObject(args));
+        StateHasChanged();
+    }
+
+    public void ToggleMenu(MouseEventArgs args)
+    {
+        if (_isOpen) CloseMenu();
+        else OpenMenu(args);
+    }
+}

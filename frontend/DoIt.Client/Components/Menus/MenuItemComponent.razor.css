@@ -1,0 +1,10 @@
+﻿.menu-item {
+    color: black;
+    font-size: 15px;
+    padding: 7px;
+    padding-right: 60px;
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+    border-radius: 7px;
+}
