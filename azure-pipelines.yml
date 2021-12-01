@@ -27,3 +27,12 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/backend/Dockerfile.api.local'
         tags: |
           $(tag)
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Pipeline.Workspace)'
+        artifact: 'docker-api-image'
+        publishLocation: 'pipeline'
+# - stage: Test
+#   displayName: Test
+#   jobs:
+#     - job: 
