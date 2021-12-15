@@ -14,8 +14,8 @@ variables:
 stages:
 - stage: Build_and_Push_API_Image
   jobs:
-  - job: Build
-    displayName: Build
+  - job: Build_Image
+    displayName: Build Image
     pool:
       vmImage: ubuntu-latest
     steps:
@@ -27,8 +27,9 @@ stages:
         command: 'build'
         Dockerfile: '**/Dockerfile.api.local'
         tags: '$(tag)'
-  - job: Push
+  - job: Push_Image
     displayName: Push Image
+    dependsOn: Build_Image
     steps:
       - task: Docker@2
         inputs:
