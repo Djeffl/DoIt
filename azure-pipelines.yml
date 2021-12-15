@@ -12,8 +12,7 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: Build
-  displayName: Build image
+- stage: Build & Push Image
   jobs:
   - job: Build
     displayName: Build
@@ -28,16 +27,11 @@ stages:
         command: 'build'
         Dockerfile: '**/Dockerfile.api.local'
         tags: '$(tag)'
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'doit-api'
-        command: 'login'
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'doit-api'
-        repository: 'djeff/doit-api'
-        command: 'push'
-# - stage: Test
-#   displayName: Test
-#   jobs:
-#     - job: 
+  - job: Push
+    displayName: Push Image
+    steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'doit-api'
+          repository: 'djeff/doit-api'
+          command: 'push'
