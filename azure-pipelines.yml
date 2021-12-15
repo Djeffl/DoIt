@@ -14,25 +14,22 @@ variables:
 stages:
 - stage: Build_and_Push_API_Image
   jobs:
-  - job: Build_Image
-    displayName: Build Image
+  - job: Build_and_Push_Image
+    displayName: Build & Push Image
     pool:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build API image
+      displayName: Build API Image
       inputs:
         containerRegistry: 'doit-api'
         repository: 'djeff/doit-api'
         command: 'build'
         Dockerfile: '**/Dockerfile.api.local'
         tags: '$(tag)'
-  - job: Push_Image
-    displayName: Push Image
-    dependsOn: Build_Image
-    steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'doit-api'
-          repository: 'djeff/doit-api'
-          command: 'push'
+    - task: Docker@2
+      displayName: Push API Image
+      inputs:
+        containerRegistry: 'doit-api'
+        repository: 'djeff/doit-api'
+        command: 'push'
