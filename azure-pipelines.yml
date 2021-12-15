@@ -24,7 +24,7 @@ stages:
       displayName: Build API image
       inputs:
         containerRegistry: 'doit-api'
-        repository: 'doit-api'
+        repository: 'djeff/doit-api'
         command: 'build'
         Dockerfile: '**/Dockerfile.api.local'
         tags: '$(tag)'
