@@ -21,6 +21,10 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
+      inputs:
+        containerRegistry: 'doit-api'
+        command: 'login'
+    - task: Docker@2
       displayName: Build API image
       inputs:
         containerRegistry: 'doit-api'
