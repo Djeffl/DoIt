@@ -16,6 +16,20 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: Docker@2
+      displayName: Build API Image
+      inputs:
+        containerRegistry: 'Azure-DoIt-Container-registry'
+        repository: 'djeff/doit-api'
+        command: 'build'
+        Dockerfile: '**/Dockerfile.api'
+        tags: '$(tag)'
+    - task: Docker@2
+      displayName: Push API Image
+      inputs:
+        containerRegistry: 'Azure-DoIt-Container-registry'
+        repository: 'djeff/doit-api'
+        command: 'push'
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
@@ -27,17 +41,3 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/docker'
         artifact: 'Docker-compose'
         publishLocation: 'pipeline'
-    # - task: Docker@2
-    #   displayName: Build API Image
-    #   inputs:
-    #     containerRegistry: 'Azure-DoIt-Container-registry'
-    #     repository: 'djeff/doit-api'
-    #     command: 'build'
-    #     Dockerfile: '**/Dockerfile.api'
-    #     tags: '$(tag)'
-    # - task: Docker@2
-    #   displayName: Push API Image
-    #   inputs:
-    #     containerRegistry: 'Azure-DoIt-Container-registry'
-    #     repository: 'djeff/doit-api'
-    #     command: 'push'
