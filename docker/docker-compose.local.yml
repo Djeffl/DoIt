@@ -20,7 +20,7 @@ services:
       - doitdb
     build:
       context: ../backend
-      dockerfile: Dockerfile.api.local
+      dockerfile: Dockerfile.api
     ports:
       - "82:80"
     # networks:

@@ -48,6 +48,7 @@ namespace DoIt.Api
 
             services.AddSwaggerGen();
 
+            // todo: https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/projects?tabs=dotnet-core-cli
             services.AddDbContext<DoItContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DoItContext")));
 
             services.AddScoped<IGoalService, GoalService>();
