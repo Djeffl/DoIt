@@ -36,6 +36,6 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish docker compose-files
       inputs:
-        targetPath: '$(Pipeline.Workspace)/Docker'
+        targetPath: '$(Pipeline.Workspace)/docker'
         artifact: 'Docker-compose'
         publishLocation: 'pipeline'
