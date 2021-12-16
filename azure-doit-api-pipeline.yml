@@ -18,7 +18,7 @@ stages:
     steps:
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '(System.DefaultWorkingDirectory)/docker'
+        SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
     - task: PublishPipelineArtifact@1
