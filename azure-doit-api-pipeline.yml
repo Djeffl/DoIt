@@ -25,7 +25,7 @@ stages:
         containerRegistry: 'Azure-DoIt-Container-registry'
         repository: 'djeff/doit-api'
         command: 'build'
-        Dockerfile: '**/Dockerfile.api.local'
+        Dockerfile: '**/Dockerfile.api'
         tags: '$(tag)'
     - task: Docker@2
       displayName: Push API Image
