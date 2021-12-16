@@ -33,3 +33,9 @@ stages:
         containerRegistry: 'Azure-DoIt-Container-registry'
         repository: 'djeff/doit-api'
         command: 'push'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish docker compose-files
+      inputs:
+        targetPath: '$(Pipeline.Workspace)/Docker'
+        artifact: 'Docker-compose'
+        publishLocation: 'pipeline'
