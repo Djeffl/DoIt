@@ -16,10 +16,15 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(Pipeline.Workspace)/docker'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
     - task: PublishPipelineArtifact@1
       displayName: Publish docker compose-files
       inputs:
-        targetPath: '$(Pipeline.Workspace)'
+        targetPath: '$(Build.ArtifactStagingDirectory)'
         artifact: 'Docker-compose'
         publishLocation: 'pipeline'
     # - task: Docker@2
