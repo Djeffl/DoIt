@@ -22,7 +22,7 @@ stages:
     - task: Docker@2
       displayName: Build API Image
       inputs:
-        containerRegistry: 'Docker-Hub-Djeff'
+        containerRegistry: 'Azure-DoIt-Container-registry'
         repository: 'djeff/doit-api'
         command: 'build'
         Dockerfile: '**/Dockerfile.api.local'
@@ -30,6 +30,6 @@ stages:
     - task: Docker@2
       displayName: Push API Image
       inputs:
-        containerRegistry: 'Docker-Hub-Djeff'
+        containerRegistry: 'Azure-DoIt-Container-registry'
         repository: 'djeff/doit-api'
         command: 'push'
