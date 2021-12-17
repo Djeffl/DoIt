@@ -1,6 +1,7 @@
 version: '3.9'
 services:    
   doitapi:
-    container_name: djeff/doitapi@latest
+    container_name: doitapi
+    image: djeff/doitapi@latest
     ports:
       - "80:80"
