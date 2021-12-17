@@ -2,9 +2,6 @@
 # Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-trigger:
-- master
-
 resources:
 - repo: self
 
@@ -33,3 +30,14 @@ stages:
         containerRegistry: 'Azure-DoIt-Container-registry'
         repository: 'djeff/doit-api'
         command: 'push'
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
+    - task: PublishPipelineArtifact@1
+      displayName: Publish docker compose-files
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/docker'
+        artifact: 'Docker-compose'
+        publishLocation: 'pipeline'
