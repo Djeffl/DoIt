@@ -37,7 +37,9 @@ stages:
         displayName: Write data to directory
         inputs:
           targetType: 'inline'
-          script: '''Hello World!'' | Out-File -FilePath docker-info\text.txt'
+          script: |
+            mkdir docker-info;
+            'Hello World!' | Out-File -FilePath docker-info\text.txt;
       - task: CopyFiles@2
         displayName: Copying directory
         inputs:
