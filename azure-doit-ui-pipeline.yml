@@ -37,7 +37,7 @@ stages:
         displayName: Write data to directory
         inputs:
           targetType: 'inline'
-          script: '$text = ''Hello World!'' | Out-File $text -FilePath docker-info\text.txt'
+          script: '''Hello World!'' | Out-File -FilePath docker-info\text.txt'
       - task: CopyFiles@2
         displayName: Copying directory
         inputs:
