@@ -11,22 +11,43 @@ variables:
 stages:
 - stage: Build_and_Push_UI_Image
   jobs:
-  - job: Build_and_Push_Image
-    displayName: Build & Push Image
-    pool:
-      vmImage: ubuntu-latest
+  # - job: Build_and_Push_Image
+  #   displayName: Build & Push Image
+  #   pool:
+  #     vmImage: ubuntu-latest
+  #   steps:
+  #   - task: Docker@2
+  #     displayName: Build UI Image
+  #     inputs:
+  #       containerRegistry: 'Azure-DoIt-Container-registry'
+  #       repository: 'djeff/doit-ui'
+  #       command: 'build'
+  #       Dockerfile: '**/Dockerfile.ui'
+  #       tags: '$(tag)'
+  #   - task: Docker@2
+  #     displayName: Push API Image
+  #     inputs:
+  #       containerRegistry: 'Azure-DoIt-Container-registry'
+  #       repository: 'djeff/doit-ui'
+  #       command: 'push'
+  - job: Set_Artifacts
+    displayName: Set Artifacts
     steps:
-    - task: Docker@2
-      displayName: Build UI Image
-      inputs:
-        containerRegistry: 'Azure-DoIt-Container-registry'
-        repository: 'djeff/doit-ui'
-        command: 'build'
-        Dockerfile: '**/Dockerfile.ui'
-        tags: '$(tag)'
-    - task: Docker@2
-      displayName: Push API Image
-      inputs:
-        containerRegistry: 'Azure-DoIt-Container-registry'
-        repository: 'djeff/doit-ui'
-        command: 'push'
+      - task: PowerShell@2
+        displayName: Write data to directory
+        inputs:
+          targetType: 'inline'
+          script: '$text = ''Hello World!'' | Out-File $text -FilePath docker-info\text.txt'
+      - task: CopyFiles@2
+        displayName: Copying directory
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/docker-info'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/docker-info'
+      - task: PublishBuildArtifacts@1
+        displayName: Publish artifacts
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'docker-info'
+          publishLocation: 'Container'
+  
