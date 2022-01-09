@@ -2,7 +2,7 @@
 # Build a Docker image
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-https://daniel-krzyczkowski.github.io/Parameters-In-Azure-DevOps-Pipelines/
+# https://daniel-krzyczkowski.github.io/Parameters-In-Azure-DevOps-Pipelines/
 
 resources:
 - repo: self
@@ -38,10 +38,8 @@ stages:
       - task: PowerShell@2
         displayName: Write data to directory
         inputs:
-          targetType: 'inline'
-          script: |
-            mkdir docker-info;
-            'Hello World!' | Out-File -FilePath docker-info\text.txt;
+          filePath: 'frontend\pipeline-copy-variables-to-file-command.ps1'
+          arguments: '-DoitContainerVersion $(tag)'
       - task: CopyFiles@2
         displayName: Copying directory
         inputs:
