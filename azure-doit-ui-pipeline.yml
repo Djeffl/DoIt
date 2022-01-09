@@ -56,16 +56,16 @@ stages:
           ArtifactName: 'Variables'
           publishLocation: 'Container'
         displayName: 'Publish Variables Artifact'
-      - task: CopyFiles@2
-        displayName: Copying directory
-        inputs:
-          SourceFolder: '$(System.DefaultWorkingDirectory)/docker-info'
-          Contents: '**'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      - task: PublishBuildArtifacts@1
-        displayName: Publish artifacts
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'docker-info'
-          publishLocation: 'Container'
+      # - task: CopyFiles@2
+      #   displayName: Copying directory
+      #   inputs:
+      #     SourceFolder: '$(System.DefaultWorkingDirectory)/docker-info'
+      #     Contents: '**'
+      #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      # - task: PublishBuildArtifacts@1
+      #   displayName: Publish artifacts
+      #   inputs:
+      #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      #     ArtifactName: 'docker-info'
+      #     publishLocation: 'Container'
   
