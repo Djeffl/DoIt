@@ -38,7 +38,7 @@ stages:
       - task: PowerShell@2
         displayName: Write data to directory
         inputs:
-          filePath: 'frontend\pipeline-copy-variables-to-file-command.ps1'
+          filePath: '**\frontend\pipeline-copy-variables-to-file-command.ps1'
           arguments: '-DoitContainerVersion $(tag)'
       - task: CopyFiles@2
         displayName: Copying directory
