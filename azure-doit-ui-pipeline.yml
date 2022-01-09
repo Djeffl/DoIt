@@ -35,6 +35,12 @@ stages:
   - job: Set_Artifacts
     displayName: Set Artifacts
     steps:
+      - task: PublishBuildArtifacts@1
+        displayName: Publish artifacts
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'docker-info'
+          publishLocation: 'Container'
       - task: PowerShell@2
         displayName: Write data to directory
         inputs:
