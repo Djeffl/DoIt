@@ -41,11 +41,21 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'docker-info'
           publishLocation: 'Container'
-      - task: PowerShell@2
-        displayName: Write data to directory
+          
+      - task: Bash@3
         inputs:
-          filePath: '**\frontend\pipeline-copy-variables-to-file-command.ps1'
-          arguments: '-DoitContainerVersion $(tag)'
+          targetType: 'inline'
+          script: |
+            mkdir $(Build.ArtifactStagingDirectory)/Variables
+            echo "$(tag)" > $(Build.ArtifactStagingDirectory)/Variables/Version.variable
+            echo "$(Build.ArtifactStagingDirectory)/Variables/Version.variable"
+        displayName: 'Create Variable Files'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Variables'
+          ArtifactName: 'Variables'
+          publishLocation: 'Container'
+        displayName: 'Publish Variables Artifact'
       - task: CopyFiles@2
         displayName: Copying directory
         inputs:
