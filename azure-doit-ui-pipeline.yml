@@ -21,7 +21,7 @@ stages:
     - task: Docker@2
       displayName: Build UI Image
       inputs:
-        containerRegistry: 'Azure-DoIt-Container-registry'
+        containerRegistry: 'azure-container-registry'
         repository: 'djeff/doit-ui'
         command: 'build'
         Dockerfile: '**/Dockerfile.ui'
