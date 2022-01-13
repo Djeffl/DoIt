@@ -30,14 +30,32 @@ stages:
         containerRegistry: 'Azure-DoIt-Container-registry'
         repository: 'djeff/doit-api'
         command: 'push'
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
-    - task: PublishPipelineArtifact@1
-      displayName: Publish docker compose-files
-      inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/docker'
-        artifact: 'Docker-compose'
-        publishLocation: 'pipeline'
+  
+  - job: Set_Artifacts
+    displayName: Set Artifacts
+    steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir $(Build.ArtifactStagingDirectory)/Variables
+            echo "$(tag)" > $(Build.ArtifactStagingDirectory)/Variables/Version.variable
+            echo "$(Build.ArtifactStagingDirectory)/Variables/Version.variable"
+        displayName: 'Create Variable Files'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Variables'
+          ArtifactName: 'Variables'
+          publishLocation: 'Container'
+        displayName: 'Publish Variables Artifact'
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
+      - task: PublishPipelineArtifact@1
+        displayName: Publish docker compose-files
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/docker'
+          artifact: 'Docker-compose'
+          publishLocation: 'pipeline'
