@@ -34,7 +34,7 @@ stages:
         command: 'push'
   - job: Set_Artifacts
     displayName: Set Artifacts
-    steps:          
+    steps:
       - task: Bash@3
         inputs:
           targetType: 'inline'
