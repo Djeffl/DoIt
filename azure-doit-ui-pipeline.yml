@@ -29,7 +29,7 @@ stages:
     - task: Docker@2
       displayName: Push API Image
       inputs:
-        containerRegistry: 'Azure-DoIt-Container-registry'
+        containerRegistry: 'azure-container-registry'
         repository: 'djeff/doit-ui'
         command: 'push'
   - job: Set_Artifacts
