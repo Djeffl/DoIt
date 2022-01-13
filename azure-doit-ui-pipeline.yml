@@ -13,35 +13,28 @@ variables:
 stages:
 - stage: Build_and_Push_UI_Image
   jobs:
-  # - job: Build_and_Push_Image
-  #   displayName: Build & Push Image
-  #   pool:
-  #     vmImage: ubuntu-latest
-  #   steps:
-  #   - task: Docker@2
-  #     displayName: Build UI Image
-  #     inputs:
-  #       containerRegistry: 'Azure-DoIt-Container-registry'
-  #       repository: 'djeff/doit-ui'
-  #       command: 'build'
-  #       Dockerfile: '**/Dockerfile.ui'
-  #       tags: '$(tag)'
-  #   - task: Docker@2
-  #     displayName: Push API Image
-  #     inputs:
-  #       containerRegistry: 'Azure-DoIt-Container-registry'
-  #       repository: 'djeff/doit-ui'
-  #       command: 'push'
+  - job: Build_and_Push_Image
+    displayName: Build & Push Image
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build UI Image
+      inputs:
+        containerRegistry: 'Azure-DoIt-Container-registry'
+        repository: 'djeff/doit-ui'
+        command: 'build'
+        Dockerfile: '**/Dockerfile.ui'
+        tags: '$(tag)'
+    - task: Docker@2
+      displayName: Push API Image
+      inputs:
+        containerRegistry: 'Azure-DoIt-Container-registry'
+        repository: 'djeff/doit-ui'
+        command: 'push'
   - job: Set_Artifacts
     displayName: Set Artifacts
-    steps:
-      - task: PublishBuildArtifacts@1
-        displayName: Publish artifacts
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'docker-info'
-          publishLocation: 'Container'
-          
+    steps:          
       - task: Bash@3
         inputs:
           targetType: 'inline'
@@ -56,16 +49,15 @@ stages:
           ArtifactName: 'Variables'
           publishLocation: 'Container'
         displayName: 'Publish Variables Artifact'
-      # - task: CopyFiles@2
-      #   displayName: Copying directory
-      #   inputs:
-      #     SourceFolder: '$(System.DefaultWorkingDirectory)/docker-info'
-      #     Contents: '**'
-      #     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      # - task: PublishBuildArtifacts@1
-      #   displayName: Publish artifacts
-      #   inputs:
-      #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      #     ArtifactName: 'docker-info'
-      #     publishLocation: 'Container'
-  
+      - task: CopyFiles@2
+        displayName: Copying directory
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/docker-info'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        displayName: Publish artifacts
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'docker-info'
+          publishLocation: 'Container'
