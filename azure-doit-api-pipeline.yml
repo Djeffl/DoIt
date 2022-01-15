@@ -30,6 +30,14 @@ stages:
         containerRegistry: 'azure-container-registry'
         repository: 'djeff/doit-api'
         command: 'push'
+    
+  - job: Create_DB_Migrations
+    displayName: Create DB Migrations
+    steps:
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: 'dotnet ef migrations script'
   
   - job: Set_Artifacts
     displayName: Set Artifacts
