@@ -34,6 +34,11 @@ stages:
   - job: Create_DB_Migrations
     displayName: Create DB Migrations
     steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET Core sdk'
+        inputs:
+          packageType: sdk
+          version: 3.1.402
       - task: DotNetCoreCLI@2
         inputs:
           command: 'custom'
