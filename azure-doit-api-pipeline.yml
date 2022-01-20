@@ -35,10 +35,10 @@ stages:
     displayName: Create DB Migrations
     steps:
       - task: DotNetCoreCLI@2
-        displayName: Install Dotnet EF CLI
         inputs:
           command: 'custom'
-          custom: 'install --global dotnet-ef'
+          custom: 'tool install  dotnet-ef'
+          arguments: '--global'
       - task: PowerShell@2
         displayName: Create migrations script
         inputs:
