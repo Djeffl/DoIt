@@ -38,7 +38,7 @@ stages:
         displayName: 'Use .NET Core sdk'
         inputs:
           packageType: sdk
-          version: 5.0.0
+          version: 5.0.13
       - task: DotNetCoreCLI@2
         inputs:
           command: 'custom'
