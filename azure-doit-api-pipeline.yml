@@ -34,6 +34,17 @@ stages:
   - job: Create_DB_Migrations
     displayName: Create DB Migrations
     steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET Core sdk 5.0.100'
+        inputs:
+          packageType: 'sdk'
+          version: '5.0.100'
+          includePreviewVersions: true
+      - task: DotNetCoreCLI@2
+        displayName: 'dotnet restore'
+        inputs:
+          command: restore
+          projects: '**/*.csproj'
       - task: DotNetCoreCLI@2
         displayName: Build project
         inputs:
