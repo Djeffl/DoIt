@@ -72,7 +72,7 @@ stages:
           targetPath: '$(Build.ArtifactStagingDirectory)/db'
           artifact: 'db'
           publishLocation: 'pipeline'
-  - job: Set_Artifacts
+  - job: Set_Docker_Artifacts
     displayName: Set Artifacts
     dependsOn: Create_DB_Migrations
     steps:
