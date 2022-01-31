@@ -11,74 +11,70 @@ variables:
 stages:
 - stage: Build_and_Push_API_Image
   jobs:
-  # - job: Build_and_Push_Image
-  #   displayName: Build & Push Image
-  #   pool:
-  #     vmImage: ubuntu-latest
-  #   steps:
-  #   - task: Docker@2
-  #     displayName: Build API Image
-  #     inputs:
-  #       containerRegistry: 'azure-container-registry'
-  #       repository: 'djeff/doit-api'
-  #       command: 'build'
-  #       Dockerfile: '**/Dockerfile.api'
-  #       tags: '$(tag)'
-  #   - task: Docker@2
-  #     displayName: Push API Image
-  #     inputs:
-  #       containerRegistry: 'azure-container-registry'
-  #       repository: 'djeff/doit-api'
-  #       command: 'push'
+  - job: Build_and_Push_Image
+    displayName: Build & Push Image
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build API Image
+      inputs:
+        containerRegistry: 'azure-container-registry'
+        repository: 'djeff/doit-api'
+        command: 'build'
+        Dockerfile: '**/Dockerfile.api'
+        tags: '$(tag)'
+    - task: Docker@2
+      displayName: Push API Image
+      inputs:
+        containerRegistry: 'azure-container-registry'
+        repository: 'djeff/doit-api'
+        command: 'push'
     
   - job: Create_DB_Migrations
     displayName: Create DB Migrations
     steps:
-      # - task: UseDotNet@2
-      #   displayName: 'Use .NET Core sdk'
-      #   inputs:
-      #     packageType: sdk
-      #     version: 5.0.13
+      - task: DotNetCoreCLI@2
+        displayName: Build project
+        inputs:
+          command: 'build'
+          projects: '**/*.csproj'
       - task: PowerShell@2
         inputs:
           targetType: 'inline'
           script: 'dotnet tool install dotnet-ef --global'
-      # - task: DotNetCoreCLI@2
-      #   inputs:
-      #     command: 'custom'
-      #     custom: 'tool install dotnet-ef'
-      #     arguments: '--global'
+        displayName: 'Install dotnet ef tool'
       - task: PowerShell@2
         displayName: Create migrations script
         inputs:
           targetType: 'inline'
           script: 'dotnet ef migrations script'
   
-  # - job: Set_Artifacts
-  #   displayName: Set Artifacts
-  #   steps:
-  #     - task: Bash@3
-  #       inputs:
-  #         targetType: 'inline'
-  #         script: |
-  #           mkdir $(Build.ArtifactStagingDirectory)/Variables
-  #           echo "$(tag)" > $(Build.ArtifactStagingDirectory)/Variables/Version.variable
-  #           echo "$(Build.ArtifactStagingDirectory)/Variables/Version.variable"
-  #       displayName: 'Create Variable Files'
-  #     - task: PublishBuildArtifacts@1
-  #       inputs:
-  #         PathtoPublish: '$(Build.ArtifactStagingDirectory)/Variables'
-  #         ArtifactName: 'Variables'
-  #         publishLocation: 'Container'
-  #       displayName: 'Publish Variables Artifact'
-  #     - task: CopyFiles@2
-  #       inputs:
-  #         SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
-  #         Contents: '**'
-  #         TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
-  #     - task: PublishPipelineArtifact@1
-  #       displayName: Publish docker compose-files
-  #       inputs:
-  #         targetPath: '$(Build.ArtifactStagingDirectory)/docker'
-  #         artifact: 'Docker-compose'
-  #         publishLocation: 'pipeline'
+  - job: Set_Artifacts
+    displayName: Set Artifacts
+    steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir $(Build.ArtifactStagingDirectory)/Variables
+            echo "$(tag)" > $(Build.ArtifactStagingDirectory)/Variables/Version.variable
+            echo "$(Build.ArtifactStagingDirectory)/Variables/Version.variable"
+        displayName: 'Create Variable Files'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/Variables'
+          ArtifactName: 'Variables'
+          publishLocation: 'Container'
+        displayName: 'Publish Variables Artifact'
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/docker'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/docker'
+      - task: PublishPipelineArtifact@1
+        displayName: Publish docker compose-files
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/docker'
+          artifact: 'Docker-compose'
+          publishLocation: 'pipeline'
