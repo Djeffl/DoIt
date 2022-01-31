@@ -44,12 +44,12 @@ stages:
         displayName: 'dotnet restore'
         inputs:
           command: restore
-          projects: '**/*.csproj'
+          projects: '**/DoIt.Api.csproj'
       - task: DotNetCoreCLI@2
         displayName: Build project
         inputs:
           command: 'build'
-          projects: '**/*.csproj'
+          projects: '**/DoIt.Api.csproj'
       - task: PowerShell@2
         inputs:
           targetType: 'inline'
