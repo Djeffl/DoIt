@@ -59,7 +59,9 @@ stages:
         displayName: Create migrations script
         inputs:
           targetType: 'inline'
-          script: 'dotnet ef migrations script --project backend/DoIt.Api/DoIt.Api.csproj | out-file $(System.DefaultWorkingDirectory)/db/migration_script.sql'
+          script: |
+            mkdir $(System.DefaultWorkingDirectory)/db
+            dotnet ef migrations script --project backend/DoIt.Api/DoIt.Api.csproj | out-file $(System.DefaultWorkingDirectory)/db/migration_script.sql
   
   - job: Set_Artifacts
     displayName: Set Artifacts
