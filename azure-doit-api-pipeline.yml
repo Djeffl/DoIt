@@ -62,7 +62,16 @@ stages:
           script: |
             mkdir $(System.DefaultWorkingDirectory)/db
             dotnet ef migrations script --project backend/DoIt.Api/DoIt.Api.csproj | out-file $(System.DefaultWorkingDirectory)/db/migration_script.sql
-  
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/db'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/db'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/db'
+          artifact: 'db'
+          publishLocation: 'pipeline'
   - job: Set_Artifacts
     displayName: Set Artifacts
     dependsOn: Create_DB_Migrations
@@ -92,13 +101,4 @@ stages:
           targetPath: '$(Build.ArtifactStagingDirectory)/docker'
           artifact: 'Docker-compose'
           publishLocation: 'pipeline'
-      - task: CopyFiles@2
-        inputs:
-          SourceFolder: '$(System.DefaultWorkingDirectory)/db'
-          Contents: '**'
-          TargetFolder: '$(Build.ArtifactStagingDirectory)/db'
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)/db'
-          artifact: 'db'
-          publishLocation: 'pipeline'
+      
