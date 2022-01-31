@@ -89,3 +89,8 @@ stages:
           targetPath: '$(Build.ArtifactStagingDirectory)/docker'
           artifact: 'Docker-compose'
           publishLocation: 'pipeline'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/db'
+          artifact: 'db'
+          publishLocation: 'pipeline'
