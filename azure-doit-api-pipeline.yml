@@ -59,7 +59,7 @@ stages:
         displayName: Create migrations script
         inputs:
           targetType: 'inline'
-          script: 'dotnet ef migrations script'
+          script: 'dotnet ef migrations script --project **/DoIt.Api.csproj'
   
   - job: Set_Artifacts
     displayName: Set Artifacts
