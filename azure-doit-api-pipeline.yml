@@ -30,9 +30,51 @@ stages:
         containerRegistry: 'azure-container-registry'
         repository: 'djeff/doit-api'
         command: 'push'
-  
-  - job: Set_Artifacts
+    
+  - job: Create_DB_Migrations
+    displayName: Create DB Migrations
+    steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET Core sdk 5.0.100'
+        inputs:
+          packageType: 'sdk'
+          version: '5.0.100'
+          includePreviewVersions: true
+      - task: DotNetCoreCLI@2
+        displayName: 'dotnet restore'
+        inputs:
+          command: restore
+          projects: '**/DoIt.Api.csproj'
+      - task: DotNetCoreCLI@2
+        displayName: Build project
+        inputs:
+          command: 'build'
+          projects: '**/DoIt.Api.csproj'
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: 'dotnet tool install dotnet-ef --global'
+        displayName: 'Install dotnet ef tool'
+      - task: PowerShell@2
+        displayName: Create migrations script
+        inputs:
+          targetType: 'inline'
+          script: |
+            mkdir $(System.DefaultWorkingDirectory)/db
+            dotnet ef migrations script --project backend/DoIt.Api/DoIt.Api.csproj -o $(System.DefaultWorkingDirectory)/db/migration_script.sql
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)/db'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)/db'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/db'
+          artifact: 'db'
+          publishLocation: 'pipeline'
+  - job: Set_Docker_Artifacts
     displayName: Set Artifacts
+    dependsOn: Create_DB_Migrations
     steps:
       - task: Bash@3
         inputs:
@@ -59,3 +101,4 @@ stages:
           targetPath: '$(Build.ArtifactStagingDirectory)/docker'
           artifact: 'Docker-compose'
           publishLocation: 'pipeline'
+      
