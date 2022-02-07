@@ -61,7 +61,7 @@ stages:
           targetType: 'inline'
           script: |
             mkdir $(System.DefaultWorkingDirectory)/db
-            dotnet ef migrations script --project backend/DoIt.Api/DoIt.Api.csproj -o $(System.DefaultWorkingDirectory)/db/migration_script.sql
+            dotnet ef migrations script --project backend/DoIt.Api/DoIt.Api.csproj -o $(System.DefaultWorkingDirectory)/db/migration_script.sql --idempotent
       - task: CopyFiles@2
         inputs:
           SourceFolder: '$(System.DefaultWorkingDirectory)/db'
