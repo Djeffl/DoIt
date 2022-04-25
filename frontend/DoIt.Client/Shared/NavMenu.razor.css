@@ -126,7 +126,7 @@
         bottom: 0;
     }
 
-.nav-item.active {
+.active {
     fill: var(--accent);
     filter: initial;
 }
