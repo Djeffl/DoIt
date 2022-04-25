@@ -11,6 +11,8 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using DoIt.Client.Settings;
+
 namespace DoIt.Client
 {
 	public class Program
@@ -18,17 +20,19 @@ namespace DoIt.Client
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+            var configuration = builder.Configuration;
             builder.RootComponents.Add<App>("#app");
 
             AddCoreServices(builder);
 
-            if (builder.HostEnvironment.IsDevelopment())
+            if (configuration.GetValue<bool>("MockApplication"))
             {
                 AddMockingServices(builder);
             }
             else
             {
-                AddImplementedServices(builder);
+                AddImplementedServices(builder, configuration);
             }
 
 
@@ -53,9 +57,10 @@ namespace DoIt.Client
             builder.Services.AddSingleton<ModalService>();
         }
 
-        private static void AddImplementedServices(WebAssemblyHostBuilder builder)
+        private static void AddImplementedServices(WebAssemblyHostBuilder builder, IConfiguration configuration)
         {
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:1001") });
+            var apiSettings = configuration.GetSection(ApiSettings.ApiKey).Get<ApiSettings>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiSettings.Url) });
             builder.Services.AddScoped(typeof(ITodoService), typeof(TodoService));
             builder.Services.AddScoped(typeof(IGoalService), typeof(GoalService));
             builder.Services.AddScoped(typeof(IIdeaService), typeof(IdeaService));

@@ -3,7 +3,14 @@
 @using DoIt.Client.Components.Menus;
 @using DoIt.Client.Models.Icons;
 @using DoIt.Client.Components.Icons;
+@using Microsoft.Extensions.Configuration
 
+@inject IConfiguration Configuration
+
+<h1>
+    Test
+    @Configuration["h1FontSize"]
+</h1>
 <MenuComponent>
     <MenuItems>
         <MenuItemComponent Icon=IconType.Bike Title="Log Hello" OnClick="LogHello"></MenuItemComponent>

@@ -2,24 +2,45 @@
 <html>
 
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<title>DoIt.Client</title>
-	<base href="/" />
-	<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-	<link href="css/app.css" rel="stylesheet" />
-	<link href="manifest.json" rel="manifest" />
-	<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-	<link href="DoIt.Client.styles.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DoIt.Client</title>
+    <base href="/" />
+    <!--<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />-->
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link href="DoIt.Client.styles.css" rel="stylesheet" />
 </head>
 
 <body>
-	<div id="app">Loading...</div>
-	<script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
-	<script src="_framework/blazor.webassembly.js"></script>
-	<script>navigator.serviceWorker.register('service-worker.js');</script>
-	<script>
-	</script>
+    <div id="app">Loading...</div>
+    <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="true"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>
+        //if (window.location.hostname.includSes("localhost") || window.location.hostname.includes("dev")) {
+        //    Blazor.start({
+        //        environment: "Development"
+        //    });
+        //}
+        //else if (window.location.hostname.includes("demo")) {
+        //    Blazor.start({
+        //        environment: "Demo"
+        //    });
+        //}
+        //else if (window.location.hostname.includes("stage")) {
+        //    Blazor.start({
+        //        environment: "Staging"
+        //    });
+        //}
+        //else {
+        //    Blazor.start({
+        //        environment: "Production"
+        //    });
+        //}
+    </script>
+
 </body>
 
 </html>

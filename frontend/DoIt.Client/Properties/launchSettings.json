@@ -8,23 +8,16 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}"
-    },
     "DoIt.Client": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Acceptance"
+        "ASPNETCORE_ENVIRONMENT": "Local"
       },
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
-      "dotnetRunMessages": "true"
+      "applicationUrl": "https://localhost:8001;http://localhost:8000",
+      "dotnetRunMessages": "true",
+      "nativeDebugging": true
     },
     "Docker": {
       "commandName": "Docker",
