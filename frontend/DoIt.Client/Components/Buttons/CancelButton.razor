@@ -1,4 +1,11 @@
-﻿<button class="cancel-button button" @onclick="OnClick">Cancel</button>
+﻿@using DoIt.Client.Models.General;
+@using DoIt.Client.Models.Icons;
+
+<button class="cancel-button button" type="reset" @onclick="OnClick">
+	<DoIt.Client.Components.Icons.IconComponent Icon="IconType.Cancel" Color="AppColor.Gray">
+
+	</DoIt.Client.Components.Icons.IconComponent>
+</button>
 
 @code {
 	[Parameter]

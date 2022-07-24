@@ -82,7 +82,7 @@
                 <p class="nav-item-title">Add</p>
             </button>
         </li>
-        <li class="nav-item align-bottom order-last-2">
+        @* <li class="nav-item align-bottom order-last-2">
             <AuthorizeView>
                 <Authorized>
                     <button @onclick="(e) => SignOut(e)">
@@ -94,8 +94,8 @@
                     </button>
                 </Authorized>
             </AuthorizeView>
-        </li>
-        <li class="nav-item align-bottom order-last-1">
+        </li> *@
+        <li class="nav-item align-bottom order-last-1 nav-item-expand">
             <button @onclick="() => expand()">
                 <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24"
                      viewBox="0 0 24 24" width="24">
@@ -193,12 +193,12 @@
 
     private void OpenAddNewGoal()
     {
-        Modal.Show<GoalCreatePage>();
+        Modal.Show<GoalCreatePage>("Create Goal");
     }
 
     private void OpenAddNewIdea()
     {
-        Modal.Show<IdeaCreatePage>();
+        Modal.Show<IdeaCreatePage>("Create Idea");
     }
 
 

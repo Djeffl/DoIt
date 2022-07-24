@@ -1,10 +1,11 @@
 ﻿button.cancel-button.button {
-	border: none 1px;
-	outline: none;
-	color: white;
-	background-color: #717171;
+  border: none 1px;
+  outline: none;
+  color: #717171;
+  background: none;
+  height: 35px;
 }
 
-	button.cancel-button.button:hover {
-		background-color: #5a5a5a;
-	}
+button.cancel-button.button:hover {
+  color: #5a5a5a;
+}

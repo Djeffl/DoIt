@@ -1,10 +1,18 @@
-﻿using DoIt.Client.Models;
+﻿using System;
+
+using DoIt.Client.Models;
 using DoIt.Client.Models.Goals;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks;
+
+using DoIt.Client.Models.Todos;
+using DoIt.Interface.Goals;
+
 
 namespace DoIt.Client.Services.Goals
 {
@@ -18,24 +26,53 @@ namespace DoIt.Client.Services.Goals
 			this.client = client;
 		}
 
-		public async Task<GoalDto> CreateGoalAsync(GoalCreate goal)
+		public async Task<GoalDto> CreateGoalAsync(CreateGoalRequest goal)
 		{
-			System.Console.WriteLine("Trying to create a goal...");
 			var response = await client.PostAsJsonAsync(_baseUrl, goal);
-			System.Console.WriteLine("Create goal..");
-			var jsonContent = await response.Content.ReadAsStringAsync();
-			System.Console.WriteLine("response", jsonContent);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception();
+            }
 
-			return JsonConvert.DeserializeObject<GoalDto>(jsonContent);
+			var jsonContent = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<GoalDto>(jsonContent);
 		}
 
 		public async Task DeleteGoalAsync(long goalId)
 		{
-			System.Console.WriteLine("Deleting goal... API CALL...");
-			await client.DeleteAsync($"api/goals/{goalId}");
+			await client.DeleteAsync($"{_baseUrl}/{goalId}");
 		}
 
-		public async Task<GoalsDto> GetAllAsync()
+        public async Task<TodoDto> CreateGoalTodoAsync(long goalId, CreateTodoDto createTodoDto)
+        {
+			var response = await client.PostAsJsonAsync($"{_baseUrl}/{goalId}/todos", createTodoDto);
+            var jsonContent = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<TodoDto>(jsonContent);
+		}
+
+        public async Task<GoalDto> UpdateGoalAsync(long goalId, UpdateGoalRequest updateGoalRequest)
+        {
+            var json = JsonConvert.SerializeObject(updateGoalRequest);
+
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, MediaTypeNames.Application.Json);
+
+			var response = await client.PatchAsync($"{_baseUrl}/{goalId}", stringContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Updating goal failed.");
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            var result = JsonConvert.DeserializeObject<GoalDto>(responseString);
+
+            return result;
+        }
+
+        public async Task<GoalsDto> GetAllAsync()
 		{
 			return await client.GetFromJsonAsync<GoalsDto>("api/goals");
 		}

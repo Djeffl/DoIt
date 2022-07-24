@@ -1,44 +1,61 @@
 ﻿.cascading-modal-wrapper {
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	top: 0;
-	left: 0;
-	background-color: #00000029;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #00000029;
 }
 
 .cascading-modal {
-	background-color: white;
-	min-width: 375px;
-	min-height: 225px;
-	display: grid;
-	grid-template-rows: [first] 44px[Rest] auto;
+    overflow: auto;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    background-color: var(--bg-primary);
+    max-width: 100vw;
+    min-width: 100vw;
+    min-height: 100vh;
+    max-height: 100vh;
+    /* min-width: 375px; */
+    /* min-height: 225px; */
+    display: grid;
+    grid-template-rows: [first] 44px[Rest] auto;
 }
 
-
 .cascading-modal-center {
-	left: 50%;
-	top: 50%;
-	position: absolute;
-	width: auto;
-	height: auto;
-	transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    border-radius: 7px;
+}
+
+.top-modal {
+    display: grid;
+    grid-template-columns: auto [title] 50px [close];
+    align-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--bg-secondary);
+    padding: 1rem 0px;
 }
 
 .close-modal {
-	display: flex;
-	justify-content: flex-end;
-	padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
 }
 
-	.close-modal button {
-		border: none;
-		background: none;
-		right: 0px;
-		display: flex;
-		flex: initial;
-		justify-content: flex-end;
-	}
+    .close-modal button {
+        color: var(--text-primary);
+        border: none;
+        background: none;
+        right: 0px;
+        display: flex;
+        flex: initial;
+        justify-content: flex-end;
+    }
 
 .content-modal {
 }

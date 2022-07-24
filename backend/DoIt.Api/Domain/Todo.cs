@@ -7,7 +7,7 @@ namespace DoIt.Api.Domain
 {
 	public class Todo
 	{
-		public int Id { get; set; }
+		public long Id { get; set; }
 
 		public string Title { get; set; }
 
@@ -25,14 +25,13 @@ namespace DoIt.Api.Domain
 
 		//public Routine Routine { get; set; }
 
-		//public Goal Goal { get; set; }
-
+		public Goal Goal { get; set; }
 
 		//#region foreign Keys
 
-		//public int? RoutineId { get; set; }
+		public long? GoalId { get; set; }
 
-		//public int? GoalId { get; set; }
+        //public int? RoutineId { get; set; }
 
 		//#endregion
 	}

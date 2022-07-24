@@ -26,6 +26,7 @@ namespace DoIt.Client
 
             AddCoreServices(builder);
 
+            Console.WriteLine(configuration.GetValue<bool>("MockApplication"));
             if (configuration.GetValue<bool>("MockApplication"))
             {
                 AddMockingServices(builder);

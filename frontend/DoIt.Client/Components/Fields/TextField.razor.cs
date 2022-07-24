@@ -25,6 +25,14 @@ namespace DoIt.Client.Components.Fields
 		[Parameter]
 		public string InitialValue { get; set; }
 
+        private bool HasLabel
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(Label);
+            }
+        }
+		
 		private string LabelView
 		{
 			get
@@ -39,7 +47,7 @@ namespace DoIt.Client.Components.Fields
 
 			if (string.IsNullOrEmpty(Width))
 			{
-				Width = "320px";
+				Width = "auto";
 			}
 
 			this.Value = InitialValue;

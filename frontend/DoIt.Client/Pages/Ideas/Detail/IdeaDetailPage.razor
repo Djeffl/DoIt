@@ -1,26 +1,153 @@
-﻿@using DoIt.Client.Models.Ideas;
+﻿@using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Ideas;
+@using DoIt.Client.Components.Fields;
+@using DoIt.Client.Models.Icons;
+@using DoIt.Client.Models.General;
+@using DoIt.Client.Components.Modals.Confirm;
+@using DoIt.Client.Models.Goals
+
+
+@using DoIt.Client.Services.Modals;
+@using DoIt.Client.Services.Goals;
+@using DoIt.Interface.Goals
+
 
 @inherits BaseModalComponent<IdeaDetailParameter>
 
 @inject IIdeaService IdeaService;
+@inject IGoalService GoalService;
+@inject ModalService Modal;
+@inject NavigationManager NavigationManager;
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
 
-<section class="idea-detail">
-	<div class="title">
-		<h1>@Idea.Title</h1>
-	</div>
-	<div class="description">
-		<p>@Idea.Description</p>
-	</div>
+
+<section class="idea-detail @GetActive(SectionType.IdeaDetail)">
+    <EditForm Model="Idea" OnValidSubmit="UpdateIdeaAsync">
+        <div class="fields">
+            @* What is this? *@
+            <DataAnnotationsValidator />
+            <div class="field title-field">
+                <TextField @bind-Value="Idea.Title" Label="Title" IsMandatory="true" Width="100%"
+                           ValidationFor="@(() => Idea.Title)" />
+            </div>
+            <div class="field description-field">
+                <TextField @bind-Value="Idea.Description" Label="Description" Multiline="true" Width="100%"
+                           ValidationFor="@(() => Idea.Description)" />
+            </div>
+        </div>
+
+        <div class="actions">
+            <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+            </IconButton>
+            <IconButton OnClick="StartDeleteIdea" Text="Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
+            </IconButton>
+            <IconButton OnClick="StartUpgradeIdea" Text="Upgrade" Color="AppColor.White" ButtonType="button" Icon="IconType.Goal">
+            </IconButton>
+            <IconButton Text="Update" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.LightBulb">
+            </IconButton>
+        </div>
+    </EditForm>
 </section>
-
+<section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
+    <div class="description">
+        <p>Are you sure you want to delete idea '@Idea.Title'</p>
+    </div>
+    <div class="actions confirm-modal-actions">
+        <IconButton OnClick="() => GoIdeaDetailScreen()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+        </IconButton>
+        <IconButton OnClick="() => DeleteIdea()" Text="Yes" Color="AppColor.White" ButtonType="button" Icon="IconType.Check">
+        </IconButton>
+    </div>
+</section>
+<section class="promote-idea @GetActive(SectionType.UpgradeIdea)">
+    <h2>Upgrade Idea to Goal</h2>
+    <EditForm Model="UpgradedIdea" OnValidSubmit="UpgradeIdea">
+        @* What is this? *@
+        <DataAnnotationsValidator />
+        <TextField @bind-Value="UpgradedIdea.Title" Label="Title" IsMandatory="true" ValidationFor="@(() => UpgradedIdea.Title)" />
+        <div class="description-field">
+            <TextField @bind-Value="UpgradedIdea.Description" Label="Description" Multiline="true" Width="450px" ValidationFor="@(() => UpgradedIdea.Description)" />
+        </div>
+        @*<DateField @bind-Value="NewGoal.DueAt" Label="Due At" IsMandatory="true" ValidationFor="@(() => NewGoal.DueAt)" />*@
+        @*<SelectField @bind-Value="NewGoal.Type" Label="Type" Options="options" />*@
+        <div class="actions">
+            <IconButton OnClick="() => GoIdeaDetailScreen()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+            </IconButton>
+            <IconButton OnClick="() => DeleteIdea()" Text="Create" Color="AppColor.White" ButtonType="button" Icon="IconType.Goal">
+            </IconButton>
+        </div>
+    </EditForm>
+</section>
 @code {
-	public IdeaDto Idea { get; set; } = new IdeaDto();
+    public IdeaDto Idea { get; set; } = new IdeaDto();
+    public CreateGoalRequest UpgradedIdea { get; set; } = new CreateGoalRequest();
+    private SectionType ActiveSection;
 
-	protected async override Task OnInitializedAsync()
-	{
-		base.OnInitialized();
-		Console.WriteLine(Parameter.IdeaId);
-		Idea = await IdeaService.GetAsync(Parameter.IdeaId);
-	}
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        ActiveSection = SectionType.IdeaDetail;
+        Idea = await IdeaService.GetAsync(Parameter.IdeaId);
+        this.StateHasChanged();
+    }
+
+    private async Task UpdateIdeaAsync()
+    {
+        await IdeaService.UpdateIdeaAsync(Idea.Id, new UpdateIdeaDto()
+            {
+                Title = Idea.Title,
+                Description = Idea.Description
+            });
+
+        CloseModal(ActionType.Update, Idea);
+    }
+
+    private async void UpgradeIdea()
+    {
+        var response = await GoalService.CreateGoalAsync(UpgradedIdea);
+
+        NavigationManager.NavigateTo("/goals");
+    }
+
+    private void StartUpgradeIdea()
+    {
+        ActiveSection = SectionType.UpgradeIdea;
+        UpgradedIdea.Description = Idea.Description;
+        UpgradedIdea.Title = Idea.Title;
+    }
+
+    private void StartDeleteIdea()
+    {
+        GoConfirmScreen();
+    }
+
+    private void GoConfirmScreen()
+    {
+        ActiveSection = SectionType.ConfirmDelete;
+    }
+
+    private void GoIdeaDetailScreen()
+    {
+        ActiveSection = SectionType.IdeaDetail;
+    }
+
+    private async void DeleteIdea()
+    {
+        await IdeaService.DeleteAsync(Idea.Id);
+
+        Modal.Close(ActionType.Delete, Idea);
+    }
+
+    private string GetActive(SectionType sectionType)
+    {
+        return ActiveSection == sectionType ? "active" : "";
+    }
+
+    private enum SectionType
+    {
+        IdeaDetail,
+        ConfirmDelete,
+        UpgradeIdea
+    }
 }

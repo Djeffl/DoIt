@@ -7,26 +7,30 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace DoIt.Api.Migrations
 {
     [DbContext(typeof(DoItContext))]
-    [Migration("20210507221719_Add_TodoAndGoalTable")]
-    partial class Add_TodoAndGoalTable
+    [Migration("20220623183057_Initial_Migration")]
+    partial class Initial_Migration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("DoIt.Api.Domain.Goal", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -48,15 +52,38 @@ namespace DoIt.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Goals");
+                    b.ToTable("Goals", "dbo");
+                });
+
+            modelBuilder.Entity("DoIt.Api.Domain.Idea", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ideas", "dbo");
                 });
 
             modelBuilder.Entity("DoIt.Api.Domain.Todo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -70,8 +97,8 @@ namespace DoIt.Api.Migrations
                     b.Property<DateTime?>("FinishedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("GoalId")
-                        .HasColumnType("int");
+                    b.Property<long?>("GoalId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsFinished")
                         .HasColumnType("bit");
@@ -86,14 +113,21 @@ namespace DoIt.Api.Migrations
 
                     b.HasIndex("GoalId");
 
-                    b.ToTable("Todo");
+                    b.ToTable("Todo", "dbo");
                 });
 
             modelBuilder.Entity("DoIt.Api.Domain.Todo", b =>
                 {
-                    b.HasOne("DoIt.Api.Domain.Goal", null)
+                    b.HasOne("DoIt.Api.Domain.Goal", "Goal")
                         .WithMany("Todos")
                         .HasForeignKey("GoalId");
+
+                    b.Navigation("Goal");
+                });
+
+            modelBuilder.Entity("DoIt.Api.Domain.Goal", b =>
+                {
+                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,9 @@
-﻿@using DoIt.Client.Models.Icons
+﻿@using DoIt.Client.Models.Icons;
 @using DoIt.Client.Services.Icons;
+@using DoIt.Client.Models.General;
 
-<img src=@IconUrl style=@IconColorStyle height=@HeightAndWith width=@HeightAndWith />
+<img src=@IconUrl class="icon-img" style=@AppColorStyle height=@HeightAndWith width=@HeightAndWith
+     @onmouseover="() => active = true" @onmouseout="() => active = false" />
 @code {
     [Parameter]
     public IconType Icon { get; set; }
@@ -10,23 +12,32 @@
     public int? HeightAndWith { get; set; }
 
     [Parameter]
-    public IconColor Color { get; set; }
+    public AppColor Color { get; set; }
 
-    public string IconUrl => IconLocationUrlProvider.GetUrl(Icon);
+    private bool active = false;
 
-    public string IconColorStyle
+    public string IconUrl => IconLocationUrlProvider.GetUrl(Icon, active);
+
+    public string AppColorStyle
     {
         get
         {
-            switch(Color)
+            switch (Color)
             {
                 // https://isotropic.co/hex-color-to-css-filter/
-                case IconColor.Black:
+                case AppColor.Black:
                     return "filter: invert(0%) sepia(8%) saturate(7467%) hue-rotate(46deg) brightness(110%) contrast(107%);";
-                case IconColor.Gray:
-                    return "filter: invert(40%) sepia(0%) saturate(2425%) hue-rotate(20deg) brightness(95%) contrast(81%);";
-                case IconColor.White:
-                    return "filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(146deg) brightness(108%) contrast(101%);";
+                case AppColor.Gray:
+                    return active ? "filter: invert(34%) sepia(0%) saturate(51%) hue-rotate(157deg) brightness(100%) contrast(100%);" :
+                    "filter: invert(40%) sepia(0%) saturate(2425%) hue-rotate(20deg) brightness(95%) contrast(81%);";
+                case AppColor.White:
+                    return active ? "filter: invert(100%) sepia(1%) saturate(5376%) hue-rotate(176deg) brightness(96%) contrast(88%);" :
+                    "filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(146deg) brightness(108%) contrast(101%);";
+                case AppColor.Yellow:
+                    return "filter: invert(78%) sepia(35%) saturate(516%) hue-rotate(4deg) brightness(94%) contrast(85%);";
+                case AppColor.Red:
+                    return active ? "filter: invert(47%) sepia(99%) saturate(337%) hue-rotate(314deg) brightness(78%) contrast(110%);" :
+                               "filter: invert(70%) sepia(2%) saturate(4725%) hue-rotate(311deg) brightness(91%) contrast(108%);";
                 default: return "";
             }
         }
@@ -36,9 +47,10 @@
     {
         base.OnParametersSet();
 
-        if(HeightAndWith == null)
+        if (HeightAndWith == null)
         {
             HeightAndWith = 24;
         }
     }
+
 }

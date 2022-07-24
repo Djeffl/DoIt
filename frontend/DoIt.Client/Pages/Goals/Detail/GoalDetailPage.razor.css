@@ -1,0 +1,58 @@
+﻿h2 {
+	margin: 10px;
+}
+
+div.section-content {
+	margin: 20px 25px;
+}
+
+section {
+    display: none;
+}
+
+section.active {
+    display: block;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+textarea {
+	width: 450px;
+	height: 200px;
+}
+
+.hidden {
+    display: none;
+}
+
+.action-plan-header {
+	display: flex;
+	align-items: center;
+}
+
+.action-plan-task {
+	display: flex;
+    align-items: center;
+}
+
+.action-plan-item-form {
+	display: flex;
+	align-items: flex-end;
+}
+
+.action-plan-item-field-spacing {
+    margin-right: 0.5rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.action-plan-content table tr {
+    display: flex;
+    align-items: center;
+}

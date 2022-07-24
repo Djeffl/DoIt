@@ -1,12 +1,13 @@
-﻿@inherits BaseModalComponent<ConfirmModalParameter>;
+﻿@using DoIt.Client.Models.General
+@inherits BaseModalComponent<ConfirmModalParameter>;
 
 <div class="confirm-modal">
 	<div class="description">
 		<p>@Parameter.Description</p>
 	</div>
 	<div class="confirm-modal-buttons">
-		<button class="confirm-modal-button-confirm" @onclick="ConfirmBtnClick">Confirm</button>
 		<button class="confirm-modal-button-cancel" @onclick="CancelBtnClick">Cancel</button>
+		<button class="confirm-modal-button-confirm" @onclick="ConfirmBtnClick">Confirm</button>
 	</div>
 </div>
 
@@ -26,12 +27,12 @@
 
 	private void ConfirmBtnClick()
 	{
-		this.CloseModal(true);
+		this.CloseModal(ActionType.Confirm, true);
 	}
 
 	private void CancelBtnClick()
 	{
-		this.CloseModal(false);
+		this.CloseModal(ActionType.Cancel, false);
 	}
 
 }

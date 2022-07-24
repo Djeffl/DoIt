@@ -1,3 +1,21 @@
-﻿.idea-detail {
-	padding: 7px;
+﻿.actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+.field {
+    margin: 1rem 0px;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    justify-content: space-around;
+}
+
+section {
+    display: none;
+}
+
+section.active {
+    display: block;
 }

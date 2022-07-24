@@ -1,3 +1,8 @@
-﻿.fields {
-	padding: 7px;
+﻿.field {
+    margin: 1rem 0px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
 }

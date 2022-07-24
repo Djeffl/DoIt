@@ -11,5 +11,9 @@ namespace DoIt.Api.Services.Goal.Dto
 		public GoalType Type { get; set; }
 
 		public DateTime DueAt{ get; set; }
-	}
+        
+        public string Location { get; set; }
+        
+        public string Reason { get; set; }
+    }
 }

@@ -1,6 +1,13 @@
 ﻿<div class="button-group">
-	<ConfirmButton OnClick="ConfirmButtonOnClick"></ConfirmButton>
 	<CancelButton OnClick="CancelButtonOnClick"></CancelButton>
+	@if (ConfirmButtonComponent != null)
+	{
+		@ConfirmButtonComponent
+	}
+	@if (ConfirmButtonComponent == null)
+	{
+		<ConfirmButton OnClick="ConfirmButtonOnClick"></ConfirmButton>
+	}
 </div>
 @code {
 	[Parameter]
@@ -8,4 +15,7 @@
 
 	[Parameter]
 	public Action CancelButtonOnClick { get; set; } = () => { };
+
+	[Parameter]
+	public RenderFragment ConfirmButtonComponent { get; set; }
 }

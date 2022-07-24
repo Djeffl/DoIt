@@ -5,7 +5,9 @@
 @using DoIt.Client.Services.Goals;
 @using DoIt.Client.Models.Menus;
 @using DoIt.Client.Components.Menus;
+@using DoIt.Client.Models.General
 @using DoIt.Client.Services.Modals;
+@using DoIt.Interface.Goals
 
 @inject NavigationManager NavManager
 @inject IGoalService GoalService
@@ -58,8 +60,8 @@
     {
         base.OnInitialized();
 
-        daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
-        dueDateText = Goal.DueAt.ToString("d");
+        //daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
+        //dueDateText = Goal.DueAt.ToString("d");
     }
 
     private void NavigateGoalDetailPage()
@@ -79,7 +81,7 @@
         ModalService.OnClose += OnConfirmRemoveGoalModalClose;
     }
 
-    private void OnConfirmRemoveGoalModalClose(object response)
+    private void OnConfirmRemoveGoalModalClose(ActionType actionType, object response)
     {
         var isConfirmed = (bool?)response;
         if (isConfirmed.HasValue && isConfirmed.Value)
@@ -90,7 +92,7 @@
         ModalService.OnClose -= OnConfirmRemoveGoalModalClose;
     }
 
-    private void OnConfirmCompleteGoalModalClose(object response)
+    private void OnConfirmCompleteGoalModalClose(ActionType actionType, object response)
     {
         var isConfirmed = (bool?)response;
         if (isConfirmed.HasValue && isConfirmed.Value)

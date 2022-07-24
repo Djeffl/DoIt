@@ -3,52 +3,89 @@
 @using DoIt.Client.Models.Goals;
 @using DoIt.Client.Services.Goals;
 @using DoIt.Client.Components.Fields;
+@using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Models.General
+@using DoIt.Client.Models.Icons
+@using DoIt.Interface.Goals
+@using Microsoft.AspNetCore.Components
 
 @inherits BaseModalComponent<GoalCreateParameter>
 
 @inject IGoalService GoalService
 
-<div class="new-goal">
-	<EditForm Model="NewGoal" OnValidSubmit="CreateGoalAsync">
-		@* What is this? *@
-		<DataAnnotationsValidator />
-		<TextField @bind-Value="NewGoal.Title" Label="Title" IsMandatory="true" ValidationFor="@(() => NewGoal.Title)" InitialValue=@NewGoal.Title />
-		<div class="description-field">
-			<TextField @bind-Value="NewGoal.Description" Label="Description" Multiline="true" Width="450px" ValidationFor="@(() => NewGoal.Description)" InitialValue=@NewGoal.Description />
-		</div>
-		@*<DateField @bind-Value="NewGoal.DueAt" Label="Due At" IsMandatory="true" ValidationFor="@(() => NewGoal.DueAt)" />*@
-		@*<SelectField @bind-Value="NewGoal.Type" Label="Type" Options="options" />*@
+<article class="goal-detail">
+    <EditForm Model="Goal" OnValidSubmit="CreateGoalAsync">
+        <div class="fields">
+            @* What is this? *@
+            <DataAnnotationsValidator />
+            <div class="field title-field">
+                <TextField @bind-Value="Goal.Title" Label="Title" IsMandatory="true" Width="100%"
+                           ValidationFor="@(() => Goal.Title)" />
+            </div>
+            <div class="field description-field">
+                <TextField @bind-Value="Goal.Description" Label="Description" Multiline="true" Width="100%"
+                           ValidationFor="@(() => Goal.Description)" />
+            </div>
+            <div class="field location-field">
+                <TextField @bind-Value="Goal.Location" Label="Location" Multiline="false" Width="100%"
+                           ValidationFor="@(() => Goal.Location)" />
+            </div>
+            <div class="field reason-field">
+                <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
+                           ValidationFor="@(() => Goal.Reason)" />
+            </div>
+            @*<div class="field type-field">
+                <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
+                />
+                </div>*@
+            <div class="field due-at-field">
+                <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
+                           ValidationFor="@(() => Goal.DueAt)" />
+            </div>
+        </div>
 
+        <div class="actions">
+            <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+            </IconButton>
+            <IconButton Text="Create" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
+            </IconButton>
+        </div>
 
-		<button class="submit-button" type="submit">Create</button>
-	</EditForm>
-</div>
+    </EditForm>
+</article>
+
 @code {
-	public GoalCreate NewGoal = new GoalCreate()
-	{
-		DueAt = DateTime.Now,
-	};
+    public CreateGoalRequest Goal = new CreateGoalRequest()
+        {
+            DueAt = DateTime.Now
+        };
 
-	//private List<string> options = ((GoalType[])Enum.GetValues(typeof(GoalType))).Select(t => t.ToString()).ToList();
+    //private List<string> options = ((GoalType[])Enum.GetValues(typeof(GoalType))).Select(t => t.ToString()).ToList();
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		Console.WriteLine(JsonConvert.SerializeObject(Parameter));
-		if (Parameter != null && Parameter.Idea != null)
-		{
-			this.NewGoal.IdeaId = Parameter.Idea.Id;
-			this.NewGoal.Title = Parameter.Idea.Title;
-			this.NewGoal.Description = Parameter.Idea.Description;
-		}
-	}
+        Console.WriteLine(JsonConvert.SerializeObject(Parameter));
+        //if (Parameter != null && Parameter.Idea != null)
+        //{
+        //	this.NewGoal.IdeaId = Parameter.Idea.Id;
+        //	this.NewGoal.Title = Parameter.Idea.Title;
+        //	this.NewGoal.Description = Parameter.Idea.Description;
+        //}
+    }
 
-	private async Task CreateGoalAsync()
-	{
-		var response = await GoalService.CreateGoalAsync(NewGoal);
+    private async Task CreateGoalAsync()
+    {
+        try
+        {
+            var response = await GoalService.CreateGoalAsync(Goal);
 
-		Console.WriteLine("Closing modal now...");
-		this.CloseModal();
-	}
+            this.CloseModal(ActionType.Create, response);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
 }

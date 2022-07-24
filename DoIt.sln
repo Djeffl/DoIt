@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoIt.Client", "frontend\DoI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoIt.Api", "backend\DoIt.Api\DoIt.Api.csproj", "{23EAC30D-2FF5-4167-A047-72877A68AADF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{7D1953F8-2468-44E0-A69D-2879EB59DC69}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoIt.Interface", "shared\DoIt.Interface\DoIt.Interface.csproj", "{4622A4D4-2D0E-404E-8F07-784FE23644E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,10 @@ Global
 		{23EAC30D-2FF5-4167-A047-72877A68AADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23EAC30D-2FF5-4167-A047-72877A68AADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23EAC30D-2FF5-4167-A047-72877A68AADF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4622A4D4-2D0E-404E-8F07-784FE23644E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4622A4D4-2D0E-404E-8F07-784FE23644E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4622A4D4-2D0E-404E-8F07-784FE23644E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4622A4D4-2D0E-404E-8F07-784FE23644E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +50,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{4A50CC64-098A-41B8-8B14-6A1F14DD1FA6} = {CCBB0BE4-1373-42F7-9146-8E591C4BC2C6}
 		{23EAC30D-2FF5-4167-A047-72877A68AADF} = {9727350A-33D7-409D-99C5-035C6A93ECB2}
+		{4622A4D4-2D0E-404E-8F07-784FE23644E8} = {7D1953F8-2468-44E0-A69D-2879EB59DC69}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {685C50F0-99A4-4575-958B-1DCD025BA3A0}

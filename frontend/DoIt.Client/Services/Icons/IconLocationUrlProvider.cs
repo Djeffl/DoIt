@@ -4,7 +4,7 @@ namespace DoIt.Client.Services.Icons
 {
     public class IconLocationUrlProvider
     {
-        public static string GetUrl(IconType iconType)
+        public static string GetUrl(IconType iconType, bool active = false)
         {
             switch (iconType)
             {
@@ -16,8 +16,17 @@ namespace DoIt.Client.Services.Icons
                 case IconType.KiteSurfing: return "svg/sport/kitesurfing-24px.svg";
                 case IconType.Pool: return "svg/sport/pool-24px.svg";
                 case IconType.MoreOptions: return "svg/general/more_vert_24dp.svg";
-                case IconType.Delete: return "svg/general/delete_24dp.svg";
+                case IconType.Delete: return active ? "svg/general/active/delete_24dp.svg" : "svg/general/delete_24dp.svg";
                 case IconType.CompleteAll: return "svg/general/done_all_24dp.svg";
+                case IconType.LightBulb:
+                    return active ? "svg/general/active/ligthbulb_black_24dp.svg" : "svg/general/lightbulb_black_24dp.svg";
+                case IconType.Goal:
+                    return "svg/general/goal_24dp.svg";
+                case IconType.Cancel: return "svg/general/cancel_black_24dp.svg";
+                case IconType.Add:
+                    return "svg/general/plus_thick_24dp.svg";
+                case IconType.Check:
+                    return "svg/general/check_24dp.svg";
                 default: return "favicon.ico";
             }
         }

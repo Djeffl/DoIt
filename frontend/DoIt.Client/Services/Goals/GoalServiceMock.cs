@@ -1,10 +1,12 @@
 ﻿using DoIt.Client.Models.Goals;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+
+using DoIt.Client.Models.Todos;
+using DoIt.Interface.Goals;
+
 
 namespace DoIt.Client.Services.Goals
 {
@@ -17,7 +19,7 @@ namespace DoIt.Client.Services.Goals
             this.client = client;
         }
 
-		public Task<GoalDto> CreateGoalAsync(GoalCreate goal)
+		public Task<GoalDto> CreateGoalAsync(CreateGoalRequest goal)
 		{
             return Task.Run(() => new GoalDto
             {
@@ -34,7 +36,17 @@ namespace DoIt.Client.Services.Goals
             return Task.CompletedTask; 
 		}
 
-		public async Task<GoalsDto> GetAllAsync()
+        public async Task<TodoDto> CreateGoalTodoAsync(long goalId, CreateTodoDto createTodoDto)
+        {
+            return new TodoDto();
+        }
+
+        public Task<GoalDto> UpdateGoalAsync(long goalId, UpdateGoalRequest updateGoalRequest)
+        {
+            return null;
+        }
+
+        public async Task<GoalsDto> GetAllAsync()
         {
             return await client.GetFromJsonAsync<GoalsDto>("sample-data/goals.json");
         }

@@ -1,107 +1,123 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DoIt.Api.Dto.Request;
-using DoIt.Api.Dto.Response;
 using DoIt.Api.Dto.Response.Goals;
+using DoIt.Api.Extensions;
 using DoIt.Api.Services;
 using DoIt.Api.Services.Goal.Dto;
+using DoIt.Api.Services.Todo;
+using DoIt.Api.Services.Todo.Dto;
+using DoIt.Interface.Goals;
+
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoIt.Api.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class GoalsController : ControllerBase
-	{
-		private readonly IGoalService _goalService;
+    [Route("api/goals")]
+    [ApiController]
+    public class GoalsController : ControllerBase
+    {
+        private readonly IGoalService _goalService;
+        private readonly ITodoService _todoService;
 
-		/// <summary>
-		/// C'tor
-		/// </summary>
-		public GoalsController(IGoalService goalService)
-		{
-			_goalService = goalService;
-		}
+        /// <summary>
+        /// C'tor
+        /// </summary>
+        public GoalsController(IGoalService goalService, ITodoService todoService)
+        {
+            _goalService = goalService;
+            _todoService = todoService;
+        }
 
-		[HttpGet]
-		[Route("")]
-		[AllowAnonymous]
-		public async Task<ActionResult<GoalsResponseDto>> GetGoals()
-		{
-			var result = await _goalService.GetGoalsAsync(new GetGoalsDto());
+        [HttpGet]
+        [Route("")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GoalsDto>> GetGoalsAsync()
+        {
+            var result = await _goalService.GetGoalsAsync(new GetGoalsDto());
 
-			if (result.Any())
-			{
-				var response = new GoalsResponseDto()
-				{
-					Data = result.Select(x => new GoalResponseDto
-					{
-						Title = x.Title,
-						Description = x.Description,
-					}).ToList()
-				};
+            return result;
+        }
 
-				return response;
-			}
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ActionResult<GoalDto>> GetGoalAsync([FromRoute] long id)
+        {
+            var result = await _goalService.GetGoalAsync(id);
 
-			return new GoalsResponseDto();
-		}
+            if (result != null)
+            {
+                return result;
+            }
 
-		[HttpGet]
-		[Route("{id}")]
-		public async Task<ActionResult<GoalResponseDto>> GetGoal([FromRoute] long id)
-		{
-			var result = await _goalService.GetGoalAsync(id);
+            return NotFound();
+        }
 
-			if (result != null)
-			{
-				return new GoalResponseDto
-				{
-					Title = result.Title,
-					Description = result.Description,
-				};
-			}
+        [HttpPost]
+        [Route("")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GoalDto>> CreateGoalAsync(CreateGoalRequest request)
+        {
+            //var isParsed = Enum.TryParse<GoalType>(request.Type, ignoreCase: true, out var goalType);
 
-			return NotFound();
-		}
+            //if (!isParsed)
+            //{
+            //	return BadRequest();
+            //}
 
-		[HttpPost]
-		[Route("")]
-		[AllowAnonymous]
-		public async Task<ActionResult<GoalResponseDto>> CreateGoal(CreateGoalRequest request)
-		{
-			//var isParsed = Enum.TryParse<GoalType>(request.Type, ignoreCase: true, out var goalType);
+            var result = await _goalService.CreateGoalAsync(
+                new CreateGoalDto
+                {
+                    Title = request.Title,
+                    Description = request.Description,
+                    Location = request.Location,
+                    Reason = request.Reason,
+                    DueAt = request.DueAt,
+                    //Type = goalType
+                }
+            );
 
-			//if (!isParsed)
-			//{
-			//	return BadRequest();
-			//}
+            var actionName = nameof(GoalsController.GetGoalAsync);
 
-			var result = await _goalService.CreateGoalAsync(
-				new CreateGoalDto
-				{
-					Description = request.Description,
-					DueAt = request.DueAt,
-					Title = request.Title,
-					//Type = goalType
-				}
-			);
+            return CreatedAtAction(actionName, new { id = result.Id }, result);
+        }
 
-			return CreatedAtAction(nameof(GetGoal), new { id = result.Id }, result);
-		}
+        [HttpDelete]
+        public async Task<IActionResult> DeleteGoalAsync([FromRoute] long id)
+        {
+            Console.WriteLine("Removing data...");
+            await _goalService.DeleteGoalAsync(id);
 
-		[HttpDelete]
-		public async Task<IActionResult> DeleteGoal([FromRoute] long id)
-		{
-			Console.WriteLine("Removing data...");
-			await _goalService.DeleteGoalAsync(id);
+            return Ok();
+        }
 
-			return Ok();
-		}
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<ActionResult<GoalDto>> UpdateGoalAsync([FromRoute] long id, UpdateGoalRequest request)
+        {
+            var result = await _goalService.UpdateGoalAsync(id, request);
 
-	}
+            return Ok(result);
+        }
+
+
+        [HttpPost]
+        [Route("{goalId:long}/todos")]
+        [AllowAnonymous]
+        public async Task<ActionResult<GoalResponseDto>> CreateGoalTodoAsync(long goalId, CreateTodoRequest request)
+        {
+            var result = await _todoService.CreateTodoAsync(new CreateTodoDto()
+            {
+                Title = request.Title,
+                GoalId = goalId
+            });
+
+            var actionName = nameof(TodosController.GetTodoById);
+            var controllerName = nameof(TodosController).ToControllerName();
+
+            return CreatedAtAction(actionName, controllerName, new { id = result.Id }, result);
+        }
+    }
 }

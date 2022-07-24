@@ -1,50 +1,59 @@
-﻿.goals-list {
-	border: 1px solid #828282;
-	list-style: none;
-	padding: 0;
+﻿.ideas-list {
+    list-style: none;
+    padding: 0;
 }
 
-.goals-list-item {
-	background-color: white;
-	padding: 6px 10px;
+.ideas-list-item {
+    background-color: var(--bg-primary);
+    padding: 2rem;
+    border-bottom: 6px solid var(--bg-secondary);
 }
 
-	.goals-list-item:hover {
-		background-color: #b5b5b51c;
-	}
-
+    .ideas-list-item:hover {
+        background-color: #b5b5b51c;
+    }
 
 article.idea {
-	display: grid;
-	grid-template-columns: [idea-data] 90% [idea-actions] 10%;
+    display: grid;
+    /* grid-template-columns: [idea-date] 25% [idea-data] 65% [idea-actions] 10%; */
 }
 
-	article.idea div.idea-description {
-		font-size: 10px;
-		color: #828282;
-	}
+    article.idea div.idea-description {
+        font-size: 0.8rem;
+        color: var(--text-sub);
+    }
+
+.idea .idea-date {
+    margin: auto 0;
+    font-size: 0.6rem;
+    color: #828282;
+}
+
+.idea .idea-data .idea-title {
+    font-size: 1rem;
+}
 
 .actions {
-	list-style: none;
-	padding: 0px;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+    list-style: none;
+    padding: 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
-	.actions li {
-		border: none;
-	}
+    .actions li {
+        border: none;
+    }
 
-		.actions li:hover {
-			background: none;
-		}
+        .actions li:hover {
+            background: none;
+        }
 
 .action {
-	background: none;
-	border: 0px;
-	outline: none;
+    background: none;
+    border: 0px;
+    outline: none;
 }
 
-	.action:hover {
-		color: #003000;
-	}
+    .action:hover {
+        color: #003000;
+    }

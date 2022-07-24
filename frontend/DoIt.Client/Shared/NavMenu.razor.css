@@ -10,6 +10,20 @@
 }*/
 
 .navbar {
+  position: fixed;
+  background-color: var(--bg-primary);
+  transition: width 600ms ease;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 80px;
+  width: 100vw;
+  padding: 0;
+  bottom: 0;
+  overflow: visible;
+}
+
+@media only screen and (min-width: 765px) {
+  .navbar {
     position: fixed;
     background-color: var(--bg-primary);
     transition: width 600ms ease;
@@ -18,55 +32,9 @@
     height: 100vh;
     width: 5rem;
     padding: 0;
-}
+  }
 
-    .navbar.expanded {
-        width: 300px;
-    }
-
-    .navbar .navbar-nav .nav-item .nav-item-title {
-        display: none;
-    }
-
-    .navbar.expanded .navbar-nav .nav-item .nav-item-title {
-        display: flex;
-    }
-
-.nav-item NavLink {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-}
-
-.nav-item-title {
-    color: var(--text-primary);
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-left: 1rem;
-    text-decoration: none;
-}
-
-    .nav-item-title:hover {
-        text-decoration: none;
-    }
-
-.navbar button svg {
-    transition: transform 600ms ease;
-}
-
-.navbar.expanded button svg {
-    transform: rotate(-180deg);
-}
-
-.navbar::-webkit-scrollbar {
-    width: 0.25rem;
-}
-
-.navbar::-webkit-scrollbar-track {
-    background: #1e1e24;
-}
-
-.navbar-nav {
+  .navbar-nav {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -75,75 +43,13 @@
     align-items: center;
     height: 100%;
     width: 100%;
-}
+  }
 
-.nav-item {
-    width: 100%;
+  .nav-item.nav-item-expand {
     display: flex;
-    align-items: center;
-    flex-direction: column;
-    min-height: 5rem;
-    color: var(--text-primary);
-    text-decoration: none;
-    filter: grayscale(100%) opacity(0.7);
-    transition: var(--transition-speed);
-    background: none;
-    border: none;
-    outline: none;
-    fill: var(--text-primary);
-    justify-content: center;
-    align-items: center;
-}
+  }
 
-    .nav-item:hover {
-        filter: grayscale(0%) opacity(1);
-        background: var(--bg-secondary);
-        color: var(--text-secondary);
-        fill: var(--accent);
-    }
-
-    .nav-item button {
-        background-color: inherit;
-        border: none;
-        outline: none;
-        width: 100%;
-        height: 5rem;
-    }
-
-.align-bottom {
-    margin-top: auto;
-}
-
-.nav-item.align-bottom {
-    position: absolute;
-}
-
-    .nav-item.align-bottom.order-last-2 {
-        bottom: 5rem;
-    }
-
-    .nav-item.align-bottom.order-last-1 {
-        bottom: 0;
-    }
-
-.active {
-    fill: var(--accent);
-    filter: initial;
-}
-
-.nav-item svg {
-    width: 2rem;
-    min-width: 2rem;
-    fill: inherit;
-}
-
-
-.active ~ .sub-link {
-    display: flex;
-    justify-content: center;
-}
-
-.sub-link {
+  .sub-link {
     display: none;
     align-items: center;
     color: var(--text-primary);
@@ -156,32 +62,178 @@
     fill: var(--text-primary);
     width: 100%;
     height: 2rem;
+  }
 }
 
-    .sub-link:hover {
-        filter: grayscale(0%) opacity(1);
-        background: var(--bg-secondary);
-        color: var(--text-secondary);
-        fill: var(--accent);
-    }
+.nav-item.nav-item-expand {
+  display: none;
+}
 
-    .sub-link.active {
-        fill: var(--accent);
-        filter: initial;
-    }
+.navbar.expanded {
+  width: 300px;
+}
 
-    .sub-link svg {
-        width: 2rem;
-        min-width: 2rem;
-        fill: inherit;
-    }
+.navbar .navbar-nav .nav-item .nav-item-title {
+  display: none;
+}
 
-    .sub-link p {
-        font-size: 1rem;
-    }
+.navbar.expanded .navbar-nav .nav-item .nav-item-title {
+  display: flex;
+}
+
+.nav-item NavLink {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.nav-item-title {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.nav-item-title:hover {
+  text-decoration: none;
+}
+
+.navbar button svg {
+  transition: transform 600ms ease;
+}
+
+.navbar.expanded button svg {
+  transform: rotate(-180deg);
+}
+
+.navbar::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+.navbar::-webkit-scrollbar-track {
+  background: #1e1e24;
+}
+
+.navbar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.nav-item {
+  width: 25%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  min-height: 5rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  /* filter: grayscale(100%) opacity(0.7); */
+  transition: var(--transition-speed);
+  background: none;
+  border: none;
+  outline: none;
+  fill: var(--text-primary);
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-item:hover {
+  /* filter: grayscale(0%) opacity(1); */
+  background: var(--bg-secondary);
+  color: var(--text-accent);
+  fill: var(--accent);
+}
+
+.nav-item button {
+  background-color: var(--bg-primary);
+  /* background-color: inherit; */
+  border: none;
+  outline: none;
+  width: 25%;
+  height: 3rem;
+}
+
+.align-bottom {
+  margin-top: auto;
+}
+
+.nav-item.align-bottom {
+  position: absolute;
+}
+
+.nav-item.align-bottom.order-last-2 {
+  bottom: 5rem;
+}
+
+.nav-item.align-bottom.order-last-1 {
+  bottom: 0;
+}
+
+.active {
+  fill: var(--accent);
+  filter: initial;
+}
+
+.nav-item svg {
+  width: 2rem;
+  min-width: 2rem;
+  fill: inherit;
+}
+
+.active ~ .sub-link {
+  display: flex;
+  justify-content: center;
+}
+
+.sub-link {
+  display: none;
+  align-items: center;
+  color: var(--text-primary);
+  text-decoration: none;
+  /* filter: grayscale(100%) opacity(0.7); */
+  transition: var(--transition-speed);
+  background: none;
+  border: none;
+  outline: none;
+  fill: var(--text-primary);
+  width: 25%;
+  height: 2rem;
+  position: absolute;
+  top: -3rem;
+  border-radius: 27px 27px 0px 0px;
+}
+
+.sub-link:hover {
+  /* filter: grayscale(0%) opacity(1); */
+  background: var(--bg-secondary);
+  color: var(--text-accent);
+  fill: var(--accent);
+}
+
+.sub-link.active {
+  fill: var(--accent);
+  filter: initial;
+}
+
+.sub-link svg {
+  width: 2rem;
+  min-width: 2rem;
+  fill: inherit;
+}
+
+.sub-link p {
+  font-size: 1rem;
+}
 
 .nav-link {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
 }

@@ -1,8 +1,22 @@
-﻿<button class="confirm-button button" type="submit" @onclick="OnClick">Confirm</button>
+﻿@using DoIt.Client.Models.General;
+
+<button class="confirm-button button" type="submit" @onclick="OnClick">
+	@* @Text *@
+	@IconComponent
+</button>
 
 @code {
 	[Parameter]
 	public Action OnClick { get; set; }
+
+	@* [Parameter]
+		public string Text { get; set; } = "Confirm"; *@
+
+	[Parameter]
+	public RenderFragment IconComponent { get; set; }
+
+	[Parameter]
+	public AppColor Color { get; set; }
 
 	protected override void OnInitialized()
 	{

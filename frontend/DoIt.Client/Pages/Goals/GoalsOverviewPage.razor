@@ -2,12 +2,12 @@
 
 @using Services.Goals;
 @using DoIt.Client.Components.Goals;
-@using DoIt.Client.Extensions;
 @using Blazored.SessionStorage;
+@using DoIt.Client.Models.General
 @using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Modals;
 @using DoIt.Client.Pages.Goals.Create;
-@using DoIt.Client.Models.Goals;
+@using DoIt.Interface.Goals
 
 @inject IGoalService GoalService;
 @inject NavigationManager NavManager;
@@ -24,7 +24,7 @@ else
 <section class="goals">
 	@foreach (var goal in Goals)
 	{
-		<GoalComponentTwo Goal="goal"></GoalComponentTwo>
+		<GoalComponent Goal="goal"></GoalComponent>
 	}
 
 	@*<section class="goals-category">
@@ -56,7 +56,7 @@ else
 
 	public async Task OpenCreateGoalModalIfIdeaWasPromotedAsync()
 	{
-		const string promotedIdea = "PromotedIdea";
+		const string promotedIdea = "UpgradedIdea";
 		var ideaToBePromotedToGoal = await SessionStorage.GetItemAsync<IdeaDto>(promotedIdea);
 
 		if (ideaToBePromotedToGoal == null)
@@ -64,7 +64,7 @@ else
 			return;
 		}
 
-		ModalService.Show<GoalCreatePage, GoalCreateParameter>(new GoalCreateParameter()
+		ModalService.Show<GoalCreatePage, GoalCreateParameter>("", new GoalCreateParameter()
 		{
 			Idea = ideaToBePromotedToGoal
 		});
@@ -72,9 +72,9 @@ else
 		await SessionStorage.SetItemAsync<IdeaDto>(promotedIdea, null);
 	}
 
-	private void OnModalClose(object response)
+	private void OnModalClose(ActionType actionType, object response)
 	{
-		if (response is GoalDto)
+		if (actionType == ActionType.Create)
 		{
 			var newGoal = response as GoalDto;
 			Goals.Add(newGoal);

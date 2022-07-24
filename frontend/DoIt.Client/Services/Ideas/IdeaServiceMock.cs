@@ -29,5 +29,10 @@ namespace DoIt.Client.Services.Ideas
 		{
 			return Task.CompletedTask;
 		}
-	}
+
+        public Task<IdeaDto> UpdateIdeaAsync(long ideaId, UpdateIdeaDto idea)
+        {
+            return Task.Run(() => new IdeaDto());
+		}
+    }
 }

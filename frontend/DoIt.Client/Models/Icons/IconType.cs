@@ -7,7 +7,7 @@ namespace DoIt.Client.Models.Icons
 {
     public enum IconType
     {
-        LightBulb, 
+        LightBulb,
         MoreOptions,
         Bike,
         Ski,
@@ -24,6 +24,10 @@ namespace DoIt.Client.Models.Icons
         Tennis,
         KiteSurfing,
         CompleteAll,
-        Delete
+        Delete,
+        Cancel,
+        Goal,
+        Check,
+        Add
     }
 }

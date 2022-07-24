@@ -4,6 +4,8 @@
 @using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
+@using DoIt.Client.Models.Icons;
+@using DoIt.Client.Models.General;
 
 @inherits BaseModalComponent
 
@@ -13,25 +15,33 @@
 	<div class="fields">
 		@* What is this? *@
 		<DataAnnotationsValidator />
-		<div class="field title-field">
-			<TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" ValidationFor="@(() => NewIdea.Title)" />
-		</div>
+        <div class="field title-field">
+            <TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" Width="100%"
+                       ValidationFor="@(() => NewIdea.Title)"/>
+        </div>
 		<div class="field description-field">
-			<TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="450px" ValidationFor="@(() => NewIdea.Description)" />
+			<TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="100%"
+				ValidationFor="@(() => NewIdea.Description)" />
 		</div>
 	</div>
-
-	<ConfirmOrCancelButtonGroup></ConfirmOrCancelButtonGroup>
+	
+    <div class="actions">
+        <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+        </IconButton>
+        <IconButton Text="Create" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.LightBulb">
+        </IconButton>
+    </div>
 </EditForm>
 
 @code {
+
+
 	public IdeaCreateDto NewIdea = new IdeaCreateDto();
 
 	private async Task CreateIdeaAsync()
 	{
 		var response = await IdeaService.CreateAsync(NewIdea);
 
-		Console.WriteLine("Closing modal now...");
-		this.CloseModal(response);
+		CloseModal(ActionType.Create, response);
 	}
 }

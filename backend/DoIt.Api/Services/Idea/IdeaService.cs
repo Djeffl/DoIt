@@ -31,13 +31,12 @@ namespace DoIt.Api.Services.Idea
 
 			await _ctx.SaveChangesAsync();
 
-			Console.WriteLine("Created idea!");
-
 			return new GetIdeaDto()
 			{
 				Id = newIdea.Id,
 				Title = newIdea.Title,
-				Description = newIdea.Description
+				Description = newIdea.Description,
+				CreatedAt = newIdea.CreatedAt
 			};
 		}
 
@@ -53,18 +52,43 @@ namespace DoIt.Api.Services.Idea
 			await _ctx.SaveChangesAsync();
 		}
 
-		public async Task<GetIdeaDto> GetIdeaAsync(long id)
+        public async Task<GetIdeaDto> UpdateIdeaAsync(long id, UpdateIdeaDto updateIdeaDto)
+        {
+            var idea = await _ctx.Ideas.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (idea is null)
+            {
+                throw new ObjectNotFoundException("Idea not found");
+            }
+
+            idea.Description = updateIdeaDto.Description;
+            idea.Title = updateIdeaDto.Title;
+
+            await _ctx.SaveChangesAsync();
+
+            return new GetIdeaDto()
+            {
+                Id = idea.Id,
+                Title = idea.Title,
+                Description = idea.Description,
+                CreatedAt = idea.CreatedAt,
+				//UpdatedAt = 
+            };
+		}
+
+        public async Task<GetIdeaDto> GetIdeaAsync(long id)
 		{
 			return await _ctx.Ideas
 				.Select(x => new GetIdeaDto()
 				{
 					Id = x.Id,
 					Description = x.Description,
-					Title = x.Title
+					Title = x.Title,
+					CreatedAt = x.CreatedAt,
 				}).FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		public async Task<GetIdeasDto> GetGoalsAsync()
+		public async Task<GetIdeasDto> GetIdeasAsync()
 		{
 			return new GetIdeasDto()
 			{
@@ -73,7 +97,8 @@ namespace DoIt.Api.Services.Idea
 				{
 					Id = x.Id,
 					Description = x.Description,
-					Title = x.Title
+					Title = x.Title,
+					CreatedAt = x.CreatedAt
 				}).ToListAsync()
 			};
 		}

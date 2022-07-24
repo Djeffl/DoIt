@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DoIt.Api.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/ideas")]
 	[ApiController]
 	public class IdeasController : ControllerBase
 	{
@@ -23,7 +23,7 @@ namespace DoIt.Api.Controllers
 		[Route("")]
 		public async Task<IActionResult> GetIdeas()
 		{
-			var result = await _ideaService.GetGoalsAsync();
+			var result = await _ideaService.GetIdeasAsync();
 
 			return Ok(new GetIdeasResponseDto()
 			{
@@ -31,7 +31,8 @@ namespace DoIt.Api.Controllers
 				{
 					Id = x.Id,
 					Description = x.Description,
-					Title = x.Title
+					Title = x.Title,
+					CreatedAt = x.CreatedAt,
 				}).ToList()
 			});
 		}
@@ -51,7 +52,8 @@ namespace DoIt.Api.Controllers
 			{
 				Id = result.Id,
 				Title = result.Title,
-				Description = result.Description
+				Description = result.Description,
+                CreatedAt = result.CreatedAt
 			};
 
 		}
@@ -59,8 +61,7 @@ namespace DoIt.Api.Controllers
 		[HttpPost]
 		public async Task<ActionResult<GetIdeaResponseDto>> CreateIdea(CreateIdeaRequestDto request)
 		{
-
-			if (request.Title == null)
+            if (request.Title == null)
 			{
 				return BadRequest($"{nameof(request.Title)} cannot be empty.");
 			}
@@ -75,7 +76,8 @@ namespace DoIt.Api.Controllers
 				{
 					Id = result.Id,
 					Title = result.Title,
-					Description = result.Description
+					Description = result.Description,
+					CreatedAt = result.CreatedAt
 				}
 			);
 
@@ -90,6 +92,32 @@ namespace DoIt.Api.Controllers
 
 			return Ok();
 		}
+
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<ActionResult<GetIdeaResponseDto>> UpdateIdea([FromRoute]long id, UpdateIdeaRequestDto request)
+        {
+            if (request.Title == null)
+            {
+                return BadRequest($"{nameof(request.Title)} cannot be empty.");
+            }
+            var result = await _ideaService.UpdateIdeaAsync(id, new UpdateIdeaDto
+            {
+                Title = request.Title,
+                Description = request.Description,
+            });
+
+            return CreatedAtAction(nameof(GetIdea), new { id = result.Id },
+                                   new GetIdeaResponseDto
+                                   {
+                                       Id = result.Id,
+                                       Title = result.Title,
+                                       Description = result.Description,
+                                       CreatedAt = result.CreatedAt
+                                   }
+            );
+
+        }
 
 	}
 }

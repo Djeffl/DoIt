@@ -1,9 +1,10 @@
 ﻿@using DoIt.Client.Models.Icons
 @using DoIt.Client.Components.Icons;
+@using DoIt.Client.Models.General;
 
 <div class="menu">
     <button @onclick="ToggleMenu" @onclick:stopPropagation>
-        <IconComponent Icon=@Icon Color=IconColor.Gray></IconComponent>
+        <IconComponent Icon=@Icon Color=AppColor.Gray></IconComponent>
         @if (!string.IsNullOrEmpty(@Name))
         {
             <span>@Name</span>

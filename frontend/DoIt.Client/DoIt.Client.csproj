@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
+    <Folder Include="wwwroot\NewFolder\" />
     <Folder Include="wwwroot\svg\sport\" />
   </ItemGroup>
 
@@ -66,6 +67,10 @@
 
   <ItemGroup>
     <None Include="Pages\Settings.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\DoIt.Interface\DoIt.Interface.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,6 @@
-﻿using DoIt.Client.Models.Ideas;
+﻿using System;
+
+using DoIt.Client.Models.Ideas;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -56,5 +58,25 @@ namespace DoIt.Client.Services.Ideas
 				throw new System.Exception("Promoting idea failed.");
 			}
 		}
-	}
+
+        public async Task<IdeaDto> UpdateIdeaAsync(long ideaId, UpdateIdeaDto idea)
+        {
+            var json = JsonConvert.SerializeObject(idea);
+
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, MediaTypeNames.Application.Json);
+
+            var response = await client.PatchAsync($"{baseUrl}/{ideaId}", stringContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Updating idea failed.");
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            var result = JsonConvert.DeserializeObject<IdeaDto>(responseString);
+
+            return result;
+        }
+    }
 }

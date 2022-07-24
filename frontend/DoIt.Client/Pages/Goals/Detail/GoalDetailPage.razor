@@ -1,0 +1,222 @@
+﻿@page "/goals/{GoalId}"
+
+@using DoIt.Client.Models.Goals;
+@using DoIt.Client.Services.Goals;
+@using DoIt.Client.Components.Fields;
+@using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Models.ActionPlan;
+@using DoIt.Client.Models.General;
+@using DoIt.Client.Models.Icons;
+@using DoIt.Client.Models.Todos;
+@using DoIt.Client.Services.Todos;
+@using DoIt.Client.Services.Modals;
+@using DoIt.Interface.Goals
+
+@inject ITodoService TodoService;
+@inject IGoalService GoalService;
+@inject NavigationManager NavManager;
+@inject ModalService Modal;
+
+
+@inherits BaseModalComponent<GoalDetailParameter>
+
+@if (Goal != null)
+{
+    <section class="idea-detail @GetActive(SectionType.Detail)">
+        <EditForm Model="Goal" OnValidSubmit="UpdateGoalAsync">
+            <div class="fields">
+                @* What is this? *@
+                <DataAnnotationsValidator />
+                <div class="field title-field">
+                    <TextField @bind-Value="Goal.Title" Label="Title" IsMandatory="true" Width="100%"
+                           ValidationFor="@(() => Goal.Title)" />
+                </div>
+                <div class="field description-field">
+                    <TextField @bind-Value="Goal.Description" Label="Description" Multiline="true" Width="100%"
+                           ValidationFor="@(() => Goal.Description)" />
+                </div>
+                <div class="field location-field">
+                    <TextField @bind-Value="Goal.Location" Label="Location" Multiline="false" Width="100%"
+                           ValidationFor="@(() => Goal.Location)" />
+                </div>
+                <div class="field reason-field">
+                    <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
+                           ValidationFor="@(() => Goal.Reason)" />
+                </div>
+                @*<div class="field type-field">
+                    <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
+                    />
+                    </div>*@
+                <div class="field due-at-field">
+                    <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
+                           ValidationFor="@(() => Goal.DueAt)" />
+                </div>
+
+                <div class="action-plan">
+                    <div class="action-plan-header">
+                        <h2>Action Plan</h2>
+                        <IconButton Background="false" ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Add" OnClick="NewActionPlanItem">
+                        </IconButton>
+                    </div>
+                    <div class="action-plan-content">
+                        @if (Goal.ActionPlan.Any())
+                        {
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Finished</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Due At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var task in Goal.ActionPlan)
+                                    {
+                                        <tr>
+                                            <td class="action-plan-task">
+                                                <CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(e)" Label="@task.Title" />
+                                            </td>
+                                            <td>
+                                                <TextField @bind-Value="task.Title">
+                                                </TextField>
+                                            </td>
+                                            <td>
+                                                @task.DueAt
+                                            </td>
+                                            @*<td>
+                                                @task.repetition
+                                                </td>*@
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        @* Possibility to add a new task *@
+                        @*<li class="new-action-plan-item">
+                            <div class="action-plan-item-form">
+                            <div class="action-plan-item-field-spacing">
+                            <TextField @bind-Value="ActionPlanItem.Title" IsMandatory="true" ValidationFor="() => ActionPlanItem.Title" InitialValue="ActionPlanItem.Title" />
+                            </div>
+                            <IconButton ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Check" OnClick="AddNewActionPlan">
+                            </IconButton>
+                            </div>
+                            </li>*@
+                        @*</>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+                </IconButton>
+                <IconButton OnClick="StartDeleteGoal" Text="Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
+                </IconButton>
+                <IconButton Text="Update" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
+                </IconButton>
+            </div>
+        </EditForm>
+    </section>
+    <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
+        <div class="description">
+            <p>Are you sure you want to delete idea '@Goal.Title'</p>
+        </div>
+        <div class="actions confirm-modal-actions">
+            <IconButton OnClick="() => GoDetailScreen()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+            </IconButton>
+            <IconButton OnClick="() => DeleteGoal()" Text="Yes" Color="AppColor.White" ButtonType="button" Icon="IconType.Check">
+            </IconButton>
+        </div>
+    </section>
+}
+
+@code {
+    public GoalDetail Goal { get; set; }
+
+    private SectionType ActiveSection;
+
+    private readonly List<string> _actionTypes = new() { "Task" }; //"Routine"
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Goal = await GoalService.GetGoalByIdAsync(Parameter.GoalId);
+        this.StateHasChanged();
+    }
+
+    private Task ChangeTaskProgressAsync(ChangeEventArgs eventArgs)
+    {
+        var isCompleted = (bool)eventArgs.Value;
+        Console.WriteLine($"Task is completed: {isCompleted}");
+        return Task.CompletedTask;
+    }
+
+    public async Task UpdateGoalAsync()
+    {
+        await GoalService.UpdateGoalAsync(Goal.Id, new UpdateGoalRequest()
+            {
+                Description = Goal.Description,
+                DueAt = Goal.DueAt,
+                Location = Goal.Location,
+                Reason = Goal.Reason,
+                Title = Goal.Title
+            });
+
+        CloseModal(ActionType.Update, Goal);
+    }
+
+    private void NewActionPlanItem()
+    {
+        var newTodo = new TodoDto();
+
+        Goal.ActionPlan.Add(newTodo);
+        this.StateHasChanged();
+    }
+
+    private async void AddNewActionPlan()
+    {
+        //var newTodo = await GoalService.CreateGoalTodoAsync(Goal.Id, new CreateTodoDto()
+        //    {
+        //        Title = ActionPlanItem.Title,
+        //    });
+
+        var newTodo = new TodoDto();
+
+        Goal.ActionPlan.Add(newTodo);
+        this.StateHasChanged();
+    }
+
+    private void StartDeleteGoal()
+    {
+        GoConfirmScreen();
+    }
+
+    private void GoConfirmScreen()
+    {
+        ActiveSection = SectionType.ConfirmDelete;
+    }
+
+    private void GoDetailScreen()
+    {
+        ActiveSection = SectionType.Detail;
+    }
+
+    private async void DeleteGoal()
+    {
+        await GoalService.DeleteGoalAsync(Goal.Id);
+
+        this.Modal.Close(ActionType.Delete, Goal);
+    }
+
+    private string GetActive(SectionType sectionType)
+    {
+        return ActiveSection == sectionType ? "active" : "";
+    }
+
+    private enum SectionType
+    {
+        Detail,
+        ConfirmDelete,
+        Upgrade
+    }
+}

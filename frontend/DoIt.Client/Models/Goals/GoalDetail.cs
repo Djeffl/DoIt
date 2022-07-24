@@ -8,8 +8,6 @@ namespace DoIt.Client.Models.Goals
 	{
 		public int Id { get; set; }
 
-		public GoalType Type { get; set; }
-
 		public string Title { get; set; }
 
 		public string Description { get; set; }
@@ -22,6 +20,12 @@ namespace DoIt.Client.Models.Goals
 
 		public bool IsFinished { get; set; }
 
-		public List<Todo> Tasks { get; set; }
-	}
+        public List<TodoDto> ActionPlan { get; set; } = new List<TodoDto>();
+
+        public string Location { get; set; }
+
+        public string Reason { get; set; }
+
+        public GoalType Type { get; set; }
+    }
 }

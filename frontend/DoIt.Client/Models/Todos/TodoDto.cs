@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DoIt.Client.Models.Todos
 {
-	public class Todo
+	public class TodoDto
 	{
 		public int Id { get; set; }
 
@@ -12,6 +13,8 @@ namespace DoIt.Client.Models.Todos
 		public string Description { get; set; }
 
 		public bool IsFinished { get; set; }
+
+        public DateTime DueAt { get; set; }
 
 	}
 }

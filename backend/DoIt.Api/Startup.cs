@@ -6,6 +6,8 @@ using DoIt.Api.Data;
 using DoIt.Api.Extensions;
 using DoIt.Api.Services;
 using DoIt.Api.Services.Idea;
+using DoIt.Api.Services.Todo;
+
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +55,7 @@ namespace DoIt.Api
 
             services.AddScoped<IGoalService, GoalService>();
             services.AddScoped<IIdeaService, IdeaService>();
+            services.AddScoped<ITodoService, TodoService>();
 
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
         }
@@ -61,7 +64,7 @@ namespace DoIt.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(policy =>
-                policy.WithOrigins("http://localhost:5000", "https://localhost:5001")
+                policy.WithOrigins("http://localhost:8000", "https://localhost:8001")
                 .AllowAnyMethod()
                 .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
                 .AllowCredentials());

@@ -1,50 +1,59 @@
 ﻿:root {
-	--input-width: 320px;
+    /* 320px; */
+    --input-width: 100%;
 }
 
 .text-field {
-	margin: 10px 0px;
 }
 
 label {
-	color: #c6c6c6
+    color: var(--text-primary);
+    margin: 3px;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
 }
 
-input, textarea {
-	background: none;
-	font-size: 18px;
-	display: block;
-	width: var(--input-width);
-	border: none;
-	border-radius: 0;
-	border-bottom: 1px solid #c6c6c6;
+input,
+textarea {
+    border: 2px solid var(--bg-primary);
+    width: 100vw;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    display: block;
+    width: var(--input-width);
+    box-sizing: border-box;
 }
 
 textarea {
-	resize: none;
-	height: 165px;
+    resize: none;
+    height: 165px;
 }
 
-	input:focus, textarea:focus {
-		outline: none;
-	}
+    input:focus,
+    textarea:focus {
+        outline: none;
+    }
 
-		input:focus ~ .bar:before, textarea:focus ~ .bar:before {
-			width: var(--input-width);
-		}
+/* input:focus ~ .bar:before,
+textarea:focus ~ .bar:before {
+  width: var(--input-width);
+} */
 
-.bar {
-	position: relative;
-	display: block;
-	width: var(--input-width);
-}
-
-	.bar:before {
-		content: "";
-		height: 2px;
-		width: 0;
-		position: absolute;
-		background: #cea9a9;
-		transition: 300ms ease all;
-		left: 0%;
-	}
+/* .bar {
+  position: relative;
+  display: block;
+  width: var(--input-width);
+} */
+/* 
+.bar:before {
+  content: "";
+  height: 2px;
+  width: 0;
+  position: absolute;
+  background: #cea9a9;
+  transition: 300ms ease all;
+  left: 0%;
+} */

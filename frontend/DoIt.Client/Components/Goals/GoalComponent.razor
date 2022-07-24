@@ -1,48 +1,72 @@
-﻿@using Models.Goals;
+﻿@using DoIt.Client.Pages.Goals.Detail;
+@using DoIt.Client.Services.Modals;
+@using DoIt.Interface.Goals
+@using DoIt.Client.Extensions
 
-@inject NavigationManager NavManager
+@inject NavigationManager NavManager;
+@inject ModalService Modal;
 
-<article class="goal" @onclick="NavigateGoalDetailPage">
-	<header>
-		<h1>@Goal.Title</h1>
-	</header>
-	@*<div class="goal-type">
-		<GoalTypeIconComponent GoalType="Goal.Type" />
-	</div>*@
-	<section class="goal-progress">
-		<DoIt.Client.Components.Progress.ProgressBarComponent Completion="0.25" />
-	</section>
-	<section class="goal-details">
-		<p>Days left: <b>@daysLeftText</b></p>
-		<p>Due at: <i>@dueDateText</i></p>
-	</section>
-	@*<section class="tasks-short-list">
-			<ul>
-				<li>[] Get skills</li>
-				<li>[] Get good</li>
-				<li>[] Get better</li>
-			</ul>
-		</section>*@
+<article class="goal" @onclick="() => OpenDetailGoal(Goal.Id)">
+    <header>
+        @Goal.Title
+    </header>
+    @*<div class="goal-type">
+        <GoalTypeIconComponent GoalType="Goal.Type" />
+        </div>*@
+    <section class="goal-progress">
+        <span>Progress</span>
+        <div class="goal-progress-bar">
+            <DoIt.Client.Components.Progress.ProgressBarComponent Completion="0.25" />
+        </div>
+    </section>
+    <section class="goal-details">
+        <div class="goal-details-days-left">
+            Days left
+            <span>
+                @daysLeftText
+            </span>
+        </div>
+        <div class="goal-details-due-date">
+            Due at
+            <span>
+                @dueDateText
+            </span>
+        </div>
+    </section>
+    @*<section class="tasks-short-list">
+        <ul>
+        <li>[] Get skills</li>
+        <li>[] Get good</li>
+        <li>[] Get better</li>
+        </ul>
+        </section>*@
 </article>
 
 @code {
-	[Parameter]
-	public GoalDto Goal { get; set; }
+    [Parameter]
+    public GoalDto Goal { get; set; }
 
-	private string daysLeftText;
-	private string dueDateText;
+    private string daysLeftText;
+    private string dueDateText;
 
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
-		dueDateText = Goal.DueAt.ToString("d");
-	}
+        daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
+        dueDateText = Goal.DueAt.ToStringFormat();
+    }
 
-	private void NavigateGoalDetailPage()
-	{
-		NavManager.NavigateTo($"/goals/{Goal.Id}", true);
-	}
+    private void OpenDetailGoal(long id)
+    {
+        Console.WriteLine(JsonConvert.SerializeObject(Goal));
+        Console.WriteLine(id);
+        Modal.Show<GoalDetailPage, GoalDetailParameter>("Goal Details", new GoalDetailParameter() { GoalId = id });
+    }
+
+    //private void NavigateGoalDetailPage()
+    //{
+    //    NavManager.NavigateTo($"/goals/{Goal.Id}", true);
+    //}
 }

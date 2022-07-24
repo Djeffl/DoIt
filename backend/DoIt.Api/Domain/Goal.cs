@@ -12,13 +12,13 @@ namespace DoIt.Api.Domain
 			this.Todos = new List<Todo>();
 		}
 
-		public int Id { get; set; }
+		public long Id { get; set; }
 
 		public string Title { get; set; }
 
 		public string Description { get; set; }
 
-		public DateTime? DueAt { get; set; }
+		public DateTime DueAt { get; set; }
 
 		public DateTime CreatedAt { get; set; }
 
@@ -27,7 +27,9 @@ namespace DoIt.Api.Domain
 		public bool IsFinished { get; set; }
 
 		public List<Todo> Todos { get; set; }
-
-		//public List<Routine> Routines { get; set; }
-	}
+        
+        public string Location { get; set; }
+        
+        public string Reason { get; set; }
+    }
 }

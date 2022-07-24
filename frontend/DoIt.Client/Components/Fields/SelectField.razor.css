@@ -1,5 +1,5 @@
 ﻿div.select-field {
-	margin: 10px 0px;
+	/*margin: 1rem 0px;*/
 }
 
 label {
@@ -10,9 +10,15 @@ label {
 select {
 	display: block;
 	border: none;
-	width: 320px;
+	/*width: 320px;*/
 	border-bottom: 1px solid #c6c6c6;
-	font-size: 18px;
+	font-size: 1rem;
+    color: var(--text-primary);
 	outline: none;
 	background: none;
+}
+
+option {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
 }

@@ -21,7 +21,7 @@
 
 
 @code {
-	public Todo NewTodo = new Todo();
+	public TodoDto NewTodo = new TodoDto();
 
 	protected override void OnInitialized()
 	{
@@ -34,7 +34,7 @@
 		//var todo = new Todo { Title = this.Title, Description = this.Description, IsFinished = false };
 
 		Console.WriteLine($"Address: {Http.BaseAddress}");
-		var response = await Http.PostAsJsonAsync<Todo>("api/todos", NewTodo);
+		var response = await Http.PostAsJsonAsync<TodoDto>("api/todos", NewTodo);
 
 		if (response.StatusCode == System.Net.HttpStatusCode.Created)
 		{

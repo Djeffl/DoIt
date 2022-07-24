@@ -23,17 +23,17 @@ div.description {
 	}
 
 		.confirm-modal-buttons button.confirm-modal-button-confirm {
-			background-color: #e49999;
+			color: #e49999;
 		}
 
 			.confirm-modal-buttons button.confirm-modal-button-confirm:hover {
-				background-color: #ce5151;
+				color: #ce5151;
 			}
 
 		.confirm-modal-buttons button.confirm-modal-button-cancel {
-			background-color: #717171;
+			color: #717171;
 		}
 
 			.confirm-modal-buttons button.confirm-modal-button-cancel:hover {
-				background-color: #5a5a5a;
+				color: #5a5a5a;
 			}

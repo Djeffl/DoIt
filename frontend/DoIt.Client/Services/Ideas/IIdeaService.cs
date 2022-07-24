@@ -14,5 +14,7 @@ namespace DoIt.Client.Services.Ideas
 		Task DeleteAsync(long id);
 
 		Task PromoteAsync(long id);
-	}
+
+        Task<IdeaDto> UpdateIdeaAsync(long ideaId, UpdateIdeaDto idea);
+    }
 }

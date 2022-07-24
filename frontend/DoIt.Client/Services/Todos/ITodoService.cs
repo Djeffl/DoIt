@@ -6,6 +6,8 @@ namespace DoIt.Client.Services.Todos
 {
     public interface ITodoService
     {
-        Task<List<Todo>> GetAllAsync();
+        Task<List<TodoDto>> GetAllAsync();
+
+        Task<TodoDto> CreateAsync(CreateTodoDto newTodo);
     }
 }

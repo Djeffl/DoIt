@@ -1,15 +1,18 @@
 ﻿@inherits InputBase<string>
 
 <div class="text-field field wrapper">
-	<label for="@Label">@LabelView</label>
-	@if (Multiline)
-	{
-		<textarea name="@Label" @bind="@CurrentValue" style="width: @Width" type="text" autocomplete="off" />
-	}
-	else
-	{
-		<input name="@Label" @bind="@CurrentValue" style="width: @Width" type="text" autocomplete="off" />
-	}
-	<span class="bar" style="--input-width: @Width"></span>
-	<ValidationMessage For="@ValidationFor" />
+    @if(HasLabel)
+    {
+    <label for="@Label">@LabelView</label>
+    }
+    @if (Multiline)
+    {
+        <textarea name="@Label" @bind="@CurrentValue" style="width: @Width" type="text" autocomplete="off" />
+    }
+    else
+    {
+        <input name="@Label" @bind="@CurrentValue" style="width: @Width" type="text" autocomplete="off" />
+    }
+    <span class="bar" style="--input-width: @Width"></span>
+    <ValidationMessage For="@ValidationFor" />
 </div>
