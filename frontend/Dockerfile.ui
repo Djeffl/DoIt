@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-buster-slim AS build
 # Build the image for 6.0
 # FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 # RUN dotnet workload install wasm-tools
