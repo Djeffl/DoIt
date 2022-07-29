@@ -23,6 +23,7 @@ stages:
         repository: 'djeff/doit-api'
         command: 'build'
         Dockerfile: '**/Dockerfile.api'
+        buildContext: '.'
         tags: '$(tag)'
     - task: Docker@2
       displayName: Push API Image
@@ -34,11 +35,12 @@ stages:
   - job: Create_DB_Migrations
     displayName: Create DB Migrations
     steps:
+
       - task: UseDotNet@2
-        displayName: 'Use .NET Core sdk 6.0.7'
+        displayName: 'Use .NET Core sdk 6.0'
         inputs:
           packageType: 'sdk'
-          version: '6.0.7'
+          version: '6.0.x'
           includePreviewVersions: true
       - task: DotNetCoreCLI@2
         displayName: 'dotnet restore'
