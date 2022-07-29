@@ -64,7 +64,7 @@ namespace DoIt.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(policy =>
-                policy.WithOrigins("http://localhost:8000", "https://localhost:8001")
+                policy.WithOrigins("http://localhost:8000", "https://localhost:8001", "https://legoo.azurewebsites.net/", "http://legoo.azurewebsites.net/")
                 .AllowAnyMethod()
                 .WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization)
                 .AllowCredentials());
