@@ -29,6 +29,7 @@ namespace DoIt.Client.Services.Goals
 		public async Task<GoalDto> CreateGoalAsync(CreateGoalRequest goal)
 		{
 			var response = await client.PostAsJsonAsync(_baseUrl, goal);
+            Console.WriteLine(JsonConvert.SerializeObject(response));
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception();

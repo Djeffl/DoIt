@@ -30,6 +30,7 @@ namespace DoIt.Api.Domain
 		//#region foreign Keys
 
 		public long? GoalId { get; set; }
+        public DateTime? DueAt { get; set; }
 
         //public int? RoutineId { get; set; }
 

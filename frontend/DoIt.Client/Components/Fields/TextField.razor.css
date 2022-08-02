@@ -15,7 +15,7 @@ label {
 
 input,
 textarea {
-    border: 2px solid var(--bg-primary);
+    border: 2px solid var(--bg-secondary);
     width: 100vw;
     border-radius: 8px;
     padding: 5px;

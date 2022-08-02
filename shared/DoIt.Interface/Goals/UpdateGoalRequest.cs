@@ -11,5 +11,7 @@
         public string Reason { get; set; }
 
         public DateTime DueAt { get; set; }
+
+        public IEnumerable<GoalTodoDto> ActionPlan { get; set; }
     }
 }

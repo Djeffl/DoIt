@@ -1,7 +1,7 @@
 ﻿@using DoIt.Client.Models.Fields;
 
-<div class="checkbox-field field">
-	<input name="@Label" type="checkbox" checked=@Checked @onchange="@OnCheckChangedCallback" />
+<div class="checkbox-field field" style="@checkboxFieldMargin">
+	<input name="@Label" type="checkbox" checked=@Checked @onchange="@OnCheckChangedCallback" style="@inputFieldMargin" />
 	<label for="@Label">@Label</label>
 </div>
 
@@ -18,14 +18,19 @@
 	[Parameter]
 	public LabelPosition? PositionLabel { get; set; }
 
+    private string checkboxFieldMargin = "";
+    private string inputFieldMargin = "";
+
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
 
-		// This positioning should be done in coding
-		//if (PositionLabel.HasValue)
-		//{
+	    if (!string.IsNullOrWhiteSpace(Label))
+	    {
+	        checkboxFieldMargin = "margin: 10px 10px 10px 0px;";
+	        inputFieldMargin = "margin-right: 1rem;";
 
-		//}
+	    }
+
 	}
 }

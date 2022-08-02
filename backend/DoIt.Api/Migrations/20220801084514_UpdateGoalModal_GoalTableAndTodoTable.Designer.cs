@@ -4,6 +4,7 @@ using DoIt.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoIt.Api.Migrations
 {
     [DbContext(typeof(DoItContext))]
-    partial class DoItContextModelSnapshot : ModelSnapshot
+    [Migration("20220801084514_UpdateGoalModal_GoalTableAndTodoTable")]
+    partial class UpdateGoalModal_GoalTableAndTodoTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,8 +129,7 @@ namespace DoIt.Api.Migrations
                 {
                     b.HasOne("DoIt.Api.Domain.Goal", "Goal")
                         .WithMany("Todos")
-                        .HasForeignKey("GoalId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GoalId");
 
                     b.Navigation("Goal");
                 });

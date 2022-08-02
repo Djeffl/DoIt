@@ -19,5 +19,7 @@
         public string Location { get; set; }
 
         public string Reason { get; set; }
+
+        public IEnumerable<GoalTodoDto> ActionPlan { get; set; }
     }
 }

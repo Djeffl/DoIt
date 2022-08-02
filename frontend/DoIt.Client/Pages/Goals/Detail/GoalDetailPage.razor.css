@@ -1,27 +1,27 @@
 ﻿h2 {
-	margin: 10px;
+    margin: 10px;
 }
 
 div.section-content {
-	margin: 20px 25px;
+    margin: 20px 25px;
 }
 
 section {
     display: none;
 }
 
-section.active {
-    display: block;
-}
+    section.active {
+        display: block;
+    }
 
 ul {
-	list-style: none;
-	padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 textarea {
-	width: 450px;
-	height: 200px;
+    width: 450px;
+    height: 200px;
 }
 
 .hidden {
@@ -29,18 +29,44 @@ textarea {
 }
 
 .action-plan-header {
-	display: flex;
-	align-items: center;
-}
-
-.action-plan-task {
-	display: flex;
+    display: flex;
     align-items: center;
 }
 
+.action-plan-task {
+    display: flex;
+    align-items: center;
+}
+
+.action-plan-table-list {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 9px 0;
+}
+
+.action-plan-table-item {
+    background-color: var(--bg-secondary);
+}
+
+    .action-plan-table-item .data.is-finished {
+        width: 100px;
+    }
+
+.action-plan-table-item .data.title {
+    width: 80%;
+}
+
+    .action-plan-table-item .data {
+    }
+
+        .action-plan-table-item .data .internal {
+            display: flex;
+            justify-content: center;
+        }
+
 .action-plan-item-form {
-	display: flex;
-	align-items: flex-end;
+    display: flex;
+    align-items: flex-end;
 }
 
 .action-plan-item-field-spacing {
@@ -53,6 +79,6 @@ textarea {
 }
 
 .action-plan-content table tr {
-    display: flex;
+    /*display: flex;*/
     align-items: center;
 }

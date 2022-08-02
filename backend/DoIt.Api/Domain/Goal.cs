@@ -26,7 +26,7 @@ namespace DoIt.Api.Domain
 
 		public bool IsFinished { get; set; }
 
-		public List<Todo> Todos { get; set; }
+		public ICollection<Todo> Todos { get; set; }
         
         public string Location { get; set; }
         

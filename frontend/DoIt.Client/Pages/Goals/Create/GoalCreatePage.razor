@@ -66,7 +66,7 @@
     {
         base.OnInitialized();
 
-        Console.WriteLine(JsonConvert.SerializeObject(Parameter));
+        //Console.WriteLine(JsonConvert.SerializeObject(Parameter));
         //if (Parameter != null && Parameter.Idea != null)
         //{
         //	this.NewGoal.IdeaId = Parameter.Idea.Id;
@@ -77,15 +77,9 @@
 
     private async Task CreateGoalAsync()
     {
-        try
-        {
-            var response = await GoalService.CreateGoalAsync(Goal);
+        var response = await GoalService.CreateGoalAsync(Goal);
 
-            this.CloseModal(ActionType.Create, response);
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        Console.WriteLine("Closing MOdal...");
+        CloseModal(ActionType.Create, response);
     }
 }

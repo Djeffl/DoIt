@@ -24,7 +24,9 @@ namespace DoIt.Api.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Todo>().ToTable("Todo", schema: "dbo");
-			modelBuilder.Entity<Goal>().ToTable("Goals", schema: "dbo");
+			modelBuilder.Entity<Goal>()
+                        .ToTable("Goals", schema: "dbo")
+                        .HasMany<Todo>(x => x.Todos).WithOne(x => x.Goal).OnDelete(DeleteBehavior.Cascade);
 			modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo");
 		}
 	}

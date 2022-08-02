@@ -77,6 +77,12 @@ namespace DoIt.Api.Services
             goal.Location = request.Location;
             goal.Reason = request.Reason;
             goal.DueAt = request.DueAt;
+            goal.Todos = request.ActionPlan.Select(x => new Domain.Todo
+            {
+                Title = x.Title,
+                IsFinished = x.IsFinished,
+                DueAt = x.DueAt
+            }).ToList();
 
             await _ctx.SaveChangesAsync();
 
@@ -90,13 +96,14 @@ namespace DoIt.Api.Services
                 CreatedAt = goal.CreatedAt,
                 DueAt = goal.DueAt,
                 FinishedAt = goal.FinishedAt,
-                IsFinished = goal.IsFinished
+                IsFinished = goal.IsFinished,
+                
             };
         }
 
         public async Task<GoalDto> GetGoalAsync(long id)
         {
-            var goal = await _ctx.Goals.FindAsync(id);
+            var goal = await _ctx.Goals.Include(x => x.Todos).FirstOrDefaultAsync(x => x.Id == id);
 
             return new GoalDto
             {
@@ -108,13 +115,20 @@ namespace DoIt.Api.Services
                 CreatedAt = goal.CreatedAt,
                 DueAt = goal.DueAt,
                 FinishedAt = goal.FinishedAt,
-                IsFinished = goal.IsFinished
+                IsFinished = goal.IsFinished,
+                ActionPlan = goal.Todos.Select(x => new GoalTodoDto()
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    IsFinished = x.IsFinished,
+                    DueAt = x.DueAt
+                }),
             };
         }
 
         public async Task<GoalsDto> GetGoalsAsync(GetGoalsDto _)
         {
-            var response = await _ctx.Goals.ToListAsync();
+            var response = await _ctx.Goals.Include(x => x.Todos).ToListAsync();
 
             return new GoalsDto()
             {
@@ -128,7 +142,14 @@ namespace DoIt.Api.Services
                     CreatedAt = goal.CreatedAt,
                     DueAt = goal.DueAt,
                     FinishedAt = goal.FinishedAt,
-                    IsFinished = goal.IsFinished
+                    IsFinished = goal.IsFinished,
+                    ActionPlan = goal.Todos.Select(x => new GoalTodoDto()
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        DueAt = x.DueAt,
+                        IsFinished = x.IsFinished,
+                    })
                 }).ToList()
             };
         }

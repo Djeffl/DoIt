@@ -43,6 +43,7 @@ namespace DoIt.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [ActionName(nameof(GetGoalAsync))]
         public async Task<ActionResult<GoalDto>> GetGoalAsync([FromRoute] long id)
         {
             var result = await _goalService.GetGoalAsync(id);
@@ -79,18 +80,16 @@ namespace DoIt.Api.Controllers
                 }
             );
 
-            var actionName = nameof(GoalsController.GetGoalAsync);
-
-            return CreatedAtAction(actionName, new { id = result.Id }, result);
+            return CreatedAtAction(nameof(GetGoalAsync), new { id = result.Id }, result);
         }
 
         [HttpDelete]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteGoalAsync([FromRoute] long id)
         {
-            Console.WriteLine("Removing data...");
             await _goalService.DeleteGoalAsync(id);
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpPatch]

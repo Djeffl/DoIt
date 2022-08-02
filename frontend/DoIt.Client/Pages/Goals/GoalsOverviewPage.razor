@@ -80,6 +80,30 @@ else
 			Goals.Add(newGoal);
 			StateHasChanged();
 		}
+	    if (actionType is ActionType.Delete)
+	    {
+	        var goalId = long.Parse(response.ToString());
+	        var deletedGoal = Goals.FirstOrDefault(x => x.Id == goalId);
+	        if (deletedGoal is not null)
+	        {
+	            Goals.Remove(deletedGoal);
+	            StateHasChanged();
+	        }
+	    }
+	    //if (actionType == ActionType.Delete)
+	    //{
+	    //    Console.WriteLine("action delete");
+	    //    var goal = response as GoalDto;
+	    //    Console.WriteLine("hi");
+	    //    Console.WriteLine("d", goal);
+	    //    var deletedGoal = Goals.SingleOrDefault(x => x.Id == goal.Id);
+	    //    Console.WriteLine("delete  goal...");
+	    //    if (deletedGoal is not null)
+	    //    {
+	    //        Console.WriteLine("delete goal found.");
+	    //        Goals.Remove(deletedGoal);
+	    //    }
+	    //}
 	}
 
 	private void OpenDetailGoal(int id)
