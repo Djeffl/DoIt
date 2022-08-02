@@ -12,5 +12,5 @@ RUN dotnet publish "DoIt.Api.csproj" -c Release -o /app/release
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 as final
 WORKDIR /app
 COPY --from=publish /app/release .
-EXPOSE 5000 5001
+EXPOSE 5000 5001 80
 ENTRYPOINT ["dotnet", "DoIt.Api.dll"]
