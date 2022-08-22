@@ -2,7 +2,10 @@
 @using DoIt.Client.Services.Icons;
 @using DoIt.Client.Models.General;
 
-<img src=@IconUrl class="icon-img" style=@AppColorStyle height=@HeightAndWith width=@HeightAndWith
+<img src=@IconUrl class="icon-img" 
+style=@_style
+height=@HeightAndWith 
+width=@HeightAndWith
      @onmouseover="() => active = true" @onmouseout="() => active = false" />
 @code {
     [Parameter]
@@ -14,9 +17,26 @@
     [Parameter]
     public AppColor Color { get; set; }
 
+    [Parameter]
+    public string Padding { get; set; }
+
     private bool active = false;
 
     public string IconUrl => IconLocationUrlProvider.GetUrl(Icon, active);
+
+    private string _style
+    {
+        get
+        {
+            var style = $"{AppColorStyle};";
+            if(!string.IsNullOrEmpty(Padding))
+            {
+                style += $"padding:{Padding};";
+            }
+
+            return style;
+        }
+    }
 
     public string AppColorStyle
     {

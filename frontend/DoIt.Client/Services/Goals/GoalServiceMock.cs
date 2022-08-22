@@ -36,9 +36,9 @@ namespace DoIt.Client.Services.Goals
             return Task.CompletedTask; 
 		}
 
-        public async Task<TodoDto> CreateGoalTodoAsync(long goalId, CreateTodoDto createTodoDto)
+        public Task<TodoDto> CreateGoalTodoAsync(long goalId, CreateTodoDto createTodoDto)
         {
-            return new TodoDto();
+            return null;
         }
 
         public Task<GoalDto> UpdateGoalAsync(long goalId, UpdateGoalRequest updateGoalRequest)

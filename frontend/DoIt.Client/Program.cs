@@ -11,6 +11,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using DoIt.Client.Services.IdeaCategories;
 using DoIt.Client.Settings;
 
 namespace DoIt.Client
@@ -65,6 +66,7 @@ namespace DoIt.Client
             builder.Services.AddScoped(typeof(ITodoService), typeof(TodoService));
             builder.Services.AddScoped(typeof(IGoalService), typeof(GoalService));
             builder.Services.AddScoped(typeof(IIdeaService), typeof(IdeaService));
+            builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
         }
 
         private static void AddMockingServices(WebAssemblyHostBuilder builder)

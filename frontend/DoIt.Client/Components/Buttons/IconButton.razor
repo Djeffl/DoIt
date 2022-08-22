@@ -2,7 +2,7 @@
 @using DoIt.Client.Models.Icons;
 
 <button class="icon-button button" style="@_style" type="@ButtonType" @onclick="OnClick">
-    <DoIt.Client.Components.Icons.IconComponent Icon="Icon" Color="@Color">
+    <DoIt.Client.Components.Icons.IconComponent Icon="Icon" Color="@Color" Padding="@Padding">
     </DoIt.Client.Components.Icons.IconComponent>
     @if (!string.IsNullOrEmpty(Text))
     {
@@ -34,6 +34,9 @@
 
     [Parameter]
     public bool Background { get; set; } = true;
+
+    [Parameter]
+    public string Padding { get; set; }
 
     private string _style;
 

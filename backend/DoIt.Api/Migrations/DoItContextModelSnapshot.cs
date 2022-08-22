@@ -22,6 +22,22 @@ namespace DoIt.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("DoIt.Api.Domain.Category", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories", "dbo");
+                });
+
             modelBuilder.Entity("DoIt.Api.Domain.Goal", b =>
                 {
                     b.Property<long>("Id")
@@ -123,6 +139,21 @@ namespace DoIt.Api.Migrations
                     b.ToTable("Todo", "dbo");
                 });
 
+            modelBuilder.Entity("IdeaCategory", b =>
+                {
+                    b.Property<long>("CategoriesId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("IdeasId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CategoriesId", "IdeasId");
+
+                    b.HasIndex("IdeasId");
+
+                    b.ToTable("IdeaCategory", "dbo");
+                });
+
             modelBuilder.Entity("DoIt.Api.Domain.Todo", b =>
                 {
                     b.HasOne("DoIt.Api.Domain.Goal", "Goal")
@@ -131,6 +162,21 @@ namespace DoIt.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Goal");
+                });
+
+            modelBuilder.Entity("IdeaCategory", b =>
+                {
+                    b.HasOne("DoIt.Api.Domain.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DoIt.Api.Domain.Idea", null)
+                        .WithMany()
+                        .HasForeignKey("IdeasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DoIt.Api.Domain.Goal", b =>

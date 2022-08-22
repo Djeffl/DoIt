@@ -10,7 +10,6 @@ label {
     color: var(--text-primary);
     margin: 3px;
     font-weight: 900;
-    margin-bottom: 0.5rem;
 }
 
 input,
@@ -25,6 +24,7 @@ textarea {
     display: block;
     width: var(--input-width);
     box-sizing: border-box;
+    margin-top: 0.5rem;
 }
 
 textarea {
@@ -37,6 +37,32 @@ textarea {
         outline: none;
     }
 
+
+.autocomplete-options {
+    color: var(--text-primary);
+    box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
+    border-radius: 9px;
+    overflow: auto;
+    max-height: 204px;
+    position: absolute;
+    width: 80vw;
+    z-index: 1;
+    background-color: var(--bg-primary);
+    margin-right: 1.5rem;
+    box-sizing: border-box;
+    width: calc(100vw - 3rem);
+    left: 1.5rem;
+}
+
+    .autocomplete-options .option {
+        cursor: pointer;
+        padding: 10px;
+        line-height: 48px;
+    }
+
+        .autocomplete-options .option:hover {
+            background-color: var(--bg-secondary);
+        }
 /* input:focus ~ .bar:before,
 textarea:focus ~ .bar:before {
   width: var(--input-width);

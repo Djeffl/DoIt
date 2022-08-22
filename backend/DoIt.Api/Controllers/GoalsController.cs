@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DoIt.Api.Dto.Request;
 using DoIt.Api.Dto.Response.Goals;
 using DoIt.Api.Extensions;
-using DoIt.Api.Services;
+using DoIt.Api.Services.Goal;
 using DoIt.Api.Services.Goal.Dto;
 using DoIt.Api.Services.Todo;
 using DoIt.Api.Services.Todo.Dto;
@@ -61,7 +61,7 @@ namespace DoIt.Api.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<GoalDto>> CreateGoalAsync(CreateGoalRequest request)
         {
-            //var isParsed = Enum.TryParse<GoalType>(request.Type, ignoreCase: true, out var goalType);
+            //var isParsed = Enum.TryParse<GoalType>(request.Name, ignoreCase: true, out var goalType);
 
             //if (!isParsed)
             //{
@@ -76,7 +76,7 @@ namespace DoIt.Api.Controllers
                     Location = request.Location,
                     Reason = request.Reason,
                     DueAt = request.DueAt,
-                    //Type = goalType
+                    //Name = goalType
                 }
             );
 

@@ -1,18 +1,16 @@
-﻿using DoIt.Api.Services.Idea.Dto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
+using DoIt.Interface.Ideas;
 
 namespace DoIt.Api.Services.Idea
 {
 	public interface IIdeaService
 	{
-		Task<GetIdeasDto> GetIdeasAsync();
-		Task<GetIdeaDto> CreateGoalAsync(CreateIdeaDto createGoalDto);
-		Task<GetIdeaDto> GetIdeaAsync(long id);
+		Task<IdeasDto> GetIdeasAsync();
+		Task<IdeaDto> CreateIdeaAsync(CreateIdeaDto createGoalDto);
+		Task<IdeaDto> GetIdeaAsync(long id);
 		Task DeleteIdeaAsync(long id);
-        Task<GetIdeaDto> UpdateIdeaAsync(long id, UpdateIdeaDto updateIdeaDto);
+        Task<IdeaDto> UpdateIdeaAsync(long id, UpdateIdeaDto updateIdeaDto);
 
 	}
 }

@@ -1,11 +1,12 @@
-﻿using DoIt.Client.Models.Ideas;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
+using DoIt.Interface.Ideas;
 
 namespace DoIt.Client.Services.Ideas
 {
 	public class IdeaServiceMock : IIdeaService
 	{
-		public Task<IdeaDto> CreateAsync(IdeaCreateDto newIdea)
+		public Task<IdeaDto> CreateAsync(CreateIdeaDto newIdea)
 		{
 			return Task.Run(() => new IdeaDto());
 		}

@@ -1,16 +1,18 @@
 ﻿@using DoIt.Client.Components.Buttons;
-@using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
 @using DoIt.Client.Models.Icons;
 @using DoIt.Client.Models.General;
-@using DoIt.Client.Components.Modals.Confirm;
-@using DoIt.Client.Models.Goals
+@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Services.IdeaCategories;
 
 
 @using DoIt.Client.Services.Modals;
 @using DoIt.Client.Services.Goals;
 @using DoIt.Interface.Goals
+@using DoIt.Interface.IdeaCategory
+@using DoIt.Interface.Ideas
+@using Microsoft.AspNetCore.Components
 
 
 @inherits BaseModalComponent<IdeaDetailParameter>
@@ -20,6 +22,7 @@
 @inject ModalService Modal;
 @inject NavigationManager NavigationManager;
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
+@inject ICategoryService IdeaCategoryService;
 
 
 <section class="idea-detail @GetActive(SectionType.IdeaDetail)">
@@ -34,6 +37,13 @@
             <div class="field description-field">
                 <TextField @bind-Value="Idea.Description" Label="Description" Multiline="true" Width="100%"
                            ValidationFor="@(() => Idea.Description)" />
+            </div>
+            <div class="field category-field">
+                <ChipField @bind-Value="Idea.CategoryNames"
+                           Label="Categories"
+                           Width="100%"
+                           AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
+                </ChipField>
             </div>
         </div>
 
@@ -80,24 +90,51 @@
     </EditForm>
 </section>
 @code {
-    public IdeaDto Idea { get; set; } = new IdeaDto();
+    public DoIt.Client.Models.Ideas.IdeaDto Idea { get; set; } = new DoIt.Client.Models.Ideas.IdeaDto();
     public CreateGoalRequest UpgradedIdea { get; set; } = new CreateGoalRequest();
+    public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
     private SectionType ActiveSection;
+
 
     protected async override Task OnInitializedAsync()
     {
         base.OnInitialized();
         ActiveSection = SectionType.IdeaDetail;
-        Idea = await IdeaService.GetAsync(Parameter.IdeaId);
+        var idea = await IdeaService.GetAsync(Parameter.IdeaId);
+        Idea = new DoIt.Client.Models.Ideas.IdeaDto()
+            {
+                Id = idea.Id,
+                Title = idea.Title,
+                Description = idea.Description,
+                CategoryNames = idea.Categories.Select(x => x.Name).ToList(),
+            };
+
+        await RefreshDataAsync();
+
         this.StateHasChanged();
+    }
+
+    private async Task RefreshDataAsync()
+    {
+        var ideaCategories = await GetIdeaCategoriesAsync();
+        IdeaCategories = ideaCategories;
+    }
+
+    private async Task<IEnumerable<CategoryDto>> GetIdeaCategoriesAsync()
+    {
+        var categoriesDto = await IdeaCategoryService.GetListAsync();
+        return categoriesDto.Data;
     }
 
     private async Task UpdateIdeaAsync()
     {
+        await SetIdeaCategoryAsync();
+
         await IdeaService.UpdateIdeaAsync(Idea.Id, new UpdateIdeaDto()
             {
                 Title = Idea.Title,
-                Description = Idea.Description
+                Description = Idea.Description,
+                CategoryIds = Idea.CategoryIds,
             });
 
         CloseModal(ActionType.Update, Idea);
@@ -142,6 +179,40 @@
     private string GetActive(SectionType sectionType)
     {
         return ActiveSection == sectionType ? "active" : "";
+    }
+
+    private async Task SetIdeaCategoryAsync()
+    {
+        var categories = new List<CategoryDto>();
+
+        if (!Idea.CategoryNames.Any())
+        {
+            return;
+        }
+
+        var newCategories = Idea.CategoryNames.Where(categoryName => !IdeaCategories.Any(existingCategory => categoryName == existingCategory.Name));
+
+        if (newCategories.Any())
+        {
+            var bulkNewCategories = await AddNewIdeaCategoryBulkAsync(newCategories);
+            categories.AddRange(bulkNewCategories.Data);
+        }
+
+        categories.AddRange(IdeaCategories.Where(existingCategory => Idea.CategoryNames.Any(name => name == existingCategory.Name)));
+        Idea.CategoryIds = categories.Select(selectedCategory => selectedCategory.Id);
+
+        await RefreshDataAsync();
+    }
+
+    private async Task<CategoriesDto> AddNewIdeaCategoryBulkAsync(IEnumerable<string> categoryNames)
+    {
+        return await IdeaCategoryService.CreateBulkAsync(new CreateCategoryBulkDto
+            {
+                Categories = categoryNames.Select(name => new CreateCategoryDto()
+                {
+                    Name = name
+                })
+            });
     }
 
     private enum SectionType

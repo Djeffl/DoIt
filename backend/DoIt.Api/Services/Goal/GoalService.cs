@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 using DoIt.Interface.Goals;
 
-namespace DoIt.Api.Services
+namespace DoIt.Api.Services.Goal
 {
     public class GoalService : IGoalService
     {
@@ -16,7 +16,7 @@ namespace DoIt.Api.Services
 
         public GoalService(DoItContext context)
         {
-            this._ctx = context;
+            _ctx = context;
         }
 
         public async Task<GoalDto> CreateGoalAsync(CreateGoalDto createGoalDto)
@@ -27,7 +27,7 @@ namespace DoIt.Api.Services
                 Description = createGoalDto.Description,
                 CreatedAt = DateTime.UtcNow,
                 Location = createGoalDto.Location,
-                Reason = createGoalDto.Reason, 
+                Reason = createGoalDto.Reason,
                 DueAt = createGoalDto.DueAt,
             };
 
@@ -97,7 +97,7 @@ namespace DoIt.Api.Services
                 DueAt = goal.DueAt,
                 FinishedAt = goal.FinishedAt,
                 IsFinished = goal.IsFinished,
-                
+
             };
         }
 

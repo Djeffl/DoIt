@@ -1,12 +1,13 @@
 ﻿using System;
 
-using DoIt.Client.Models.Ideas;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+
+using DoIt.Interface.Ideas;
 
 namespace DoIt.Client.Services.Ideas
 {
@@ -20,9 +21,9 @@ namespace DoIt.Client.Services.Ideas
 			this.client = client;
 		}
 
-		public async Task<IdeaDto> CreateAsync(IdeaCreateDto newIdea)
+		public async Task<IdeaDto> CreateAsync(CreateIdeaDto newIdea)
 		{
-			var response = await client.PostAsJsonAsync<IdeaCreateDto>(baseUrl, newIdea);
+			var response = await client.PostAsJsonAsync<CreateIdeaDto>(baseUrl, newIdea);
 			var responseString = await response.Content.ReadAsStringAsync();
 
 			var result = JsonConvert.DeserializeObject<IdeaDto>(responseString);

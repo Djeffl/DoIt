@@ -20,9 +20,9 @@ namespace DoIt.Client.Services.Todos
             return await client.GetFromJsonAsync<List<TodoDto>>("sample-data/todos.json");
         }
 
-        public async Task<TodoDto> CreateAsync(CreateTodoDto newTodo)
+        public Task<TodoDto> CreateAsync(CreateTodoDto newTodo)
         {
-            return new TodoDto();
+            return null;
         }
     }
 }

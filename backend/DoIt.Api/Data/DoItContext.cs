@@ -15,6 +15,7 @@ namespace DoIt.Api.Data
 
 		public DbSet<Idea> Ideas { get; set; }
 
+		public DbSet<Category> Categories { get; set; }
 
 		public DoItContext(DbContextOptions<DoItContext> options) : base(options)
 		{
@@ -27,7 +28,12 @@ namespace DoIt.Api.Data
 			modelBuilder.Entity<Goal>()
                         .ToTable("Goals", schema: "dbo")
                         .HasMany<Todo>(x => x.Todos).WithOne(x => x.Goal).OnDelete(DeleteBehavior.Cascade);
-			modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo");
-		}
+			modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo")
+				.HasMany<Category>(c => c.Categories)
+				.WithMany(i => i.Ideas)
+				.UsingEntity("IdeaCategory");
+
+            modelBuilder.Entity<Category>().ToTable("Categories", "dbo");
+        }
 	}
 }

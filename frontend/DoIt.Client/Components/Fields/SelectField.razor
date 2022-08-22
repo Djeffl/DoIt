@@ -1,37 +1,11 @@
 ﻿@inherits InputBase<string>
 
 <div class="select-field field wrapper">
-	<label for="@Label">@LabelView</label>
-	<select name="@Label" @bind="@CurrentValue">
+    <label for="@Label">@LabelView</label>
+    <select name="@Label" @bind="@CurrentValue">
 		@foreach (var option in Options)
 		{
 			<option value="@option">@option</option>
 		}
 	</select>
 </div>
-
-@code {
-	[Parameter]
-	public List<string> Options { get; set; }
-
-	[Parameter]
-	public string Label { get; set; }
-
-	[Parameter]
-	public bool IsMandatory { get; set; }
-
-	private string LabelView
-	{
-		get
-		{
-			return IsMandatory ? $"{Label}(*)" : Label;
-		}
-	}
-
-	protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
-	{
-		result = value;
-		validationErrorMessage = null;
-		return true;
-	}
-}

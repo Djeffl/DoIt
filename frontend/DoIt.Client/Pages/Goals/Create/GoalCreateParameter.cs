@@ -1,4 +1,4 @@
-﻿using DoIt.Client.Models.Ideas;
+﻿using DoIt.Interface.Ideas;
 
 namespace DoIt.Client.Pages.Goals.Create
 {

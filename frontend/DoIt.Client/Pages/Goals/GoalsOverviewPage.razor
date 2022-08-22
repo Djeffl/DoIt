@@ -4,10 +4,10 @@
 @using DoIt.Client.Components.Goals;
 @using Blazored.SessionStorage;
 @using DoIt.Client.Models.General
-@using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Modals;
 @using DoIt.Client.Pages.Goals.Create;
 @using DoIt.Interface.Goals
+@using DoIt.Interface.Ideas
 
 @inject IGoalService GoalService;
 @inject NavigationManager NavManager;
@@ -41,7 +41,7 @@ else
 }
 
 @code {
-	private bool promoteIdea;
+	//private bool promoteIdea;
 	public List<GoalDto> Goals;
 
 	protected override async Task OnInitializedAsync()

@@ -1,23 +1,40 @@
 ﻿<div class="progress">
-	<div class="progress-circle">
-		<h3>
-			@completionText
-		</h3>
-	</div>
+    <div class="progress-circle">
+        <h3>
+            @completionText
+        </h3>
+    </div>
 </div>
 
 @code {
-	[Parameter]
-	public double Completion { get; set; }
+    [Parameter]
+    public double Completion { get; set; }
 
-	private string completionText;
-	private string progressBarWidth;
+    [Parameter]
+    public IEnumerable<string> Options { get; set; }
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
+    [Parameter]
+    public string Label { get; set; }
 
-		completionText = $"{Completion * 100}%";
-		
-	}
+    [Parameter]
+    public bool IsMandatory { get; set; }
+
+    private string LabelView
+    {
+        get
+        {
+            return IsMandatory ? $"{Label}(*)" : Label;
+        }
+    }
+
+    private string completionText;
+    //private string progressBarWidth;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        completionText = $"{Completion * 100}%";
+
+    }
 }

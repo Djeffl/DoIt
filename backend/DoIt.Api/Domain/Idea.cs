@@ -15,14 +15,16 @@ namespace DoIt.Api.Domain
 
 		public DateTime CreatedAt { get; set; }
 
-		public Goal PromoteToGoal()
+		public ICollection<Category> Categories { get; set; } = new List<Category>();
+
+        public Goal PromoteToGoal()
 		{
 			return new Goal()
 			{
 				CreatedAt = DateTime.UtcNow,
 				Title = Title,
-				Description = Description
-			};
+				Description = Description,
+            };
 		}
 	}
 }

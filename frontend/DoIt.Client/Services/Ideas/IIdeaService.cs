@@ -1,5 +1,6 @@
-﻿using DoIt.Client.Models.Ideas;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+
+using DoIt.Interface.Ideas;
 
 namespace DoIt.Client.Services.Ideas
 {
@@ -7,7 +8,7 @@ namespace DoIt.Client.Services.Ideas
 	{
 		Task<IdeasDto> GetAllAsync();
 
-		Task<IdeaDto> CreateAsync(IdeaCreateDto newIdea);
+		Task<IdeaDto> CreateAsync(CreateIdeaDto newIdea);
 
 		Task<IdeaDto> GetAsync(long id);
 

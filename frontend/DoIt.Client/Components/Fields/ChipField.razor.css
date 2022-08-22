@@ -1,0 +1,67 @@
+﻿.chip-field .input-wrapper {
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--bg-secondary);
+    border-radius: 8px;
+    display: block;
+    margin-top: 0.5rem;
+}
+
+label {
+    color: var(--text-primary);
+    margin: 3px;
+    font-weight: 900;
+}
+
+input {
+    background-color: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    padding: 5px 0;
+    margin-left: 4px;
+}
+
+    input:focus {
+        outline: none;
+    }
+
+ul {
+    padding: 0;
+    margin: 3px 0;
+}
+
+li {
+    margin-right: 5px;
+    list-style: none;
+    background-color: var(--bg-primary);
+    padding: 5px 6px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.autocomplete-options {
+    color: var(--text-primary);
+    box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
+    border-radius: 9px;
+    overflow: auto;
+    max-height: 204px;
+    position: absolute;
+    width: 80vw;
+    z-index: 1;
+    background-color: var(--bg-primary);
+    margin-right: 1.5rem;
+    box-sizing: border-box;
+    width: calc(100vw - 3rem);
+    left: 1.5rem;
+}
+
+    .autocomplete-options .option {
+        cursor: pointer;
+        padding: 10px;
+        line-height: 48px;
+    }
+
+        .autocomplete-options .option:hover {
+            background-color: var(--bg-secondary);
+        }

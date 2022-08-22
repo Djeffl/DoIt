@@ -274,8 +274,8 @@ namespace DoIt.Client.Services.Icons
         {
             var alpha = 1;
             var gamma = 0.16666666666666666;
-
-            double[]? best = null;
+            
+            double[] best = null;
             var bestLoss = double.MaxValue;
             var deltas = new double[6];
             var highArgs = new double[6];

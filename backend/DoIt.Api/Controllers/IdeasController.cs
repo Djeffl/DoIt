@@ -1,10 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using DoIt.Api.Dto.Request.Idea;
-using DoIt.Api.Dto.Response.Ideas;
+﻿using System.Threading.Tasks;
+
 using DoIt.Api.Services.Idea;
-using DoIt.Api.Services.Idea.Dto;
+using DoIt.Interface.Ideas;
+
 using Microsoft.AspNetCore.Mvc;
+
+using CreateIdeaDto = DoIt.Interface.Ideas.CreateIdeaDto;
 
 namespace DoIt.Api.Controllers
 {
@@ -25,21 +26,12 @@ namespace DoIt.Api.Controllers
 		{
 			var result = await _ideaService.GetIdeasAsync();
 
-			return Ok(new GetIdeasResponseDto()
-			{
-				Data = result.Ideas.Select(x => new GetIdeaResponseDto()
-				{
-					Id = x.Id,
-					Description = x.Description,
-					Title = x.Title,
-					CreatedAt = x.CreatedAt,
-				}).ToList()
-			});
+            return Ok(result);
 		}
 
 		[HttpGet]
 		[Route("{id}")]
-		public async Task<ActionResult<GetIdeaResponseDto>> GetIdea([FromRoute] long id)
+		public async Task<ActionResult<IdeaDto>> GetIdea([FromRoute] long id)
 		{
 			var result = await _ideaService.GetIdeaAsync(id);
 
@@ -48,44 +40,21 @@ namespace DoIt.Api.Controllers
 				return NotFound();
 			}
 
-			return new GetIdeaResponseDto()
-			{
-				Id = result.Id,
-				Title = result.Title,
-				Description = result.Description,
-                CreatedAt = result.CreatedAt
-			};
+            return result;
 
-		}
+        }
 
 		[HttpPost]
-		public async Task<ActionResult<GetIdeaResponseDto>> CreateIdea(CreateIdeaRequestDto request)
+		public async Task<ActionResult<IdeaDto>> CreateIdea(CreateIdeaDto idea)
 		{
-            if (request.Title == null)
-			{
-				return BadRequest($"{nameof(request.Title)} cannot be empty.");
-			}
-			var result = await _ideaService.CreateGoalAsync(new CreateIdeaDto
-			{
-				Title = request.Title,
-				Description = request.Description,
-			});
+            var result = await _ideaService.CreateIdeaAsync(idea);
 
-			return CreatedAtAction(nameof(GetIdea), new { id = result.Id },
-				new GetIdeaResponseDto
-				{
-					Id = result.Id,
-					Title = result.Title,
-					Description = result.Description,
-					CreatedAt = result.CreatedAt
-				}
-			);
-
+			return CreatedAtAction(nameof(GetIdea), new { id = result.Id }, result);
 		}
 
 		[HttpDelete]
 		[Route("{id}")]
-		public async Task<ActionResult<GetIdeaResponseDto>> DeleteIdea([FromRoute]long id)
+		public async Task<ActionResult> DeleteIdea([FromRoute]long id)
 		{
 
 			await _ideaService.DeleteIdeaAsync(id);
@@ -95,28 +64,11 @@ namespace DoIt.Api.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<ActionResult<GetIdeaResponseDto>> UpdateIdea([FromRoute]long id, UpdateIdeaRequestDto request)
+        public async Task<ActionResult<IdeaDto>> UpdateIdea([FromRoute]long id, UpdateIdeaDto idea)
         {
-            if (request.Title == null)
-            {
-                return BadRequest($"{nameof(request.Title)} cannot be empty.");
-            }
-            var result = await _ideaService.UpdateIdeaAsync(id, new UpdateIdeaDto
-            {
-                Title = request.Title,
-                Description = request.Description,
-            });
+            var result = await _ideaService.UpdateIdeaAsync(id, idea);
 
-            return CreatedAtAction(nameof(GetIdea), new { id = result.Id },
-                                   new GetIdeaResponseDto
-                                   {
-                                       Id = result.Id,
-                                       Title = result.Title,
-                                       Description = result.Description,
-                                       CreatedAt = result.CreatedAt
-                                   }
-            );
-
+            return CreatedAtAction(nameof(GetIdea), new { id = result.Id }, result);
         }
 
 	}

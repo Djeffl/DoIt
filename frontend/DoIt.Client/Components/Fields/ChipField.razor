@@ -1,0 +1,246 @@
+﻿@using DoIt.Client.Extensions
+@inherits InputBase<List<string>>
+
+<div class="chip-field">
+    <label for="@Label">@Label</label>
+    <div class="input-wrapper" style="width: @Width">
+        <input name="@Label"
+               value="@InputValue"
+               type="text"
+               class="input-field"
+               @oninput="OnInputEventHandler"
+               @onfocusin="OnFocusInField" @onfocusout="OnFocusOutField"
+               autocomplete="off"
+               style="min-width: @Width"
+               @ref="inputRef" />
+        @if (Value.Any())
+        {
+            <ul>
+                @foreach (var item in Value)
+                {
+                    <li>
+                        @item
+                        <DoIt.Client.Components.Buttons.IconButton Background="false"
+                                                           Icon="Models.Icons.IconType.Cancel"
+                                                           OnClick="() => RemoveItem(item)"
+                                                           Height="auto"
+                                                           Width="auto"
+                                                           Padding="0">
+                        </DoIt.Client.Components.Buttons.IconButton>
+                    </li>
+                }
+            </ul>
+        }
+        @if (IsDisplayAutocomplete)
+        {
+            <div class="autocomplete-options" @onmouseover="OnAutocompleteMouseOver" @onmouseout="OnAutocompleteMouseOut">
+                @foreach (var option in FilteredAutocompleteOptions)
+                {
+                    <div class="option" @onclick="() => SelectOption(option)">
+                        @option
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string Width { get; set; }
+
+    [Parameter]
+    public IEnumerable<string> AutocompleteOptions { get; set; } = new List<string>();
+
+    public string InputValue { get; set; } = "";
+
+    private List<string> FilteredAutocompleteOptions
+    {
+        get
+        {
+            var options = string.IsNullOrEmpty(InputValue) ? 
+            AutocompleteOptions.Where(x => !Value.Contains(x, StringComparer.OrdinalIgnoreCase)).ToList() : 
+            AutocompleteOptions.Where(x => !Value.Contains(x, StringComparer.OrdinalIgnoreCase) && x.StartsWith(InputValue) && x != InputValue).ToList();
+            if (!string.IsNullOrEmpty(InputValue) && !options.Contains(InputValue))
+            {
+                options.Add(InputValue);
+            }
+
+            return options;
+        }
+    }
+
+    private bool IsDisplayAutocomplete
+    {
+        get
+        {
+            return FilteredAutocompleteOptions.Any() && (_isFieldFocused || _isAutocompleteHovered);
+        }
+    }
+
+    private ElementReference inputRef;
+
+    private bool _isFieldFocused = false;
+    private bool _isAutocompleteHovered = false;
+
+    protected override bool TryParseValueFromString(string value, out List<string> result, out string validationErrorMessage)
+    {
+        result = new List<string>() { value };
+        validationErrorMessage = null;
+        return true;
+    }
+
+    private void OnInputEventHandler(ChangeEventArgs args)
+    {
+        var currentValue = (string)args.Value;
+
+        InputValue = currentValue;
+        StateHasChanged();
+    }
+
+    private void RemoveItem(string item)
+    {
+        Value.Remove(item);
+        StateHasChanged();
+    }
+
+    private void OnFocusInField(FocusEventArgs args)
+    {
+        _isFieldFocused = true;
+        StateHasChanged();
+    }
+
+    private void OnFocusOutField(FocusEventArgs args)
+    {
+        _isFieldFocused = false;
+        StateHasChanged();
+    }
+
+    private void OnAutocompleteMouseOver(MouseEventArgs args)
+    {
+        _isAutocompleteHovered = true;
+        StateHasChanged();
+    }
+
+    private void OnAutocompleteMouseOut(MouseEventArgs args)
+    {
+        _isAutocompleteHovered = false;
+        StateHasChanged();
+    }
+
+    private void SelectOption(string optionText)
+    {
+        optionText = optionText.Trim().Capitalize().Replace(' ', '-');
+
+        if (!Value.Contains(optionText))
+        {
+            Value.Add(optionText);
+        }
+
+        InputValue = "";
+        _isAutocompleteHovered = false;
+        inputRef.FocusAsync();
+        StateHasChanged();
+    }
+}
+
+
+@*<div>
+    <label for="@Label">@Label</label>
+    <input name="@Label"
+           @oninput="OnInputEventHandler"
+           value="@InputValue"
+           style="width: @Width"
+           type="text"
+           autocomplete="off" />
+    @foreach (var item in Value)
+    {
+        <p>@item</p>
+    }
+</div>
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string Width { get; set; }
+
+    [Parameter]
+    public string InitialValue { get; set; }
+
+    public string InputValue { get; set; } = "";
+
+    [Parameter]
+    public List<string> Value { get; set; }
+
+    [Parameter]
+    public EventCallback OnValueModified { get; set; }
+
+    private void OnInputEventHandler(ChangeEventArgs args)
+    {
+        var currentValue = (string)args.Value;
+        if (currentValue.EndsWith(' '))
+        {
+            InputValue = "";
+            Value.Add(currentValue);
+            OnValueModified.InvokeAsync(Value);
+            return;
+        }
+
+        InputValue = currentValue;
+    }
+}*@
+
+
+ @*   @inherits InputBase<string>
+
+<div>
+    <label for="@Label">@Label</label>
+    <input name="@Label"
+           multiple
+           @oninput="OnInputEventHandler"
+           value="@Value"
+           style="width: @Width"
+           type="text"
+           autocomplete="off" />
+    @foreach (var item in Values)
+    {
+        <p>@item</p>
+    }
+</div>
+@code {
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter]
+    public string Width { get; set; }
+
+    [Parameter]
+    public string InitialValue { get; set; }
+
+    public List<string> Values { get; set; } = new List<string>();
+
+    protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
+    {
+        result = value;
+        validationErrorMessage = null;
+        return true;
+    }
+
+    private void OnInputEventHandler(ChangeEventArgs args)
+    {
+        var currentValue = (string)args.Value;
+        if (currentValue.EndsWith(' '))
+        {
+            Value = "";
+            Values.Add(currentValue);
+            return;
+        }
+
+        Value = currentValue;
+    }
+}
+*@

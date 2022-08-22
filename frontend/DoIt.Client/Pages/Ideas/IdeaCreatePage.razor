@@ -1,30 +1,44 @@
 ﻿@page "/ideas/create"
 
 @using DoIt.Client.Components.Buttons;
-@using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
 @using DoIt.Client.Models.Icons;
 @using DoIt.Client.Models.General;
+@using DoIt.Client.Services.IdeaCategories
+@using DoIt.Interface.IdeaCategory
+@using DoIt.Interface.Ideas
+@using Microsoft.AspNetCore.Components
 
 @inherits BaseModalComponent
 
-@inject IIdeaService IdeaService
+@inject IIdeaService IdeaService;
+@inject ICategoryService IdeaCategoryService;
 
 <EditForm Model="NewIdea" OnValidSubmit="CreateIdeaAsync">
-	<div class="fields">
-		@* What is this? *@
-		<DataAnnotationsValidator />
+    <div class="fields">
+        @* What is this? *@
+        <DataAnnotationsValidator />
         <div class="field title-field">
             <TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" Width="100%"
-                       ValidationFor="@(() => NewIdea.Title)"/>
+                       ValidationFor="@(() => NewIdea.Title)" />
         </div>
-		<div class="field description-field">
-			<TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="100%"
-				ValidationFor="@(() => NewIdea.Description)" />
-		</div>
-	</div>
-	
+        <div class="field description-field">
+            <TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="100%"
+                       ValidationFor="@(() => NewIdea.Description)" />
+        </div>
+        <div class="field category-field">
+            <ChipField @bind-Value="NewIdea.CategoryNames"
+                       Label="Categories"
+                       Width="100%"
+                       AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
+            </ChipField>
+            @*<TextField @AutocompleteOptions="IdeaCategories" Label="Category" Multiline="false"
+            IsMandatory="false" Width="100%" @bind-Value="NewIdea.CategoryName"
+            ValidationFor="(() => NewIdea.CategoryName)" AutocompleteOptions="IdeaCategories.Select(x => x.Name)" />*@
+        </div>
+    </div>
+
     <div class="actions">
         <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
         </IconButton>
@@ -34,14 +48,72 @@
 </EditForm>
 
 @code {
+    public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
+    public DoIt.Client.Models.Ideas.CreateIdeaDto NewIdea = new DoIt.Client.Models.Ideas.CreateIdeaDto();
+
+    #region Overrides of ComponentBase
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await RefereshDataAsync();
+    }
+
+    #endregion
 
 
-	public IdeaCreateDto NewIdea = new IdeaCreateDto();
+    private async Task CreateIdeaAsync()
+    {
+        await SetIdeaCategoryAsync();
 
-	private async Task CreateIdeaAsync()
-	{
-		var response = await IdeaService.CreateAsync(NewIdea);
+        var response = await IdeaService.CreateAsync(NewIdea.ToService());
 
-		CloseModal(ActionType.Create, response);
-	}
+        CloseModal(ActionType.Create, response);
+    }
+
+    private async Task RefereshDataAsync()
+    {
+        var ideaCategories = await GetIdeaCategoriesAsync();
+        IdeaCategories = ideaCategories;
+    }
+
+    private async Task<IEnumerable<CategoryDto>> GetIdeaCategoriesAsync()
+    {
+        var categoriesDto = await IdeaCategoryService.GetListAsync();
+        return categoriesDto.Data;
+    }
+
+    private async Task SetIdeaCategoryAsync()
+    {
+        var categories = new List<CategoryDto>();
+
+        if (!NewIdea.CategoryNames.Any())
+        {
+            return;
+        }
+
+        var newCategories = NewIdea.CategoryNames.Where(categoryName => !IdeaCategories.Any(existingCategory => categoryName == existingCategory.Name));
+
+        if (newCategories.Any())
+        {
+            var bulkNewCategories = await AddNewIdeaCategoryBulkAsync(newCategories);
+            categories.AddRange(bulkNewCategories.Data);
+        }
+
+        categories.AddRange(IdeaCategories.Where(existingCategory => NewIdea.CategoryNames.Any(name => name == existingCategory.Name)));
+        NewIdea.CategoryIds = categories.Select(selectedCategory => selectedCategory.Id);
+
+        await RefereshDataAsync();
+    }
+
+    private async Task<CategoriesDto> AddNewIdeaCategoryBulkAsync(IEnumerable<string> categoryNames)
+    {
+        return await IdeaCategoryService.CreateBulkAsync(new CreateCategoryBulkDto
+            {
+                Categories = categoryNames.Select(name => new CreateCategoryDto()
+                {
+                    Name = name
+                })
+            });
+    }
 }

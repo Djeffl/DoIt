@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DoIt.Api.Data;
 using DoIt.Api.Extensions;
-using DoIt.Api.Services;
+using DoIt.Api.Services.Category;
+using DoIt.Api.Services.Goal;
 using DoIt.Api.Services.Idea;
 using DoIt.Api.Services.Todo;
 
@@ -56,6 +57,7 @@ namespace DoIt.Api
             services.AddScoped<IGoalService, GoalService>();
             services.AddScoped<IIdeaService, IdeaService>();
             services.AddScoped<ITodoService, TodoService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
         }

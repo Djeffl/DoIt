@@ -1,18 +1,13 @@
 ﻿@page "/ideas"
-
-@using DoIt.Client.Models.Ideas;
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Pages.Ideas.Detail;
 
 @using DoIt.Client.Services.Modals;
 
 @using DoIt.Client.Services.Goals;
-
-@using DoIt.Client.Components.Modals.Confirm;
-
-@using System.Globalization;
-@using DoIt.Client.Extensions
 @using DoIt.Client.Models.General
+@using DoIt.Interface.Ideas
+@using DoIt.Client.Extensions
 
 
 
@@ -61,14 +56,13 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 		var getIdeasResponse = await IdeaService.GetAllAsync();
-		this.Ideas = getIdeasResponse.Data;
+		this.Ideas = getIdeasResponse.Data.ToList();
 
 		Modal.OnClose += OnModalClose;
 	}
 
 	private async void OnModalClose(ActionType actionType, object response)
 	{
-		Console.WriteLine(JsonConvert.SerializeObject(response));
 		if (actionType is ActionType.Create)
 		{
 		    var newIdea = response as IdeaDto;
