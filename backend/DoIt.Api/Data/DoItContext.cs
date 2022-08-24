@@ -7,33 +7,33 @@ using System.Threading.Tasks;
 
 namespace DoIt.Api.Data
 {
-	public class DoItContext : DbContext
-	{
-		public DbSet<Todo> Todos { get; set; }
+    public class DoItContext : DbContext
+    {
+        public DbSet<Todo> Todos { get; set; }
 
-		public DbSet<Goal> Goals { get; set; }
+        public DbSet<Goal> Goals { get; set; }
 
-		public DbSet<Idea> Ideas { get; set; }
+        public DbSet<Idea> Ideas { get; set; }
 
-		public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
-		public DoItContext(DbContextOptions<DoItContext> options) : base(options)
-		{
+        public DoItContext(DbContextOptions<DoItContext> options) : base(options)
+        {
 
-		}
+        }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			modelBuilder.Entity<Todo>().ToTable("Todo", schema: "dbo");
-			modelBuilder.Entity<Goal>()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Todo>().ToTable("Todo", schema: "dbo");
+            modelBuilder.Entity<Goal>()
                         .ToTable("Goals", schema: "dbo")
                         .HasMany<Todo>(x => x.Todos).WithOne(x => x.Goal).OnDelete(DeleteBehavior.Cascade);
-			modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo")
-				.HasMany<Category>(c => c.Categories)
-				.WithMany(i => i.Ideas)
-				.UsingEntity("IdeaCategory");
+            modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo")
+                .HasMany<Category>(c => c.Categories)
+                .WithMany(i => i.Ideas)
+                .UsingEntity<IdeaCategory>();
 
             modelBuilder.Entity<Category>().ToTable("Categories", "dbo");
         }
-	}
+    }
 }

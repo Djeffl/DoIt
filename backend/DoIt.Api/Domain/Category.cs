@@ -9,4 +9,6 @@ public class Category
     public string Name { get; set; }
 
     public ICollection<Idea> Ideas { get; set; }
+    public List<IdeaCategory> IdeaCategories { get; set; }
+
 }

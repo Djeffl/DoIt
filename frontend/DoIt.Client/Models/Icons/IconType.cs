@@ -28,6 +28,9 @@ namespace DoIt.Client.Models.Icons
         Cancel,
         Goal,
         Check,
-        Add
+        Add,
+        Alert,
+        Info,
+        Bug
     }
 }

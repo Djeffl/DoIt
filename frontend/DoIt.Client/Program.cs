@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 using DoIt.Client.Services.IdeaCategories;
 using DoIt.Client.Settings;
+using DoIt.Client.Services.Toast;
 
 namespace DoIt.Client
 {
@@ -57,6 +58,9 @@ namespace DoIt.Client
 
             // Custom Modal
             builder.Services.AddSingleton<ModalService>();
+
+            // Custom Toast
+            builder.Services.AddSingleton<ToastService>();
         }
 
         private static void AddImplementedServices(WebAssemblyHostBuilder builder, IConfiguration configuration)

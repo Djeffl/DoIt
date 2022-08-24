@@ -27,6 +27,12 @@ namespace DoIt.Client.Services.Icons
                     return "svg/general/plus_thick_24dp.svg";
                 case IconType.Check:
                     return "svg/general/check_24dp.svg";
+                case IconType.Alert:
+                    return "svg/general/alert_black_24dp.svg";
+                case IconType.Bug:
+                    return "svg/general/bug_black_24dp.svg";
+                case IconType.Info:
+                    return "svg/general/information_black_24dp.svg";
                 default: return "favicon.ico";
             }
         }

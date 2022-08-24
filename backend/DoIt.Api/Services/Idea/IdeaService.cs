@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DoIt.Interface.Ideas;
+using DoIt.Api.Extensions;
+using System.Collections.Generic;
 
 namespace DoIt.Api.Services.Idea
 {
@@ -44,7 +46,7 @@ namespace DoIt.Api.Services.Idea
 
         public async Task<IdeaDto> UpdateIdeaAsync(long id, UpdateIdeaDto updateIdeaDto)
         {
-            var idea = await _ctx.Ideas.FirstOrDefaultAsync(x => x.Id == id);
+            var idea = await _ctx.Ideas.Include(x => x.IdeaCategories).FirstOrDefaultAsync(x => x.Id == id);
 
             if (idea is null)
             {
@@ -53,9 +55,10 @@ namespace DoIt.Api.Services.Idea
 
             idea.Description = updateIdeaDto.Description;
             idea.Title = updateIdeaDto.Title;
-            idea.Categories = updateIdeaDto.CategoryIds.Select(x => new Domain.Category()
+            idea.IdeaCategories = updateIdeaDto.CategoryIds.Select(categoryId => new Domain.IdeaCategory
             {
-                Id = x
+                CategoryId = categoryId,
+                IdeaId = idea.Id,
             }).ToList();
 
             await _ctx.SaveChangesAsync();

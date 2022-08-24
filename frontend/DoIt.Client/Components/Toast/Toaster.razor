@@ -1,0 +1,129 @@
+﻿@using DoIt.Client.Models.Icons
+@using DoIt.Client.Models.Toasts
+@using DoIt.Client.Services.Toast
+@using System.Timers
+
+<div class="toaster">
+    @if (_toasts.Any())
+    {
+        @foreach (var toast in _toasts)
+        {
+            <div class="toast @toast.Content.Theme">
+                <div class="header">
+                    <div class="title">
+                        <DoIt.Client.Components.Icons.IconComponent Icon="toast.Content.Icon" 
+                        Color="Models.General.AppColor.Black"
+                        Padding="0rem 0.5rem 0rem 0rem">
+
+                        </DoIt.Client.Components.Icons.IconComponent>
+                        <h3>
+                            @toast.Content.Title
+                        </h3>
+                    </div>
+                    <div class="close">
+                        <DoIt.Client.Components.Buttons.IconButton Icon="IconType.Cancel"
+                                                           Background="false"
+                                                           OnClick="() => RemoveToast(toast.Id)"
+                                                           Height="auto"
+                                                           Color="Models.General.AppColor.Black">
+                        </DoIt.Client.Components.Buttons.IconButton>
+                    </div>
+
+                </div>
+                <div class="body">
+                    @toast.Content.Message
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+@code {
+    @inject ToastService ToastService;
+
+    [Parameter]
+    public int TimeoutInSeconds { get; set; } = 2;
+    private List<Toast> _toasts = new List<Toast>();
+
+    protected override Task OnInitializedAsync()
+    {
+        ToastService.OnShow += ShowToast;
+        return base.OnInitializedAsync();
+    }
+
+    private void ShowToast(ToastLevel level, string message, string header = "")
+    {
+        var toast = BuildToast(level, message, header);
+        _toasts.Add(toast);
+
+        var timeout = TimeoutInSeconds * 1000;
+        var toastTimer = new Timer(timeout);
+        toastTimer.Elapsed += (sender, args) => { RemoveToast(toast.Id); };
+        toastTimer.AutoReset = false;
+        toastTimer.Start();
+
+        StateHasChanged();
+    }
+
+    private void RemoveToast(Guid toastId)
+    {
+        var toastMessage = _toasts.SingleOrDefault(x => x.Id == toastId);
+        _toasts.Remove(toastMessage);
+        StateHasChanged();
+    }
+
+    private static Toast BuildToast(ToastLevel level, string message, string header = "")
+    {
+        ToastMessage toastMessage;
+
+        switch (level)
+        {
+            case ToastLevel.Error:
+                toastMessage = new ToastMessage(!string.IsNullOrWhiteSpace(header) ? header : "Error", message, IconType.Bug, "error");
+                break;
+            case ToastLevel.Info:
+                toastMessage = new ToastMessage(!string.IsNullOrWhiteSpace(header) ? header : "Information", message, IconType.Info, "info");
+                break;
+            case ToastLevel.Success:
+                toastMessage = new ToastMessage(!string.IsNullOrWhiteSpace(header) ? header : "Success", message, IconType.Check, "success");
+                break;
+            case ToastLevel.Warn:
+                toastMessage = new ToastMessage(!string.IsNullOrWhiteSpace(header) ? header : "Warning", message, IconType.Alert, "warn");
+                break;
+            default: throw new NotSupportedException();
+        }
+
+        var toast = new Toast
+            {
+                Content = toastMessage,
+                Id = Guid.NewGuid(),
+                Timestamp = DateTime.Now,
+            };
+
+        return toast;
+    }
+
+    private class Toast
+    {
+        public Guid Id { get; set; }
+        public DateTime Timestamp { get; set; }
+        public ToastMessage Content { get; set; }
+    }
+
+    private class ToastMessage
+    {
+        public string Title { get; set; }
+        public string Message { get; set; }
+        public IconType Icon { get; set; }
+        public string Theme { get; set; }
+
+        public ToastMessage(string title, string message, IconType icon, string theme)
+        {
+            Title = title;
+            Message = message;
+            Icon = icon;
+            Theme = theme;
+        }
+    }
+}

@@ -1,15 +1,16 @@
 ﻿@page "/ideas"
-@using DoIt.Client.Services.Ideas;
-@using DoIt.Client.Pages.Ideas.Detail;
+@using DoIt.Client.Components.Loading
+@using DoIt.Client.Services.Ideas
+@using DoIt.Client.Pages.Ideas.Detail
 
-@using DoIt.Client.Services.Modals;
+@using DoIt.Client.Services.Modals
 
-@using DoIt.Client.Services.Goals;
+@using DoIt.Client.Services.Goals
 @using DoIt.Client.Models.General
 @using DoIt.Interface.Ideas
 @using DoIt.Client.Extensions
 
-
+@inherits BasePage
 
 @inject IIdeaService IdeaService;
 @inject IGoalService GoalService;
@@ -17,88 +18,88 @@
 @inject NavigationManager NavigationManager;
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
 
-@if (Ideas == null)
-{
-	// Spinner Loading
-}
-else
-{
-    <section class="ideas">
-		<ul class="ideas-list">
-			@if (Ideas.Any())
-			{
-				@foreach (var idea in Ideas)
-				{
-					<li class="ideas-list-item" @onclick="() => OpenDetailGoal(idea.Id)">
-						<article class="idea">
-							<div class="idea-data">
-								<div class="idea-title">
-									@idea.Title
-								</div>
-								<div class="idea-description">
-									@idea.Description
-								</div>
-								<div class="idea-date">
-									@idea.CreatedAt.ToStringFormat()
-								</div>
-							</div>
-						</article>
-					</li>
-				}
-			}
-		</ul>
-	</section>
-}
-
+<LoadingContainerComponent LoadingState="LoadingState">
+    <Rendered>
+        <section class="ideas">
+            <ul class="ideas-list">
+                @if (Ideas.Any())
+                {
+                    @foreach (var idea in Ideas)
+                    {
+                        <li class="ideas-list-item" @onclick="() => OpenDetailGoal(idea.Id)">
+                            <article class="idea">
+                                <div class="idea-data">
+                                    <div class="idea-title">
+                                        @idea.Title
+                                    </div>
+                                    <div class="idea-description">
+                                        @idea.Description
+                                    </div>
+                                    <div class="idea-date">
+                                        @idea.CreatedAt.ToStringFormat()
+                                    </div>
+                                </div>
+                            </article>
+                        </li>
+                    }
+                }
+            </ul>
+        </section>
+    </Rendered>
+</LoadingContainerComponent>
 @code {
-	public List<IdeaDto> Ideas { get; set; }
+    public List<IdeaDto> Ideas { get; set; }
 
-	protected override async Task OnInitializedAsync()
-	{
-		var getIdeasResponse = await IdeaService.GetAllAsync();
-		this.Ideas = getIdeasResponse.Data.ToList();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Modal.OnClose += OnModalClose;
+    }
 
-		Modal.OnClose += OnModalClose;
-	}
+    protected override async Task RefreshDataAsync()
+    {
+        var getIdeasResponse = await IdeaService.GetAllAsync();
+        Ideas = getIdeasResponse.Data.ToList();
+    }
 
-	private async void OnModalClose(ActionType actionType, object response)
-	{
-		if (actionType is ActionType.Create)
-		{
-		    var newIdea = response as IdeaDto;
+    private void OnModalClose(ActionType actionType, object response)
+    {
+        if (actionType is ActionType.Create)
+        {
+            var newIdea = response as IdeaDto;
 
-			Ideas.Add(newIdea);
-			StateHasChanged();
-		}
+            Ideas.Add(newIdea);
+            StateHasChanged();
+        }
 
-	    if (actionType is ActionType.Update)
-	    {
-	        var updatedIdea = response as IdeaDto;
-	        var idea = Ideas.FirstOrDefault(x => x.Id == updatedIdea.Id);
-	        if (idea is not null)
-	        {
-	            idea.Title = updatedIdea.Title;
-	            idea.Description = updatedIdea.Description;
-	        }
-	        StateHasChanged();
-	    }
+        if (actionType is ActionType.Update)
+        {
+            var updatedIdea = response as IdeaDto;
+            var idea = Ideas.FirstOrDefault(x => x.Id == updatedIdea.Id);
+            if (idea is not null)
+            {
+                idea.Title = updatedIdea.Title;
+                idea.Description = updatedIdea.Description;
+            }
+            StateHasChanged();
+        }
 
-		if (actionType is ActionType.Delete)
-		{
-		    var deletedIdea = response as IdeaDto;
+        if (actionType is ActionType.Delete)
+        {
+            var deletedIdea = response as IdeaDto;
 
-		    var idea = Ideas.FirstOrDefault(x => x.Id == deletedIdea.Id);
+            var idea = Ideas.FirstOrDefault(x => x.Id == deletedIdea.Id);
 
-		    if (idea is not null)
-		    {
-		        Ideas.Remove(idea);
-		        StateHasChanged();
-		    }
-		}
-	}
+            if (idea is not null)
+            {
+                Ideas.Remove(idea);
+                StateHasChanged();
+            }
+        }
+    }
 
     private void OpenDetailGoal(long id)
-	{
-		Modal.Show<IdeaDetailPage, IdeaDetailParameter>("Idea Details", new IdeaDetailParameter() { IdeaId = id });
-	}
+    {
+        Modal.Show<IdeaDetailPage, IdeaDetailParameter>("Idea Details", new IdeaDetailParameter() { IdeaId = id });
+    }
 }

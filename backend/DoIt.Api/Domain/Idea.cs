@@ -16,6 +16,7 @@ namespace DoIt.Api.Domain
 		public DateTime CreatedAt { get; set; }
 
 		public ICollection<Category> Categories { get; set; } = new List<Category>();
+        public List<IdeaCategory> IdeaCategories { get; set; }
 
         public Goal PromoteToGoal()
 		{
