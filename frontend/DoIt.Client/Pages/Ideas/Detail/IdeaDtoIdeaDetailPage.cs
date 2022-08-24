@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DoIt.Client.Models.Ideas
+namespace DoIt.Client.Pages.Ideas.Detail
 {
-    public class IdeaDto
+    public class IdeaDtoIdeaDetailPage
     {
         public long Id { get; set; }
         public string Title { get; set; }
@@ -14,3 +14,4 @@ namespace DoIt.Client.Models.Ideas
         public List<string> CategoryNames { get; set; } = new();
     }
 }
+

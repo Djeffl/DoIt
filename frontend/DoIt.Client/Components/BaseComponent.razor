@@ -1,15 +1,57 @@
 ﻿@using DoIt.Client.Components.Loading;
-@using DoIt.Client.Models.Loading
-
-<LoadingContainerComponent>
-
-</LoadingContainerComponent>
+@using DoIt.Client.Models.Loading;
+@using DoIt.Client.Services.Toast
 
 @code {
-    protected LoadingState LoadingState;
+    [Inject] public ToastService ToastService { get; set; }
 
-    protected override Task OnInitializedAsync()
+    protected LoadingState LoadingState = LoadingState.Loading;
+
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        await LoadDataAndStateAsync();
+        await base.OnInitializedAsync();
+    }
+
+    protected virtual Task LoadAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    private async Task LoadDataAndStateAsync()
+    {
+        try
+        {
+            await OnDataLoadingAsync();
+            await LoadAsync();
+            await OnDataLoadedAsync();
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError(ex.Message);
+
+            await OnDataLoadedFailedAsync();
+        }
+    }
+
+    private Task OnDataLoadingAsync()
+    {
+        LoadingState = LoadingState.Loading;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private Task OnDataLoadedAsync()
+    {
+        LoadingState = LoadingState.Rendered;
+
+        return Task.CompletedTask;
+    }
+
+    private Task OnDataLoadedFailedAsync()
+    {
+        LoadingState = LoadingState.Error;
+
+        return Task.CompletedTask;
     }
 }

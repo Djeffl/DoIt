@@ -27,10 +27,25 @@ article.idea {
     margin: auto 0;
     font-size: 0.6rem;
     color: #828282;
+    margin-top: 8px;
 }
 
 .idea .idea-data .idea-title {
     font-size: 1rem;
+}
+
+.idea-categories {
+    margin-top: 8px;
+    display: inline-flex;
+}
+
+.idea-category {
+    border: 1px var(--gray) solid;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--gray);
+    padding: 4px;
+    margin-right: 8px;
 }
 
 .actions {

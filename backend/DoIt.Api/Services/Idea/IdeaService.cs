@@ -80,6 +80,7 @@ namespace DoIt.Api.Services.Idea
             return new IdeasDto()
             {
                 Data = await _ctx.Ideas
+                    .Include(i => i.Categories)
                     .Select(idea => idea.ToDto())
                     .ToListAsync()
             };

@@ -1,4 +1,6 @@
-﻿namespace DoIt.Client.Services.Ideas
+﻿using System.Linq;
+
+namespace DoIt.Client.Services.Ideas
 {
     public static class IdeaMapper
     {

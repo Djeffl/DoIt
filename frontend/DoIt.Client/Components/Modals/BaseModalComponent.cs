@@ -12,7 +12,7 @@ namespace DoIt.Client.Components.Modals
         public ParameterT Parameter { get; set; }
     }
 
-    public class BaseModalComponent : ComponentBase
+    public class BaseModalComponent : BaseComponent
     {
         [Inject]
         private ModalService _modalService { get; set; }

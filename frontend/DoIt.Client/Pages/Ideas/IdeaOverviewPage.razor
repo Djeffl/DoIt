@@ -10,7 +10,7 @@
 @using DoIt.Interface.Ideas
 @using DoIt.Client.Extensions
 
-@inherits BasePage
+@inherits BaseComponent
 
 @inject IIdeaService IdeaService;
 @inject IGoalService GoalService;
@@ -38,6 +38,17 @@
                                     <div class="idea-date">
                                         @idea.CreatedAt.ToStringFormat()
                                     </div>
+                                    @if (idea.Categories.Any())
+                                    {
+                                        <div class="idea-categories">
+                                            @foreach (var ideaCategory in idea.Categories)
+                                            {
+                                                <div class="idea-category">
+                                                    @ideaCategory.Name
+                                                </div>
+                                            }
+                                        </div>
+                                    }
                                 </div>
                             </article>
                         </li>
@@ -47,59 +58,3 @@
         </section>
     </Rendered>
 </LoadingContainerComponent>
-@code {
-    public List<IdeaDto> Ideas { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        Modal.OnClose += OnModalClose;
-    }
-
-    protected override async Task RefreshDataAsync()
-    {
-        var getIdeasResponse = await IdeaService.GetAllAsync();
-        Ideas = getIdeasResponse.Data.ToList();
-    }
-
-    private void OnModalClose(ActionType actionType, object response)
-    {
-        if (actionType is ActionType.Create)
-        {
-            var newIdea = response as IdeaDto;
-
-            Ideas.Add(newIdea);
-            StateHasChanged();
-        }
-
-        if (actionType is ActionType.Update)
-        {
-            var updatedIdea = response as IdeaDto;
-            var idea = Ideas.FirstOrDefault(x => x.Id == updatedIdea.Id);
-            if (idea is not null)
-            {
-                idea.Title = updatedIdea.Title;
-                idea.Description = updatedIdea.Description;
-            }
-            StateHasChanged();
-        }
-
-        if (actionType is ActionType.Delete)
-        {
-            var deletedIdea = response as IdeaDto;
-
-            var idea = Ideas.FirstOrDefault(x => x.Id == deletedIdea.Id);
-
-            if (idea is not null)
-            {
-                Ideas.Remove(idea);
-                StateHasChanged();
-            }
-        }
-    }
-
-    private void OpenDetailGoal(long id)
-    {
-        Modal.Show<IdeaDetailPage, IdeaDetailParameter>("Idea Details", new IdeaDetailParameter() { IdeaId = id });
-    }
-}
