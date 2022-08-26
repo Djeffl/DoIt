@@ -123,6 +123,7 @@ namespace DoIt.Client.Pages.Ideas.Detail
 
             if (!Idea.CategoryNames.Any())
             {
+                Idea.CategoryIds = new List<long>();
                 return;
             }
 

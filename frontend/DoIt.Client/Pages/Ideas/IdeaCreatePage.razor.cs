@@ -48,6 +48,7 @@ namespace DoIt.Client.Pages.Ideas
 
             if (!NewIdea.CategoryNames.Any())
             {
+                NewIdea.CategoryIds = new List<long>();
                 return;
             }
 
