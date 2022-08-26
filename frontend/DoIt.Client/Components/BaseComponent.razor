@@ -13,7 +13,7 @@
         await base.OnInitializedAsync();
     }
 
-    protected virtual Task LoadAsync()
+    protected virtual Task LoadDataAsync()
     {
         return Task.CompletedTask;
     }
@@ -23,7 +23,7 @@
         try
         {
             await OnDataLoadingAsync();
-            await LoadAsync();
+            await LoadDataAsync();
             await OnDataLoadedAsync();
         }
         catch (Exception ex)

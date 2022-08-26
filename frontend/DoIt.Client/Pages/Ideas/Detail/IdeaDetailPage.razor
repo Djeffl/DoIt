@@ -51,13 +51,9 @@
                 </div>
 
                 <div class="actions">
-                    <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+                    <IconButton OnClick="StartDeleteIdea" Text="> Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
                     </IconButton>
-                    <IconButton OnClick="StartDeleteIdea" Text="Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
-                    </IconButton>
-                    <IconButton OnClick="StartUpgradeIdea" Text="Upgrade" Color="AppColor.White" ButtonType="button" Icon="IconType.Goal">
-                    </IconButton>
-                    <IconButton Text="Update" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.LightBulb">
+                    <IconButton OnClick="StartUpgradeIdea" Text="> Set As Goal" Color="AppColor.White" BackgroundColor="var(--accent)" ButtonType="button" Icon="IconType.Goal">
                     </IconButton>
                 </div>
             </EditForm>
@@ -67,166 +63,25 @@
                 <p>Are you sure you want to delete idea '@Idea.Title'</p>
             </div>
             <div class="actions confirm-modal-actions">
-                <IconButton OnClick="() => GoIdeaDetailScreen()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+                <IconButton OnClick="() => GoIdeaDetailScreen()" Text="> Cancel" Color="AppColor.Gray" ButtonType="button">
                 </IconButton>
-                <IconButton OnClick="() => DeleteIdea()" Text="Yes" Color="AppColor.White" ButtonType="button" Icon="IconType.Check">
+                <IconButton OnClick="() => DeleteIdea()" Text="> Yes" Color="AppColor.White" ButtonType="button">
                 </IconButton>
             </div>
         </section>
         <section class="promote-idea @GetActive(SectionType.UpgradeIdea)">
             <h2>Upgrade Idea to Goal</h2>
-            <EditForm Model="UpgradedIdea" OnValidSubmit="UpgradeIdea">
-                @* What is this? *@
-                <DataAnnotationsValidator />
-                <TextField @bind-Value="UpgradedIdea.Title" Label="Title" IsMandatory="true" ValidationFor="@(() => UpgradedIdea.Title)" />
-                <div class="description-field">
-                    <TextField @bind-Value="UpgradedIdea.Description" Label="Description" Multiline="true" Width="450px" ValidationFor="@(() => UpgradedIdea.Description)" />
-                </div>
-                @*<DateField @bind-Value="NewGoal.DueAt" Label="Due At" IsMandatory="true" ValidationFor="@(() => NewGoal.DueAt)" />*@
-                @*<SelectField @bind-Value="NewGoal.Type" Label="Type" Options="options" />*@
-                <div class="actions">
-                    <IconButton OnClick="() => GoIdeaDetailScreen()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+            <DoIt.Client.Components.Goals.GoalFormComponent Goal="UpgradedIdeaAsGoal">
+                <Actions>
+                    <div class="actions">
+                        <IconButton Text="> Cancel" Color="AppColor.White" ButtonType="button" OnClick="() => ActiveSection = SectionType.IdeaDetail">
+                        </IconButton>
+                    <IconButton Text="> Create" Color="AppColor.White" ButtonType="button" OnClick="() => UpgradeIdea()" Icon="IconType.Goal" BackgroundColor="var(--accent)">
                     </IconButton>
-                    <IconButton OnClick="() => DeleteIdea()" Text="Create" Color="AppColor.White" ButtonType="button" Icon="IconType.Goal">
-                    </IconButton>
-                </div>
-            </EditForm>
+                    </div>
+                </Actions>
+            </DoIt.Client.Components.Goals.GoalFormComponent>
+
         </section>
     </Rendered>
 </DoIt.Client.Components.Loading.LoadingContainerComponent>
-@code {
-    public IdeaDtoIdeaDetailPage Idea { get; set; } = new IdeaDtoIdeaDetailPage();
-    public CreateGoalRequest UpgradedIdea { get; set; } = new CreateGoalRequest();
-    public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
-    private SectionType ActiveSection;
-
-    private LoadingState LoadingState;
-
-    protected async override Task OnInitializedAsync()
-    {
-        base.OnInitialized();
-
-        LoadingState = LoadingState.Loading;
-        ActiveSection = SectionType.IdeaDetail;
-        var idea = await IdeaService.GetAsync(Parameter.IdeaId);
-        Idea = new IdeaDtoIdeaDetailPage
-            {
-                Id = idea.Id,
-                Title = idea.Title,
-                Description = idea.Description,
-                CategoryNames = idea.Categories.Select(x => x.Name).ToList(),
-            };
-
-        await RefreshDataAsync();
-        LoadingState = LoadingState.Rendered;
-        this.StateHasChanged();
-    }
-
-    private async Task RefreshDataAsync()
-    {
-        var ideaCategories = await GetIdeaCategoriesAsync();
-        IdeaCategories = ideaCategories;
-    }
-
-    private async Task<IEnumerable<CategoryDto>> GetIdeaCategoriesAsync()
-    {
-        var categoriesDto = await IdeaCategoryService.GetListAsync();
-        return categoriesDto.Data;
-    }
-
-    private async Task UpdateIdeaAsync()
-    {
-        await SetIdeaCategoryAsync();
-
-        await IdeaService.UpdateIdeaAsync(Idea.Id, new UpdateIdeaDto()
-            {
-                Title = Idea.Title,
-                Description = Idea.Description,
-                CategoryIds = Idea.CategoryIds,
-            });
-
-        CloseModal(ActionType.Update, Idea);
-    }
-
-    private async void UpgradeIdea()
-    {
-        var response = await GoalService.CreateGoalAsync(UpgradedIdea);
-
-        NavigationManager.NavigateTo("/goals");
-    }
-
-    private void StartUpgradeIdea()
-    {
-        ActiveSection = SectionType.UpgradeIdea;
-        UpgradedIdea.Description = Idea.Description;
-        UpgradedIdea.Title = Idea.Title;
-    }
-
-    private void StartDeleteIdea()
-    {
-        GoConfirmScreen();
-    }
-
-    private void GoConfirmScreen()
-    {
-        ActiveSection = SectionType.ConfirmDelete;
-    }
-
-    private void GoIdeaDetailScreen()
-    {
-        ActiveSection = SectionType.IdeaDetail;
-    }
-
-    private async void DeleteIdea()
-    {
-        await IdeaService.DeleteAsync(Idea.Id);
-
-        Modal.Close(ActionType.Delete, Idea);
-    }
-
-    private string GetActive(SectionType sectionType)
-    {
-        return ActiveSection == sectionType ? "active" : "";
-    }
-
-    private async Task SetIdeaCategoryAsync()
-    {
-        var categories = new List<CategoryDto>();
-
-        if (!Idea.CategoryNames.Any())
-        {
-            return;
-        }
-
-        var newCategories = Idea.CategoryNames.Where(categoryName => !IdeaCategories.Any(existingCategory => categoryName == existingCategory.Name));
-
-        if (newCategories.Any())
-        {
-            var bulkNewCategories = await AddNewIdeaCategoryBulkAsync(newCategories);
-            categories.AddRange(bulkNewCategories.Data);
-        }
-
-        categories.AddRange(IdeaCategories.Where(existingCategory => Idea.CategoryNames.Any(name => name == existingCategory.Name)));
-        Idea.CategoryIds = categories.Select(selectedCategory => selectedCategory.Id);
-
-        await RefreshDataAsync();
-    }
-
-    private async Task<CategoriesDto> AddNewIdeaCategoryBulkAsync(IEnumerable<string> categoryNames)
-    {
-        return await IdeaCategoryService.CreateBulkAsync(new CreateCategoryBulkDto
-            {
-                Categories = categoryNames.Select(name => new CreateCategoryDto()
-                {
-                    Name = name
-                })
-            });
-    }
-
-    private enum SectionType
-    {
-        IdeaDetail,
-        ConfirmDelete,
-        UpgradeIdea
-    }
-}

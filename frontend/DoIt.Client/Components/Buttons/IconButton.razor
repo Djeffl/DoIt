@@ -2,8 +2,11 @@
 @using DoIt.Client.Models.Icons;
 
 <button class="icon-button button" style="@_style" type="@ButtonType" @onclick="OnClick">
-    <DoIt.Client.Components.Icons.IconComponent Icon="Icon" Color="@Color" Padding="@Padding">
-    </DoIt.Client.Components.Icons.IconComponent>
+    @if (Icon is not null)
+    {
+        <DoIt.Client.Components.Icons.IconComponent Icon="Icon.Value" Color="@Color" Padding="@Padding">
+        </DoIt.Client.Components.Icons.IconComponent>
+    }
     @if (!string.IsNullOrEmpty(Text))
     {
         <span class="button-text">@Text</span>
@@ -30,10 +33,13 @@
     public string ButtonType { get; set; } = "button";
 
     [Parameter]
-    public IconType Icon { get; set; }
+    public IconType? Icon { get; set; }
 
     [Parameter]
     public bool Background { get; set; } = true;
+
+    [Parameter]
+    public string BackgroundColor { get; set; }
 
     [Parameter]
     public string Padding { get; set; }
@@ -58,6 +64,10 @@
         if (!Background)
         {
             style += $"background: none; box-shadow: none;";
+        }
+        else if(!string.IsNullOrEmpty(BackgroundColor))
+        {
+            style += $"background-color: {BackgroundColor}";
         }
 
         _style = style;

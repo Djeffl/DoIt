@@ -18,7 +18,7 @@ namespace DoIt.Client.Pages.Ideas
             Modal.OnClose += OnModalClose;
         }
 
-        protected override async Task LoadAsync()
+        protected override async Task LoadDataAsync()
         {
             var getIdeasResponse = await IdeaService.GetAllAsync();
             Ideas = getIdeasResponse.Data.ToList();

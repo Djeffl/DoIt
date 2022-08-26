@@ -27,9 +27,9 @@
         return base.OnInitializedAsync();
     }
 
-    protected override async Task LoadAsync()
+    protected override async Task LoadDataAsync()
     {
-        await base.LoadAsync();
+        await base.LoadDataAsync();
 
         await Task.Delay(2000);
     }

@@ -1,0 +1,55 @@
+﻿@using DoIt.Interface.Goals
+@using DoIt.Client.Components.Fields;
+
+<EditForm Model="Goal">
+    <div class="fields">
+        @* What is this? *@
+        <DataAnnotationsValidator />
+        <div class="field title-field">
+            <TextField @bind-Value="Goal.Title" Label="Title" IsMandatory="true" Width="100%"
+                       ValidationFor="@(() => Goal.Title)" />
+        </div>
+        <div class="field description-field">
+            <TextField @bind-Value="Goal.Description" Label="Description" Multiline="true" Width="100%"
+                       ValidationFor="@(() => Goal.Description)" />
+        </div>
+        <div class="field location-field">
+            <TextField @bind-Value="Goal.Location" Label="Location" Multiline="false" Width="100%"
+                       ValidationFor="@(() => Goal.Location)" />
+        </div>
+        <div class="field reason-field">
+            <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
+                       ValidationFor="@(() => Goal.Reason)" />
+        </div>
+        @*<div class="field type-field">
+        <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
+        />
+        </div>*@
+        <div class="field due-at-field">
+            <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
+                       ValidationFor="@(() => Goal.DueAt)" />
+        </div>
+    </div>
+    @Actions
+</EditForm>
+
+@code {
+    [Parameter]
+    public RenderFragment Actions { get; set; }
+
+    [Parameter]
+    public CreateGoalRequest Goal { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        if (Goal == null)
+        {
+            Goal = new CreateGoalRequest()
+                {
+                    DueAt = DateTime.Now
+                };
+        }
+    }
+}
