@@ -29,7 +29,7 @@
 <DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
     <Rendered>
         <section class="idea-detail @GetActive(SectionType.IdeaDetail)">
-            <EditForm Model="Idea" OnValidSubmit="UpdateIdeaAsync">
+            <EditForm OnValidSubmit="UpdateIdeaAsync" EditContext="@EditContext">
                 <div class="fields">
                     @* What is this? *@
                     <DataAnnotationsValidator />

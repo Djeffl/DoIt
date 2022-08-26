@@ -51,15 +51,9 @@ namespace DoIt.Client.Pages.Ideas
             StateHasChanged();
         }
 
-        private void UpdateExistingIdea(IdeaDto updatedIdea)
+        private async void UpdateExistingIdea(IdeaDto updatedIdea)
         {
-            var idea = Ideas.FirstOrDefault(x => x.Id == updatedIdea.Id);
-            if (idea is not null)
-            {
-                idea.Title = updatedIdea.Title;
-                idea.Description = updatedIdea.Description;
-            }
-            StateHasChanged();
+            await LoadDataAsync();
         }
 
         private void DeleteIdea(IdeaDto idea)

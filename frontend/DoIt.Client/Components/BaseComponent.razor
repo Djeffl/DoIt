@@ -18,6 +18,26 @@
         return Task.CompletedTask;
     }
 
+    protected void LogWarn(string message, string header = "")
+    {
+        ToastService.ShowWarning(message, header);
+    }
+
+    protected void LogError(string message, string header = "")
+    {
+        ToastService.ShowError(message, header);
+    }
+
+    protected void LogInformation(string message, string header = "")
+    {
+        ToastService.ShowInfo(message, header);
+    }
+
+    protected void LogSuccess(string message, string header = "")
+    {
+        ToastService.ShowSuccess(message, header);
+    }
+
     private async Task LoadDataAndStateAsync()
     {
         try

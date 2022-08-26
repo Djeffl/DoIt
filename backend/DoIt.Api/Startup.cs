@@ -47,7 +47,11 @@ namespace DoIt.Api
 
             services.AddMvc();
 
-            services.AddControllers();
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(options =>
+                    {
+                        options.SuppressModelStateInvalidFilter = true;
+                    });
 
             services.AddSwaggerGen();
 
@@ -65,6 +69,15 @@ namespace DoIt.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseExceptionHandler("/error-development");
+            }
+            else
+            {
+                app.UseExceptionHandler("/error");
+            }
+
             app.UseCors(policy =>
                 policy.WithOrigins("https://legoo.azurewebsites.net", "http://legoo.azurewebsites.net", "http://localhost:8000", "https://localhost:8001")
                 .AllowAnyMethod()

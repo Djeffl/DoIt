@@ -1,4 +1,5 @@
-﻿using DoIt.Client.Models.General;
+﻿using DoIt.Client.Components.Modals;
+using DoIt.Client.Models.General;
 using DoIt.Client.Services.Ideas;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas
 {
-    public partial class IdeaCreatePage
+    public partial class IdeaCreatePage : BaseModalComponent
     {
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         public Models.Ideas.CreateIdeaDto NewIdea = new Models.Ideas.CreateIdeaDto();
@@ -29,6 +30,8 @@ namespace DoIt.Client.Pages.Ideas
             await SetIdeaCategoryIdsAsync();
 
             var response = await IdeaService.CreateAsync(NewIdea.ToService());
+
+            LogSuccess("Idea successfully created.");
 
             CloseModal(ActionType.Create, response);
         }

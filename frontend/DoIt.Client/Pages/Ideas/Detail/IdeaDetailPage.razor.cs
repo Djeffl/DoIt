@@ -5,6 +5,8 @@ using DoIt.Client.Models.Loading;
 using DoIt.Interface.Goals;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
+using Microsoft.AspNetCore.Components.Forms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +20,16 @@ namespace DoIt.Client.Pages.Ideas.Detail
         public CreateGoalRequest UpgradedIdeaAsGoal { get; set; } = new CreateGoalRequest();
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         private SectionType ActiveSection;
+        private EditContext EditContext;
 
         protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
             ActiveSection = SectionType.IdeaDetail;
+
+            EditContext = new EditContext(Idea);
+            EditContext.OnFieldChanged += EditContext_OnFieldChanged;
         }
 
         protected override async Task OnParametersSetAsync()
@@ -143,6 +149,16 @@ namespace DoIt.Client.Pages.Ideas.Detail
                     Name = name
                 })
             });
+        }
+
+        // Note: The OnFieldChanged event is raised for each field in the model
+        private async void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
+        {
+            Console.WriteLine(JsonConvert.SerializeObject(e));
+            if (e.FieldIdentifier.FieldName == "Description")
+            {
+                await UpdateIdeaAsync();
+            }
         }
 
         private enum SectionType
