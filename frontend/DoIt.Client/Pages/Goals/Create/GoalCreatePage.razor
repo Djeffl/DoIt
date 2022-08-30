@@ -1,61 +1,45 @@
 ﻿@page "/goals/create"
 
+@using DoIt.Client.Components.Loading
 @using DoIt.Client.Models.Goals;
 @using DoIt.Client.Services.Goals;
 @using DoIt.Client.Components.Fields;
 @using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Models.General
 @using DoIt.Client.Models.Icons
+@using DoIt.Client.Services.Modals
 @using DoIt.Interface.Goals
 @using Microsoft.AspNetCore.Components
 
 @inherits BaseModalComponent<GoalCreateParameter>
 
-@inject IGoalService GoalService
+@inject IGoalService GoalService;
+@inject ModalService ModalService;
 
-<article class="goal-detail">
-    <EditForm Model="Goal" OnValidSubmit="CreateGoalAsync">
-        <div class="fields">
-            @* What is this? *@
-            <DataAnnotationsValidator />
-            <div class="field title-field">
-                <TextField @bind-Value="Goal.Title" Label="Title" IsMandatory="true" Width="100%"
-                           ValidationFor="@(() => Goal.Title)" />
-            </div>
-            <div class="field description-field">
-                <TextField @bind-Value="Goal.Description" Label="Description" Multiline="true" Width="100%"
-                           ValidationFor="@(() => Goal.Description)" />
-            </div>
-            <div class="field location-field">
-                <TextField @bind-Value="Goal.Location" Label="Location" Multiline="false" Width="100%"
-                           ValidationFor="@(() => Goal.Location)" />
-            </div>
-            <div class="field reason-field">
-                <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
-                           ValidationFor="@(() => Goal.Reason)" />
-            </div>
-            @*<div class="field type-field">
-                <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
-                />
-                </div>*@
-            <div class="field due-at-field">
-                <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
-                           ValidationFor="@(() => Goal.DueAt)" />
-            </div>
-        </div>
 
-        <div class="actions">
-            <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
-            </IconButton>
-            <IconButton Text="Create" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
-            </IconButton>
-        </div>
-
-    </EditForm>
-</article>
+<DoIt.Client.Components.Modals.ModalComponent Title="Create Goal" CloseModal="() => ModalService.Close()">
+    <Content>
+        <LoadingContainerComponent LoadingState="LoadingState">
+            <Rendered>
+                <article class="goal-detail">
+                    <DoIt.Client.Components.Goals.GoalFormComponent>
+                        <Actions>
+                            <div class="actions">
+                                <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+                                </IconButton>
+                                <IconButton Text="Create" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
+                                </IconButton>
+                            </div>
+                        </Actions>
+                    </DoIt.Client.Components.Goals.GoalFormComponent>
+                </article>
+            </Rendered>
+        </LoadingContainerComponent>
+    </Content>
+</DoIt.Client.Components.Modals.ModalComponent>
 
 @code {
-    public CreateGoalRequest Goal = new CreateGoalRequest()
+    public Models.Goals.CreateGoalDto Goal = new Models.Goals.CreateGoalDto()
         {
             DueAt = DateTime.Now
         };
@@ -77,7 +61,7 @@
 
     private async Task CreateGoalAsync()
     {
-        var response = await GoalService.CreateGoalAsync(Goal);
+        var response = await GoalService.CreateGoalAsync(Goal.ToService());
 
         Console.WriteLine("Closing MOdal...");
         CloseModal(ActionType.Create, response);

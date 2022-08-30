@@ -9,7 +9,7 @@ namespace DoIt.Client.Services.Modals
 {
     public class ModalService
     {
-        public event Action<RenderFragment, string> OnShow;
+        public event Action<RenderFragment> OnShow;
         public event Action<ActionType, object> OnClose;
 
         public ModalService()
@@ -23,18 +23,18 @@ namespace DoIt.Client.Services.Modals
                 x.OpenComponent(1, typeof(ComponentT));
                 x.CloseComponent();
             });
-            OnShow?.Invoke(content, "");
+            OnShow?.Invoke(content);
         }
 
-        public void Show<ComponentT>(string title)
-        {
-            var content = new RenderFragment(x =>
-            {
-                x.OpenComponent(1, typeof(ComponentT));
-                x.CloseComponent();
-            });
-            OnShow?.Invoke(content, title);
-        }
+        //public void Show<ComponentT>(string title)
+        //{
+        //    var content = new RenderFragment(x =>
+        //    {
+        //        x.OpenComponent(1, typeof(ComponentT));
+        //        x.CloseComponent();
+        //    });
+        //    OnShow?.Invoke(content, title);
+        //}
 
         public void Show<ComponentT, ParameterT>(ParameterT parameter)
         {
@@ -44,35 +44,35 @@ namespace DoIt.Client.Services.Modals
                 x.AddAttribute(3, "Parameter", parameter);
                 x.CloseComponent();
             });
-            OnShow?.Invoke(content, "");
+            OnShow?.Invoke(content);
         }
 
-        public void Show<ComponentT, ParameterT>(string title, ParameterT parameter)
-        {
-            var content = new RenderFragment(x =>
-            {
-                x.OpenComponent(1, typeof(ComponentT));
-                x.AddAttribute(3, "Parameter", parameter);
-                x.CloseComponent();
-            });
-            OnShow?.Invoke(content, title);
-        }
+        //public void Show<ComponentT, ParameterT>(string title, ParameterT parameter)
+        //{
+        //    var content = new RenderFragment(x =>
+        //    {
+        //        x.OpenComponent(1, typeof(ComponentT));
+        //        x.AddAttribute(3, "Parameter", parameter);
+        //        x.CloseComponent();
+        //    });
+        //    OnShow?.Invoke(content, title);
+        //}
 
-        public ResultT Show<ComponentT, ParameterT, ResultT>(ParameterT parameter) where ResultT : new()
-        {
-            var content = new RenderFragment(x =>
-            {
-                x.OpenComponent(1, typeof(ComponentT));
-                x.AddAttribute(2, "Parameter", parameter);
-                x.CloseComponent();
-            });
+        //public ResultT Show<ComponentT, ParameterT, ResultT>(ParameterT parameter) where ResultT : new()
+        //{
+        //    var content = new RenderFragment(x =>
+        //    {
+        //        x.OpenComponent(1, typeof(ComponentT));
+        //        x.AddAttribute(2, "Parameter", parameter);
+        //        x.CloseComponent();
+        //    });
 
-            var obj = new ResultT();
+        //    var obj = new ResultT();
 
-            OnShow?.Invoke(content, "");
+        //    OnShow?.Invoke(content, "");
 
-            return obj;
-        }
+        //    return obj;
+        //}
 
         public void Close()
         {

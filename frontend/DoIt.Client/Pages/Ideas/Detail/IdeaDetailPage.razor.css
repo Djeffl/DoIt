@@ -4,6 +4,10 @@
     justify-content: space-between;
 }
 
+.right {
+    float: right;
+}
+
 .field {
     margin: 1rem 0px;
 }

@@ -17,17 +17,7 @@
     {
         <div class="cascading-modal-wrapper" @onclick="() => CloseModal()">
             <div class="cascading-modal cascading-modal-center" @onclick:stopPropagation="true">
-                <section class="top-modal">
-                    <div class="top-modal-title">
-                        <h1>@Title</h1>
-                    </div>
-                    <div class="close-modal">
-                        <button @onclick="() => CloseModal()">X</button>
-                    </div>
-                </section>
-                <div class="content-modal">
-                    @Content
-                </div>
+                @ModalContent
             </div>
         </div>
     }
@@ -36,10 +26,8 @@
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; }
 
-    [Parameter] public string Title { get; set; }
-
     protected bool IsVisible { get; set; }
-    protected RenderFragment Content { get; set; }
+    protected RenderFragment ModalContent { get; set; }
 
     protected override void OnInitialized()
     {
@@ -47,10 +35,9 @@
         ModalService.OnClose += CloseModal;
     }
 
-    public void ShowModal(RenderFragment content, string title)
+    public void ShowModal(RenderFragment content)
     {
-        Content = content;
-        Title = title;
+        ModalContent = content;
         IsVisible = true;
 
         StateHasChanged();
@@ -65,7 +52,7 @@
     public void CloseModal(ActionType actionType, object response)
     {
         IsVisible = false;
-        Content = null;
+        ModalContent = null;
 
         StateHasChanged();
     }

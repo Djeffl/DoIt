@@ -9,7 +9,7 @@ namespace DoIt.Api.Services.Goal
     public interface IGoalService
     {
         Task<GoalsDto> GetGoalsAsync(GetGoalsDto _);
-        Task<GoalDto> CreateGoalAsync(CreateGoalDto createGoalDto);
+        Task<GoalDto> CreateGoalAsync(Interface.Goals.CreateGoalDto createGoalDto);
         Task<GoalDto> GetGoalAsync(long id);
         Task DeleteGoalAsync(long id);
         Task<GoalDto> UpdateGoalAsync(long id, UpdateGoalRequest request);

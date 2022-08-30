@@ -14,7 +14,9 @@
     {
         <div class="hidden-menu-overlay" @onclick="ToggleMenu">
             <div style=@_menuOverlayStyle class="menu-overlay">
-                @MenuItems
+                <div style="width: 100%; height: 100%;" @onclick="CloseMenu">
+                    @MenuItems
+                </div>
             </div>
         </div>
     }
@@ -36,6 +38,7 @@
 
     public void CloseMenu()
     {
+        Console.WriteLine("Closing...");
         _isOpen = false;
         StateHasChanged();
     }
@@ -43,7 +46,7 @@
     public void OpenMenu(MouseEventArgs args)
     {
         _isOpen = true;
-        _menuOverlayStyle = $"top: {args.ClientY}px; left: {args.ClientX}px;";
+        _menuOverlayStyle = $"top: {args.ClientY}px; left: {args.ClientX - 185}px;";
         Console.WriteLine(JsonConvert.SerializeObject(args));
         StateHasChanged();
     }

@@ -7,42 +7,48 @@
 @using DoIt.Client.Models.Icons;
 @using DoIt.Client.Models.General;
 @using DoIt.Client.Services.IdeaCategories
+@using DoIt.Client.Services.Modals
 @using DoIt.Interface.IdeaCategory
 @using DoIt.Interface.Ideas
 @using Microsoft.AspNetCore.Components
 
-@inherits BaseModalComponent
-
+@inject ModalService ModalService;
 @inject IIdeaService IdeaService;
 @inject ICategoryService IdeaCategoryService;
 
-<LoadingContainerComponent LoadingState="LoadingState">
-    <Rendered>
-        <EditForm Model="NewIdea" OnValidSubmit="CreateIdeaAsync">
-            <div class="fields">
-                @* What is this? *@
-                <DataAnnotationsValidator />
-                <div class="field title-field">
-                    <TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" Width="100%"
-                               ValidationFor="@(() => NewIdea.Title)" />
-                </div>
-                <div class="field description-field">
-                    <TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="100%"
-                               ValidationFor="@(() => NewIdea.Description)" />
-                </div>
-                <div class="field category-field">
-                    <ChipField @bind-Value="NewIdea.CategoryNames"
-                               Label="Categories"
-                               Width="100%"
-                               AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
-                    </ChipField>
-                </div>
-            </div>
+@inherits BaseComponent
 
-            <div class="actions">
-                <IconButton Text="> Create" BackgroundColor="var(--accent)" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.LightBulb">
-                </IconButton>
-            </div>
-        </EditForm>
-    </Rendered>
-</LoadingContainerComponent>
+<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => ModalService.Close()">
+    <Content>
+        <LoadingContainerComponent LoadingState="LoadingState">
+            <Rendered>
+                <EditForm Model="NewIdea" OnValidSubmit="CreateIdeaAsync">
+                    <div class="fields">
+                        @* What is this? *@
+                        <DataAnnotationsValidator />
+                        <div class="field title-field">
+                            <TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" Width="100%"
+                                       ValidationFor="@(() => NewIdea.Title)" />
+                        </div>
+                        <div class="field description-field">
+                            <TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="100%"
+                                       ValidationFor="@(() => NewIdea.Description)" />
+                        </div>
+                        <div class="field category-field">
+                            <ChipField @bind-Value="NewIdea.CategoryNames"
+                                       Label="Categories"
+                                       Width="100%"
+                                       AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
+                            </ChipField>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <IconButton Text="> Create" BackgroundColor="var(--accent)" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.LightBulb">
+                        </IconButton>
+                    </div>
+                </EditForm>
+            </Rendered>
+        </LoadingContainerComponent>
+    </Content>
+</DoIt.Client.Components.Modals.ModalComponent>

@@ -59,7 +59,7 @@ namespace DoIt.Api.Controllers
         [HttpPost]
         [Route("")]
         [AllowAnonymous]
-        public async Task<ActionResult<GoalDto>> CreateGoalAsync(CreateGoalRequest request)
+        public async Task<ActionResult<GoalDto>> CreateGoalAsync(Interface.Goals.CreateGoalDto request)
         {
             //var isParsed = Enum.TryParse<GoalType>(request.Name, ignoreCase: true, out var goalType);
 

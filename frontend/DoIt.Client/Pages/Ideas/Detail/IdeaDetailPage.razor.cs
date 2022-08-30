@@ -2,6 +2,8 @@
 using DoIt.Client.Components.Modals;
 using DoIt.Client.Models.General;
 using DoIt.Client.Models.Loading;
+using DoIt.Client.Models.Menus;
+using DoIt.Client.Services.Goals;
 using DoIt.Interface.Goals;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
@@ -17,10 +19,12 @@ namespace DoIt.Client.Pages.Ideas.Detail
     public partial class IdeaDetailPage : BaseModalComponent<IdeaDetailParameter>
     {
         public IdeaDtoIdeaDetailPage Idea { get; set; } = new IdeaDtoIdeaDetailPage();
-        public CreateGoalRequest UpgradedIdeaAsGoal { get; set; } = new CreateGoalRequest();
+        public DoIt.Client.Models.Goals.CreateGoalDto UpgradedIdeaAsGoal { get; set; } = new Models.Goals.CreateGoalDto();
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         private SectionType ActiveSection;
         private EditContext EditContext;
+
+        public IEnumerable<MenuOption> Options { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -30,6 +34,22 @@ namespace DoIt.Client.Pages.Ideas.Detail
 
             EditContext = new EditContext(Idea);
             EditContext.OnFieldChanged += EditContext_OnFieldChanged;
+
+            Options = new List<MenuOption>()
+            {
+                new MenuOption()
+                {
+                    Title = "Delete",
+                    Icon = Models.Icons.IconType.Delete,
+                    OnClick = () => this.StartDeleteIdea()
+                }, 
+                new MenuOption()
+                {
+                    Title = "As Goal",
+                    Icon = Models.Icons.IconType.Goal,
+                    OnClick = () => this.StartUpgradeIdea()
+                },
+            };
         }
 
         protected override async Task OnParametersSetAsync()
@@ -78,7 +98,8 @@ namespace DoIt.Client.Pages.Ideas.Detail
 
         private async void UpgradeIdea()
         {
-            var response = await GoalService.CreateGoalAsync(UpgradedIdeaAsGoal);
+            var response = await GoalService.CreateGoalAsync(UpgradedIdeaAsGoal.ToService());
+            CloseModal(ActionType.Create, response);
 
             NavigationManager.NavigateTo("/goals");
         }
@@ -88,6 +109,9 @@ namespace DoIt.Client.Pages.Ideas.Detail
             ActiveSection = SectionType.UpgradeIdea;
             UpgradedIdeaAsGoal.Description = Idea.Description;
             UpgradedIdeaAsGoal.Title = Idea.Title;
+            UpgradedIdeaAsGoal.CategoryNames = Idea.CategoryNames;
+            UpgradedIdeaAsGoal.DueAt = DateTime.Now;
+            UpgradedIdeaAsGoal.IdeaId = Idea.Id;
         }
 
         private void StartDeleteIdea()
@@ -156,10 +180,10 @@ namespace DoIt.Client.Pages.Ideas.Detail
         private async void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
         {
             Console.WriteLine(JsonConvert.SerializeObject(e));
-            if (e.FieldIdentifier.FieldName == "Description")
-            {
-                await UpdateIdeaAsync();
-            }
+            //if (e.FieldIdentifier.FieldName == "Description")
+            //{
+            //    await UpdateIdeaAsync();
+            //}
         }
 
         private enum SectionType
@@ -167,13 +191,6 @@ namespace DoIt.Client.Pages.Ideas.Detail
             IdeaDetail,
             ConfirmDelete,
             UpgradeIdea
-        }
-
-        private class ActionFlow
-        {
-            public string Name { get; set; }
-            public Action Action { get; set; }
-            public List<ActionFlow> FlowOptions { get; set; }
         }
     }
 }

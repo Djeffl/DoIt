@@ -3,7 +3,7 @@
 @using DoIt.Client.Components.Icons;
 @using DoIt.Client.Models.General;
 
-<div @onclick="e => OnClick.InvokeAsync(e)" @onclick:stopPropagation class="menu-item">
+<div @onclick="e => OnClick.InvokeAsync(e)" class="menu-item">
     <IconComponent Color="AppColor.Gray" HeightAndWith="15" Icon=@Icon></IconComponent>
     <span>@Title</span>
 </div>

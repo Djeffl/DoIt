@@ -26,7 +26,7 @@ namespace DoIt.Client.Services.Goals
 			this.client = client;
 		}
 
-		public async Task<GoalDto> CreateGoalAsync(CreateGoalRequest goal)
+		public async Task<GoalDto> CreateGoalAsync(Interface.Goals.CreateGoalDto goal)
 		{
 			var response = await client.PostAsJsonAsync(_baseUrl, goal);
             Console.WriteLine(JsonConvert.SerializeObject(response));

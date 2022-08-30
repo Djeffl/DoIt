@@ -64,10 +64,10 @@ else
 			return;
 		}
 
-		ModalService.Show<GoalCreatePage, GoalCreateParameter>("", new GoalCreateParameter()
-		{
-			Idea = ideaToBePromotedToGoal
-		});
+		//ModalService.Show<GoalCreatePage, GoalCreateParameter>("", new GoalCreateParameter()
+		//{
+		//	Idea = ideaToBePromotedToGoal
+		//});
 
 		await SessionStorage.SetItemAsync<IdeaDto>(promotedIdea, null);
 	}

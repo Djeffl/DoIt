@@ -11,7 +11,7 @@ namespace DoIt.Client.Services.Goals
 	{
 		Task<GoalsDto> GetAllAsync();
 
-		Task<GoalDto> CreateGoalAsync(CreateGoalRequest goal);
+		Task<GoalDto> CreateGoalAsync(Interface.Goals.CreateGoalDto goal);
 
 		Task<GoalDetail> GetGoalByIdAsync(long goalId);
 

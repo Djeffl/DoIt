@@ -19,7 +19,7 @@ namespace DoIt.Client.Services.Goals
             this.client = client;
         }
 
-		public Task<GoalDto> CreateGoalAsync(CreateGoalRequest goal)
+		public Task<GoalDto> CreateGoalAsync(Interface.Goals.CreateGoalDto goal)
 		{
             return Task.Run(() => new GoalDto
             {

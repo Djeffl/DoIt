@@ -1,0 +1,27 @@
+﻿.top-modal {
+    display: grid;
+    grid-template-columns: 50px [close] auto [title] 50px [options];
+    align-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--bg-secondary);
+    padding: 1rem 0px;
+}
+
+.title {
+    margin: 0;
+}
+
+.close-modal {
+    display: inline-flex;
+    padding: 10px;
+}
+
+    .close-modal button {
+        color: var(--text-primary);
+        border: none;
+        background: none;
+        right: 0px;
+        display: flex;
+        flex: initial;
+        justify-content: flex-end;
+    }

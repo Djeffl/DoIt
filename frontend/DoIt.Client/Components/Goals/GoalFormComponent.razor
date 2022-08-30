@@ -1,5 +1,9 @@
-﻿@using DoIt.Interface.Goals
+﻿@using DoIt.Client.Services.IdeaCategories
+@using DoIt.Interface.Goals
 @using DoIt.Client.Components.Fields;
+@using DoIt.Interface.IdeaCategory
+
+@inherits BaseComponent
 
 <EditForm Model="Goal">
     <div class="fields">
@@ -18,13 +22,16 @@
                        ValidationFor="@(() => Goal.Location)" />
         </div>
         <div class="field reason-field">
-            <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
+            <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" IsMandatory="true" Width="100%"
                        ValidationFor="@(() => Goal.Reason)" />
         </div>
-        @*<div class="field type-field">
-        <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
-        />
-        </div>*@
+        <div class="field category-field">
+            <ChipField @bind-Value="Goal.CategoryNames"
+                       Label="Categories"
+                       Width="100%"
+                       AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
+            </ChipField>
+        </div>
         <div class="field due-at-field">
             <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
                        ValidationFor="@(() => Goal.DueAt)" />
@@ -38,7 +45,13 @@
     public RenderFragment Actions { get; set; }
 
     [Parameter]
-    public CreateGoalRequest Goal { get; set; }
+    public Models.Goals.CreateGoalDto Goal { get; set; }
+
+    [Inject]
+    public ICategoryService CategoryService { get; set; }
+
+    public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
+
 
     protected override void OnInitialized()
     {
@@ -46,10 +59,22 @@
 
         if (Goal == null)
         {
-            Goal = new CreateGoalRequest()
+            Goal = new Models.Goals.CreateGoalDto()
                 {
                     DueAt = DateTime.Now
                 };
         }
+    }
+
+    protected override async Task LoadDataAsync()
+    {
+        await base.LoadDataAsync();
+        IdeaCategories = await GetIdeaCategoriesAsync();
+    }
+
+    private async Task<IEnumerable<CategoryDto>> GetIdeaCategoriesAsync()
+    {
+        var categoriesDto = await CategoryService.GetListAsync();
+        return categoriesDto.Data;
     }
 }

@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DoIt.Client.Models.Icons;
 using System;
-using System.Threading.Tasks;
 
 namespace DoIt.Client.Models.Menus
 {
-	public class MenuOption
+    public class MenuOption
 	{
 		public string Title { get; set; }
-		public Task<EventCallback> OnClick { get; set; }
-	}
+
+        public Action OnClick { get; set; }
+
+        public IconType Icon { get; set; }
+
+    }
 }

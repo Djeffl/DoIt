@@ -13,7 +13,8 @@
 @using DoIt.Interface.Goals
 @using DoIt.Interface.IdeaCategory
 @using DoIt.Interface.Ideas
-@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components;
+@using DoIt.Client.Components.Modals;
 
 
 @inherits BaseModalComponent<IdeaDetailParameter>
@@ -24,64 +25,66 @@
 @inject NavigationManager NavigationManager;
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
 @inject ICategoryService IdeaCategoryService;
+@inject ModalService ModalService;
 
+<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => ModalService.Close(ActionType.Cancel, Idea)" Options="Options">
+    <Content>
+        <DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
+            <Rendered>
+                <section class="idea-detail @GetActive(SectionType.IdeaDetail)">
+                    <EditForm OnValidSubmit="UpdateIdeaAsync" EditContext="@EditContext">
+                        <div class="fields">
+                            @* What is this? *@
+                            <DataAnnotationsValidator />
+                            <div class="field title-field">
+                                <TextField @bind-Value="Idea.Title" Label="Title" IsMandatory="true" Width="100%"
+                                           ValidationFor="@(() => Idea.Title)" />
+                            </div>
+                            <div class="field description-field">
+                                <TextField @bind-Value="Idea.Description" Label="Description" Multiline="true" Width="100%"
+                                           ValidationFor="@(() => Idea.Description)" />
+                            </div>
+                            <div class="field category-field">
+                                <ChipField @bind-Value="Idea.CategoryNames"
+                                           Label="Categories"
+                                           Width="100%"
+                                           AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
+                                </ChipField>
+                            </div>
+                        </div>
 
-<DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
-    <Rendered>
-        <section class="idea-detail @GetActive(SectionType.IdeaDetail)">
-            <EditForm OnValidSubmit="UpdateIdeaAsync" EditContext="@EditContext">
-                <div class="fields">
-                    @* What is this? *@
-                    <DataAnnotationsValidator />
-                    <div class="field title-field">
-                        <TextField @bind-Value="Idea.Title" Label="Title" IsMandatory="true" Width="100%"
-                                   ValidationFor="@(() => Idea.Title)" />
+                        <div class="actions right">
+                            <IconButton OnClick="async () => await UpdateIdeaAsync()" Text="Save" Color="AppColor.White" BackgroundColor="var(--accent)" ButtonType="button" Icon="IconType.Check">
+                            </IconButton>
+                        </div>
+                    </EditForm>
+                </section>
+                <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
+                    <div class="description">
+                        <p>Are you sure you want to delete idea '@Idea.Title'</p>
                     </div>
-                    <div class="field description-field">
-                        <TextField @bind-Value="Idea.Description" Label="Description" Multiline="true" Width="100%"
-                                   ValidationFor="@(() => Idea.Description)" />
-                    </div>
-                    <div class="field category-field">
-                        <ChipField @bind-Value="Idea.CategoryNames"
-                                   Label="Categories"
-                                   Width="100%"
-                                   AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
-                        </ChipField>
-                    </div>
-                </div>
-
-                <div class="actions">
-                    <IconButton OnClick="StartDeleteIdea" Text="> Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
-                    </IconButton>
-                    <IconButton OnClick="StartUpgradeIdea" Text="> Set As Goal" Color="AppColor.White" BackgroundColor="var(--accent)" ButtonType="button" Icon="IconType.Goal">
-                    </IconButton>
-                </div>
-            </EditForm>
-        </section>
-        <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
-            <div class="description">
-                <p>Are you sure you want to delete idea '@Idea.Title'</p>
-            </div>
-            <div class="actions confirm-modal-actions">
-                <IconButton OnClick="() => GoIdeaDetailScreen()" Text="> Cancel" Color="AppColor.Gray" ButtonType="button">
-                </IconButton>
-                <IconButton OnClick="() => DeleteIdea()" Text="> Yes" Color="AppColor.White" ButtonType="button">
-                </IconButton>
-            </div>
-        </section>
-        <section class="promote-idea @GetActive(SectionType.UpgradeIdea)">
-            <h2>Upgrade Idea to Goal</h2>
-            <DoIt.Client.Components.Goals.GoalFormComponent Goal="UpgradedIdeaAsGoal">
-                <Actions>
-                    <div class="actions">
-                        <IconButton Text="> Cancel" Color="AppColor.White" ButtonType="button" OnClick="() => ActiveSection = SectionType.IdeaDetail">
+                    <div class="actions confirm-modal-actions">
+                        <IconButton OnClick="() => GoIdeaDetailScreen()" Text="> Cancel" Color="AppColor.Gray" ButtonType="button">
                         </IconButton>
-                    <IconButton Text="> Create" Color="AppColor.White" ButtonType="button" OnClick="() => UpgradeIdea()" Icon="IconType.Goal" BackgroundColor="var(--accent)">
-                    </IconButton>
+                        <IconButton OnClick="() => DeleteIdea()" Text="> Yes" Color="AppColor.White" ButtonType="button">
+                        </IconButton>
                     </div>
-                </Actions>
-            </DoIt.Client.Components.Goals.GoalFormComponent>
+                </section>
+                <section class="promote-idea @GetActive(SectionType.UpgradeIdea)">
+                    <h2>Upgrade Idea to Goal</h2>
+                    <DoIt.Client.Components.Goals.GoalFormComponent Goal="UpgradedIdeaAsGoal">
+                        <Actions>
+                            <div class="actions">
+                                <IconButton Text="> Cancel" Color="AppColor.White" ButtonType="button" OnClick="() => ActiveSection = SectionType.IdeaDetail">
+                                </IconButton>
+                                <IconButton Text="> Create" Color="AppColor.White" ButtonType="button" OnClick="() => UpgradeIdea()" Icon="IconType.Goal" BackgroundColor="var(--accent)">
+                                </IconButton>
+                            </div>
+                        </Actions>
+                    </DoIt.Client.Components.Goals.GoalFormComponent>
 
-        </section>
-    </Rendered>
-</DoIt.Client.Components.Loading.LoadingContainerComponent>
+                </section>
+            </Rendered>
+        </DoIt.Client.Components.Loading.LoadingContainerComponent>
+    </Content>
+</DoIt.Client.Components.Modals.ModalComponent>

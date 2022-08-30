@@ -22,6 +22,8 @@ namespace DoIt.Client.Pages.Ideas
         {
             var getIdeasResponse = await IdeaService.GetAllAsync();
             Ideas = getIdeasResponse.Data.ToList();
+            StateHasChanged();
+
         }
 
         private void OnModalClose(ActionType actionType, object response)
@@ -42,29 +44,22 @@ namespace DoIt.Client.Pages.Ideas
 
         private void OpenDetailGoal(long id)
         {
-            Modal.Show<IdeaDetailPage, IdeaDetailParameter>("Idea Details", new IdeaDetailParameter() { IdeaId = id });
+            Modal.Show<IdeaDetailPage, IdeaDetailParameter>(new IdeaDetailParameter() { IdeaId = id });
         }
 
-        private void AddNewIdea(IdeaDto idea)
-        {
-            Ideas.Add(idea);
-            StateHasChanged();
-        }
-
-        private async void UpdateExistingIdea(IdeaDto updatedIdea)
+        private async void AddNewIdea(IdeaDto _)
         {
             await LoadDataAsync();
         }
 
-        private void DeleteIdea(IdeaDto idea)
+        private async void UpdateExistingIdea(IdeaDto _)
         {
-            var ideaToDelete = Ideas.FirstOrDefault(x => x.Id == idea.Id);
+            await LoadDataAsync();
+        }
 
-            if (ideaToDelete is not null)
-            {
-                Ideas.Remove(ideaToDelete);
-            }
-            StateHasChanged();
+        private async void DeleteIdea(IdeaDto _)
+        {
+            await LoadDataAsync();
         }
     }
 }

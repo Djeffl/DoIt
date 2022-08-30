@@ -19,7 +19,7 @@ namespace DoIt.Api.Services.Goal
             _ctx = context;
         }
 
-        public async Task<GoalDto> CreateGoalAsync(CreateGoalDto createGoalDto)
+        public async Task<GoalDto> CreateGoalAsync(Interface.Goals.CreateGoalDto createGoalDto)
         {
             var newGoal = new Domain.Goal()
             {

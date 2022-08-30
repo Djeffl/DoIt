@@ -1,0 +1,30 @@
+﻿@using DoIt.Client.Components.Menus
+@inherits BaseComponent
+
+
+<div class="modal">
+    <section class="top-modal">
+        <div class="close-modal">
+            <button @onclick="() => CloseModal()">&#60;</button>
+        </div>
+        <div class="top-modal-title">
+            <h1 class="title">@Title</h1>
+        </div>
+        <div>
+            @if (Options != null)
+            {
+                <MenuComponent Icon=Models.Icons.IconType.MoreOptions>
+                    <MenuItems>
+                        @foreach (var option in Options)
+                        {
+                            <MenuItemComponent OnClick="() => option.OnClick()" Icon="@option.Icon" Title="@option.Title"></MenuItemComponent>
+                        }
+                    </MenuItems>
+                </MenuComponent>
+            }
+        </div>
+    </section>
+    <div class="content-modal">
+        @Content
+    </div>
+</div>

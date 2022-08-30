@@ -62,7 +62,7 @@
     {
         Console.WriteLine(JsonConvert.SerializeObject(Goal));
         Console.WriteLine(id);
-        Modal.Show<GoalDetailPage, GoalDetailParameter>("Goal Details", new GoalDetailParameter() { GoalId = id });
+        Modal.Show<GoalDetailPage, GoalDetailParameter>(new GoalDetailParameter() { GoalId = id });
     }
 
     //private void NavigateGoalDetailPage()
