@@ -1,0 +1,38 @@
+﻿@using DoIt.Client.Components.Fields;
+@using DoIt.Client.Models.Ideas
+@using DoIt.Interface.IdeaCategory
+
+@inherits BaseComponent
+
+<EditForm Model="Idea" OnSubmit="() => OnSubmit(Idea)">
+    <div class="fields">
+        @* What is this? *@
+        <DataAnnotationsValidator />
+        <div class="field title-field">
+            <TextField @bind-Value="Idea.Title" Label="Title" IsMandatory="true" Width="100%"
+                       ValidationFor="@(() => Idea.Title)" />
+        </div>
+        <div class="field description-field">
+            <TextField @bind-Value="Idea.Description" Label="Description" Multiline="true" Width="100%"
+                       ValidationFor="@(() => Idea.Description)" />
+        </div>
+        <div class="field category-field">
+            <ChipField @bind-Value="Idea.CategoryNames"
+                       Label="Categories"
+                       Width="100%"
+                       AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
+            </ChipField>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Action<IdeaFormDto> OnSubmit { get; set; } = default;
+
+    [Parameter]
+    public IdeaFormDto Idea { get; set; }
+
+    [Parameter]
+    public IEnumerable<CategoryDto> IdeaCategories { get; set; }
+}

@@ -18,36 +18,11 @@
 
 @inherits BaseComponent
 
-<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => ModalService.Close()">
+<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => ModalService.Close()" Options="Options">
     <Content>
         <LoadingContainerComponent LoadingState="LoadingState">
             <Rendered>
-                <EditForm Model="NewIdea" OnValidSubmit="CreateIdeaAsync">
-                    <div class="fields">
-                        @* What is this? *@
-                        <DataAnnotationsValidator />
-                        <div class="field title-field">
-                            <TextField @bind-Value="NewIdea.Title" Label="Title" IsMandatory="true" Width="100%"
-                                       ValidationFor="@(() => NewIdea.Title)" />
-                        </div>
-                        <div class="field description-field">
-                            <TextField @bind-Value="NewIdea.Description" Label="Description" Multiline="true" Width="100%"
-                                       ValidationFor="@(() => NewIdea.Description)" />
-                        </div>
-                        <div class="field category-field">
-                            <ChipField @bind-Value="NewIdea.CategoryNames"
-                                       Label="Categories"
-                                       Width="100%"
-                                       AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
-                            </ChipField>
-                        </div>
-                    </div>
-
-                    <div class="actions">
-                        <IconButton Text="> Create" BackgroundColor="var(--accent)" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.LightBulb">
-                        </IconButton>
-                    </div>
-                </EditForm>
+                <DoIt.Client.Components.Ideas.IdeaFormComponent Idea="NewIdea" IdeaCategories="IdeaCategories"></DoIt.Client.Components.Ideas.IdeaFormComponent>
             </Rendered>
         </LoadingContainerComponent>
     </Content>

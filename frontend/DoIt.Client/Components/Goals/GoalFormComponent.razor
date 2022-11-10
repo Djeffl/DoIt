@@ -37,15 +37,11 @@
                        ValidationFor="@(() => Goal.DueAt)" />
         </div>
     </div>
-    @Actions
 </EditForm>
 
 @code {
     [Parameter]
-    public RenderFragment Actions { get; set; }
-
-    [Parameter]
-    public Models.Goals.CreateGoalDto Goal { get; set; }
+    public Models.Goals.GoalFormDto Goal { get; set; }
 
     [Inject]
     public ICategoryService CategoryService { get; set; }
@@ -59,10 +55,7 @@
 
         if (Goal == null)
         {
-            Goal = new Models.Goals.CreateGoalDto()
-                {
-                    DueAt = DateTime.Now
-                };
+            throw new ArgumentNullException();
         }
     }
 

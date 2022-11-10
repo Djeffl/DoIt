@@ -22,3 +22,11 @@
     margin: .5rem 20px 1rem 20px;
     border-radius: 7px;
 }
+
+.defaultActiveItemButton {
+    color: var(--gray);
+}
+
+.menu {
+    display: flex;
+}

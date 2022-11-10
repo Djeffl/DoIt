@@ -1,25 +1,28 @@
 ﻿using DoIt.Client.Components;
 using DoIt.Client.Components.Modals;
 using DoIt.Client.Models.General;
+using DoIt.Client.Models.Ideas;
 using DoIt.Client.Models.Loading;
 using DoIt.Client.Models.Menus;
 using DoIt.Client.Services.Goals;
 using DoIt.Interface.Goals;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas.Detail
 {
     public partial class IdeaDetailPage : BaseModalComponent<IdeaDetailParameter>
     {
-        public IdeaDtoIdeaDetailPage Idea { get; set; } = new IdeaDtoIdeaDetailPage();
-        public DoIt.Client.Models.Goals.CreateGoalDto UpgradedIdeaAsGoal { get; set; } = new Models.Goals.CreateGoalDto();
+        public IdeaFormDto Idea { get; set; } = new IdeaFormDto();
+        public DoIt.Client.Models.Goals.GoalFormDto UpgradedIdeaAsGoal { get; set; } = new Models.Goals.GoalFormDto();
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         private SectionType ActiveSection;
         private EditContext EditContext;
@@ -42,13 +45,19 @@ namespace DoIt.Client.Pages.Ideas.Detail
                     Title = "Delete",
                     Icon = Models.Icons.IconType.Delete,
                     OnClick = () => this.StartDeleteIdea()
-                }, 
+                },
                 new MenuOption()
                 {
                     Title = "As Goal",
                     Icon = Models.Icons.IconType.Goal,
                     OnClick = () => this.StartUpgradeIdea()
                 },
+                new MenuOption()
+                {
+                    Title = "Save",
+                    OnClick= async () => await UpdateIdeaAsync(),
+                    DefaultActive = true
+                }
             };
         }
 
@@ -57,7 +66,7 @@ namespace DoIt.Client.Pages.Ideas.Detail
             await base.OnParametersSetAsync();
 
             var idea = await IdeaService.GetAsync(Parameter.IdeaId);
-            Idea = new IdeaDtoIdeaDetailPage
+            Idea = new IdeaFormDto
             {
                 Id = idea.Id,
                 Title = idea.Title,
@@ -85,7 +94,7 @@ namespace DoIt.Client.Pages.Ideas.Detail
         {
             await SetIdeaCategoryIdsAsync();
 
-            await IdeaService.UpdateIdeaAsync(Idea.Id,
+            await IdeaService.UpdateIdeaAsync(Idea.Id.Value,
                 new UpdateIdeaDto()
                 {
                     Title = Idea.Title,
@@ -122,18 +131,20 @@ namespace DoIt.Client.Pages.Ideas.Detail
         private void GoConfirmScreen()
         {
             ActiveSection = SectionType.ConfirmDelete;
+            StateHasChanged();
         }
 
         private void GoIdeaDetailScreen()
         {
             ActiveSection = SectionType.IdeaDetail;
+            StateHasChanged();
         }
 
         private async void DeleteIdea()
         {
-            await IdeaService.DeleteAsync(Idea.Id);
+            await IdeaService.DeleteAsync(Idea.Id.Value);
 
-            Modal.Close(ActionType.Delete, Idea);
+            ModalService.Close(ActionType.Delete, Idea);
         }
 
         private string GetActive(SectionType sectionType)

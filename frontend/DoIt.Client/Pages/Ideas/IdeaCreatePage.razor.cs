@@ -1,6 +1,8 @@
 ﻿using DoIt.Client.Components;
 using DoIt.Client.Components.Modals;
 using DoIt.Client.Models.General;
+using DoIt.Client.Models.Ideas;
+using DoIt.Client.Models.Menus;
 using DoIt.Client.Services.Ideas;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
@@ -13,11 +15,24 @@ namespace DoIt.Client.Pages.Ideas
     public partial class IdeaCreatePage
     {
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
-        public Models.Ideas.CreateIdeaDto NewIdea = new Models.Ideas.CreateIdeaDto();
+        public Models.Ideas.IdeaFormDto NewIdea = new Models.Ideas.IdeaFormDto();
+
+        public IEnumerable<MenuOption> Options { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+
+            Options = new List<MenuOption>()
+            {
+                new MenuOption()
+                {
+                    Title = "Create",
+                    Icon = Models.Icons.IconType.Delete,
+                    OnClick = async () => await this.CreateIdeaAsync(NewIdea),
+                    DefaultActive = true
+                },
+            };
         }
 
         protected override async Task LoadDataAsync()
@@ -26,13 +41,11 @@ namespace DoIt.Client.Pages.Ideas
             IdeaCategories = await GetIdeaCategoriesAsync();
         }
 
-        private async Task CreateIdeaAsync()
+        private async Task CreateIdeaAsync(IdeaFormDto idea)
         {
             await SetIdeaCategoryIdsAsync();
 
-            var response = await IdeaService.CreateAsync(NewIdea.ToService());
-
-            LogSuccess("Idea successfully created.");
+            var response = await IdeaService.CreateAsync(idea.ToService());
 
             ModalService.Close(ActionType.Create, response);
         }

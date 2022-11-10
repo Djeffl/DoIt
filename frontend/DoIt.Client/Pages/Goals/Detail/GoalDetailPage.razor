@@ -1,12 +1,17 @@
 ﻿@page "/goals/{GoalId}"
 
+@using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Models.Loading
+@using DoIt.Client.Models.Menus
+@using DoIt.Client.Services.Ideas;
+@using DoIt.Client.Components.Fields;
+@using DoIt.Client.Models.Icons;
+@using DoIt.Client.Models.General;
+@using DoIt.Client.Models.Ideas;
+@using DoIt.Client.Services.IdeaCategories;
 @using DoIt.Client.Models.Goals;
 @using DoIt.Client.Services.Goals;
-@using DoIt.Client.Components.Fields;
-@using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Models.ActionPlan;
-@using DoIt.Client.Models.General;
-@using DoIt.Client.Models.Icons;
 @using DoIt.Client.Models.Todos;
 @using DoIt.Client.Services.Todos;
 @using DoIt.Client.Services.Modals;
@@ -15,110 +20,119 @@
 @inject ITodoService TodoService;
 @inject IGoalService GoalService;
 @inject NavigationManager NavManager;
-@inject ModalService Modal;
+@inject ModalService ModalService;
 
 
 @inherits BaseModalComponent<GoalDetailParameter>
 
-@if (Goal != null)
+<DoIt.Client.Components.Modals.ModalComponent Title="Goal Detail" CloseModal="() => ModalService.Close(ActionType.Cancel, Goal)" Options="Options">
+    <Content>
+        <DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
+            <Rendered>
+                <EditForm Model="Goal" OnValidSubmit="UpdateGoalAsync">
+                    <div class="fields">
+                        @* What is this? *@
+                        <DataAnnotationsValidator />
+                        <div class="field title-field">
+                            <TextField @bind-Value="Goal.Title" Label="Title" IsMandatory="true" Width="100%"
+                                       ValidationFor="@(() => Goal.Title)" />
+                        </div>
+                        <div class="field description-field">
+                            <TextField @bind-Value="Goal.Description" Label="Description" Multiline="true" Width="100%"
+                                       ValidationFor="@(() => Goal.Description)" />
+                        </div>
+                        <div class="field location-field">
+                            <TextField @bind-Value="Goal.Location" Label="Location" Multiline="false" Width="100%"
+                                       ValidationFor="@(() => Goal.Location)" />
+                        </div>
+                        <div class="field reason-field">
+                            <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
+                                       ValidationFor="@(() => Goal.Reason)" />
+                        </div>
+                        @*<div class="field type-field">
+                        <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
+                        />
+                        </div>*@
+                        <div class="field due-at-field">
+                            <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
+                                       ValidationFor="@(() => Goal.DueAt)" />
+                        </div>
+
+                        <div class="action-plan">
+                            <div class="action-plan-header">
+                                <h2>Action Plan</h2>
+                                <IconButton Background="false" ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Add" OnClick="NewActionPlanItem">
+                                </IconButton>
+                            </div>
+                            <div class="action-plan-content">
+                                @if (Goal.ActionPlan.Any())
+                                {
+                                    <table class="action-plan-table-list">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Finished</th>
+                                                <th scope="col">Title</th>
+                                                <th scope="col">Due At</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var task in Goal.ActionPlan)
+                                            {
+                                                <tr class="action-plan-table-item">
+                                                    <td class="data is-finished">
+                                                        <div class="internal">
+                                                            <CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(e)" />
+                                                        </div>
+                                                    </td>
+                                                    <td class="title data">
+                                                        <div class="internal">
+                                                            <TextField @bind-Value="@task.Title" Multiline="false"></TextField>
+                                                        </div>
+                                                    </td>
+                                                    <td class="due-at data">
+                                                        <div class="internal">
+                                                            @task.DueAt
+                                                        </div>
+                                                    </td>
+                                                    @*<td>
+                                            @task.repetition
+                                            </td>*@
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                @* Possibility to add a new task *@
+                                @*<li class="new-action-plan-item">
+                                <div class="action-plan-item-form">
+                                <div class="action-plan-item-field-spacing">
+                                <TextField @bind-Value="ActionPlanItem.Title" IsMandatory="true" ValidationFor="() => ActionPlanItem.Title" InitialValue="ActionPlanItem.Title" />
+                                </div>
+                                <IconButton ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Check" OnClick="AddNewActionPlan">
+                                </IconButton>
+                                </div>
+                                </li>*@
+                                @*</>*@
+                            </div>
+                        </div>
+                    </div>
+                </EditForm>
+            </Rendered>
+        </DoIt.Client.Components.Loading.LoadingContainerComponent>
+    </Content>
+</DoIt.Client.Components.Modals.ModalComponent>
+
+@*@if (Goal != null)
 {
     <section class="idea-detail @GetActive(SectionType.Detail)">
-        <EditForm Model="Goal" OnValidSubmit="UpdateGoalAsync">
-            <div class="fields">
-                @* What is this? *@
-                <DataAnnotationsValidator />
-                <div class="field title-field">
-                    <TextField @bind-Value="Goal.Title" Label="Title" IsMandatory="true" Width="100%"
-                           ValidationFor="@(() => Goal.Title)" />
-                </div>
-                <div class="field description-field">
-                    <TextField @bind-Value="Goal.Description" Label="Description" Multiline="true" Width="100%"
-                           ValidationFor="@(() => Goal.Description)" />
-                </div>
-                <div class="field location-field">
-                    <TextField @bind-Value="Goal.Location" Label="Location" Multiline="false" Width="100%"
-                           ValidationFor="@(() => Goal.Location)" />
-                </div>
-                <div class="field reason-field">
-                    <TextField @bind-Value="Goal.Reason" Label="Reason" Multiline="true" Width="100%"
-                           ValidationFor="@(() => Goal.Reason)" />
-                </div>
-                @*<div class="field type-field">
-                    <TextField @bind-Value="Goal.Type" Label="Type" Multiline="false" Width="100%"
-                    />
-                    </div>*@
-                <div class="field due-at-field">
-                    <DateField @bind-Value="Goal.DueAt" Label="Due at" Multiline="false" Width="100%"
-                           ValidationFor="@(() => Goal.DueAt)" />
-                </div>
-
-                <div class="action-plan">
-                    <div class="action-plan-header">
-                        <h2>Action Plan</h2>
-                        <IconButton Background="false" ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Add" OnClick="NewActionPlanItem">
-                        </IconButton>
-                    </div>
-                    <div class="action-plan-content">
-                        @if (Goal.ActionPlan.Any())
-                        {
-                            <table class="action-plan-table-list">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Finished</th>
-                                        <th scope="col">Title</th>
-                                        <th scope="col">Due At</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var task in Goal.ActionPlan)
-                                    {
-                                        <tr class="action-plan-table-item">
-                                            <td class="data is-finished">
-                                                <div class="internal">
-                                                    <CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(e)" />
-                                                </div>
-                                            </td>
-                                            <td class="title data">
-                                                <div class="internal">
-                                                    <TextField @bind-Value="@task.Title" Multiline="false"></TextField>
-                                                </div>
-                                            </td>
-                                            <td class="due-at data">
-                                                <div class="internal">
-                                                    @task.DueAt
-                                                </div>
-                                            </td>
-                                            @*<td>
-                                                @task.repetition
-                                                </td>*@
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                        @* Possibility to add a new task *@
-                        @*<li class="new-action-plan-item">
-                            <div class="action-plan-item-form">
-                            <div class="action-plan-item-field-spacing">
-                            <TextField @bind-Value="ActionPlanItem.Title" IsMandatory="true" ValidationFor="() => ActionPlanItem.Title" InitialValue="ActionPlanItem.Title" />
-                            </div>
-                            <IconButton ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Check" OnClick="AddNewActionPlan">
-                            </IconButton>
-                            </div>
-                            </li>*@
-                        @*</>*@
-                    </div>
-                </div>
-            </div>
-
-            <div class="actions">
-                <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
-                </IconButton>
-                <IconButton OnClick="StartDeleteGoal" Text="Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
-                </IconButton>
-                <IconButton Text="Update" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
-                </IconButton>
-            </div>
+        <div class="actions">
+            <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
+            </IconButton>
+            <IconButton OnClick="StartDeleteGoal" Text="Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
+            </IconButton>
+            <IconButton Text="Update" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
+            </IconButton>
+        </div>
         </EditForm>
     </section>
     <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
@@ -132,7 +146,7 @@
             </IconButton>
         </div>
     </section>
-}
+}*@
 
 @code {
     public GoalDetail Goal { get; set; }
@@ -140,6 +154,7 @@
     private SectionType ActiveSection;
 
     private readonly List<string> _actionTypes = new() { "Task" }; //"Routine"
+    public IEnumerable<MenuOption> Options { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -160,19 +175,19 @@
     {
         Console.WriteLine(JsonConvert.SerializeObject(Goal));
         Console.WriteLine(JsonConvert.SerializeObject(new UpdateGoalRequest()
-        {
-            Description = Goal.Description,
-            DueAt = Goal.DueAt,
-            Location = Goal.Location,
-            Reason = Goal.Reason,
-            Title = Goal.Title,
-            ActionPlan = Goal.ActionPlan.Select(item => new GoalTodoDto()
             {
-                IsFinished = item.IsFinished,
-                Title = item.Title,
-                DueAt = item.DueAt,
-            }),
-        }));
+                Description = Goal.Description,
+                DueAt = Goal.DueAt,
+                Location = Goal.Location,
+                Reason = Goal.Reason,
+                Title = Goal.Title,
+                ActionPlan = Goal.ActionPlan.Select(item => new GoalTodoDto()
+                {
+                    IsFinished = item.IsFinished,
+                    Title = item.Title,
+                    DueAt = item.DueAt,
+                }),
+            }));
         await GoalService.UpdateGoalAsync(Goal.Id, new UpdateGoalRequest()
             {
                 Description = Goal.Description,
@@ -230,7 +245,7 @@
     private async void DeleteGoal()
     {
         await GoalService.DeleteGoalAsync(Goal.Id);
-        this.Modal.Close(ActionType.Delete, Goal.Id);
+        this.ModalService.Close(ActionType.Delete, Goal.Id);
     }
 
     private string GetActive(SectionType sectionType)

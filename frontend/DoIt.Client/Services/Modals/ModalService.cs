@@ -1,7 +1,5 @@
-﻿using DoIt.Client.Components.Modals;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using System;
-using System.Threading.Tasks;
 
 using DoIt.Client.Models.General;
 

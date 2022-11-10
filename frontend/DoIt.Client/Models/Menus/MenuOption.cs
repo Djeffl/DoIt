@@ -10,6 +10,6 @@ namespace DoIt.Client.Models.Menus
         public Action OnClick { get; set; }
 
         public IconType Icon { get; set; }
-
+        public bool DefaultActive { get; set; }
     }
 }

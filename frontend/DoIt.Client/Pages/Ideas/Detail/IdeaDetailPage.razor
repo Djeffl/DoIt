@@ -1,4 +1,6 @@
-﻿@using DoIt.Client.Components.Buttons;
+﻿@page "/ideas/{id:long}"
+
+@using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Models.Loading
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
@@ -21,7 +23,6 @@
 
 @inject IIdeaService IdeaService;
 @inject IGoalService GoalService;
-@inject ModalService Modal;
 @inject NavigationManager NavigationManager;
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
 @inject ICategoryService IdeaCategoryService;
@@ -32,32 +33,7 @@
         <DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
             <Rendered>
                 <section class="idea-detail @GetActive(SectionType.IdeaDetail)">
-                    <EditForm OnValidSubmit="UpdateIdeaAsync" EditContext="@EditContext">
-                        <div class="fields">
-                            @* What is this? *@
-                            <DataAnnotationsValidator />
-                            <div class="field title-field">
-                                <TextField @bind-Value="Idea.Title" Label="Title" IsMandatory="true" Width="100%"
-                                           ValidationFor="@(() => Idea.Title)" />
-                            </div>
-                            <div class="field description-field">
-                                <TextField @bind-Value="Idea.Description" Label="Description" Multiline="true" Width="100%"
-                                           ValidationFor="@(() => Idea.Description)" />
-                            </div>
-                            <div class="field category-field">
-                                <ChipField @bind-Value="Idea.CategoryNames"
-                                           Label="Categories"
-                                           Width="100%"
-                                           AutocompleteOptions="IdeaCategories.Select(x => x.Name)">
-                                </ChipField>
-                            </div>
-                        </div>
-
-                        <div class="actions right">
-                            <IconButton OnClick="async () => await UpdateIdeaAsync()" Text="Save" Color="AppColor.White" BackgroundColor="var(--accent)" ButtonType="button" Icon="IconType.Check">
-                            </IconButton>
-                        </div>
-                    </EditForm>
+                    <DoIt.Client.Components.Ideas.IdeaFormComponent Idea="Idea" IdeaCategories="IdeaCategories"></DoIt.Client.Components.Ideas.IdeaFormComponent>
                 </section>
                 <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
                     <div class="description">

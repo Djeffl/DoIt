@@ -10,16 +10,10 @@
         <div class="top-modal-title">
             <h1 class="title">@Title</h1>
         </div>
-        <div>
+        <div class="menu-section">
             @if (Options != null)
             {
-                <MenuComponent Icon=Models.Icons.IconType.MoreOptions>
-                    <MenuItems>
-                        @foreach (var option in Options)
-                        {
-                            <MenuItemComponent OnClick="() => option.OnClick()" Icon="@option.Icon" Title="@option.Title"></MenuItemComponent>
-                        }
-                    </MenuItems>
+                <MenuComponent Icon="Models.Icons.IconType.MoreOptions" MenuItems="Options">
                 </MenuComponent>
             }
         </div>

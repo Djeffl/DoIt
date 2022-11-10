@@ -1,6 +1,5 @@
 ﻿.top-modal {
-    display: grid;
-    grid-template-columns: 50px [close] auto [title] 50px [options];
+    display: flex;
     align-content: center;
     align-items: center;
     border-bottom: 1px solid var(--bg-secondary);
@@ -9,6 +8,10 @@
 
 .title {
     margin: 0;
+}
+
+.menu-section {
+    margin-left: auto;
 }
 
 .close-modal {

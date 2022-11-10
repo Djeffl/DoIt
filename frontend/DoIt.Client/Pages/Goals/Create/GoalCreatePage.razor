@@ -2,6 +2,7 @@
 
 @using DoIt.Client.Components.Loading
 @using DoIt.Client.Models.Goals;
+@using DoIt.Client.Models.Menus
 @using DoIt.Client.Services.Goals;
 @using DoIt.Client.Components.Fields;
 @using DoIt.Client.Components.Buttons;
@@ -17,20 +18,12 @@
 @inject ModalService ModalService;
 
 
-<DoIt.Client.Components.Modals.ModalComponent Title="Create Goal" CloseModal="() => ModalService.Close()">
+<DoIt.Client.Components.Modals.ModalComponent Title="Create Goal" CloseModal="() => ModalService.Close()" Options="Options">
     <Content>
         <LoadingContainerComponent LoadingState="LoadingState">
             <Rendered>
                 <article class="goal-detail">
-                    <DoIt.Client.Components.Goals.GoalFormComponent>
-                        <Actions>
-                            <div class="actions">
-                                <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
-                                </IconButton>
-                                <IconButton Text="Create" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
-                                </IconButton>
-                            </div>
-                        </Actions>
+                    <DoIt.Client.Components.Goals.GoalFormComponent Goal="Goal">
                     </DoIt.Client.Components.Goals.GoalFormComponent>
                 </article>
             </Rendered>
@@ -39,16 +32,30 @@
 </DoIt.Client.Components.Modals.ModalComponent>
 
 @code {
-    public Models.Goals.CreateGoalDto Goal = new Models.Goals.CreateGoalDto()
+    public Models.Goals.GoalFormDto Goal = new Models.Goals.GoalFormDto()
         {
             DueAt = DateTime.Now
         };
+
+    public IEnumerable<MenuOption> Options { get; set; }
+
 
     //private List<string> options = ((GoalType[])Enum.GetValues(typeof(GoalType))).Select(t => t.ToString()).ToList();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+
+        Options = new List<MenuOption>()
+        {
+            new MenuOption()
+            {
+                Title = "Create",
+                Icon = Models.Icons.IconType.Delete,
+                OnClick = async () => await this.CreateGoalAsync(Goal),
+                DefaultActive = true
+            },
+        };
 
         //Console.WriteLine(JsonConvert.SerializeObject(Parameter));
         //if (Parameter != null && Parameter.Idea != null)
@@ -59,11 +66,10 @@
         //}
     }
 
-    private async Task CreateGoalAsync()
+    private async Task CreateGoalAsync(GoalFormDto goal)
     {
-        var response = await GoalService.CreateGoalAsync(Goal.ToService());
+        var response = await GoalService.CreateGoalAsync(goal.ToService());
 
-        Console.WriteLine("Closing MOdal...");
         CloseModal(ActionType.Create, response);
     }
 }

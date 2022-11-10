@@ -2,7 +2,7 @@
 {
     public static class GoalMapper
     {
-        public static Interface.Goals.CreateGoalDto ToService(this Models.Goals.CreateGoalDto goal)
+        public static Interface.Goals.CreateGoalDto ToService(this Models.Goals.GoalFormDto goal)
         {
             return new DoIt.Interface.Goals.CreateGoalDto
             {

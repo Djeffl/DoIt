@@ -1,24 +1,40 @@
 ﻿@using DoIt.Client.Models.Icons
 @using DoIt.Client.Components.Icons;
 @using DoIt.Client.Models.General;
+@using DoIt.Client.Models.Menus
 
 <div class="menu">
-    <button @onclick="ToggleMenu" @onclick:stopPropagation>
-        <IconComponent Icon=@Icon Color=AppColor.Gray></IconComponent>
-        @if (!string.IsNullOrEmpty(@Name))
-        {
-            <span>@Name</span>
-        }
-    </button>
-    @if (_isOpen)
+
+    @foreach (var defaultActiveMenuItem in MenuItems.Where(x => x.DefaultActive))
     {
-        <div class="hidden-menu-overlay" @onclick="ToggleMenu">
-            <div style=@_menuOverlayStyle class="menu-overlay">
-                <div style="width: 100%; height: 100%;" @onclick="CloseMenu">
-                    @MenuItems
+        <button class="defaultActiveItemButton" @onclick=defaultActiveMenuItem.OnClick>
+            @defaultActiveMenuItem.Title
+        </button>
+    }
+
+    @if (MenuItems.Any(x => !x.DefaultActive))
+    {
+        <button @onclick="ToggleMenu" @onclick:stopPropagation>
+            <IconComponent Icon=@Icon Color=AppColor.Gray></IconComponent>
+            @if (!string.IsNullOrEmpty(@Name))
+            {
+                <span>@Name</span>
+            }
+        </button>
+        @if (_isOpen)
+        {
+            <div class="hidden-menu-overlay" @onclick="ToggleMenu">
+                <div style=@_menuOverlayStyle class="menu-overlay">
+                    <div style="width: 100%; height: 100%;" @onclick="CloseMenu">
+                        @foreach (var option in MenuItems.Where(x => !x.DefaultActive))
+                        {
+                            <MenuItemComponent OnClick="() => option.OnClick()" Icon="@option.Icon" Title="@option.Title"></MenuItemComponent>
+                        }
+
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
 </div>
 
@@ -27,8 +43,11 @@
 
     private bool _isOpen = false;
 
+    //[Parameter]
+    //public RenderFragment MenuItems { get; set; }
+
     [Parameter]
-    public RenderFragment MenuItems { get; set; }
+    public IEnumerable<MenuOption> MenuItems { get; set; }
 
     [Parameter]
     public string Name { get; set; }
