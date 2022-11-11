@@ -25,7 +25,7 @@
 
 @inherits BaseModalComponent<GoalDetailParameter>
 
-<DoIt.Client.Components.Modals.ModalComponent Title="Goal Detail" CloseModal="() => ModalService.Close(ActionType.Cancel, Goal)" Options="Options">
+<DoIt.Client.Components.Modals.ModalComponent Title="Goal Detail" CloseModal="() => CloseModal(ActionType.Cancel, Goal)" Options="Options">
     <Content>
         <DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
             <Rendered>
@@ -245,7 +245,7 @@
     private async void DeleteGoal()
     {
         await GoalService.DeleteGoalAsync(Goal.Id);
-        this.ModalService.Close(ActionType.Delete, Goal.Id);
+        CloseModal(ActionType.Delete, Goal.Id);
     }
 
     private string GetActive(SectionType sectionType)

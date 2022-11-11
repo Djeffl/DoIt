@@ -1,6 +1,7 @@
 ﻿@inherits ComponentBase
 @implements IDisposable
 
+@using DoIt.Client.Models.Modals
 @using DoIt.Client.Services.Modals;
 @using DoIt.Client.Models.General
 
@@ -13,21 +14,22 @@
         </CascadingValue>
     </div>
 
-    @if (IsVisible)
+    @if (Modals.Any())
     {
-        <div class="cascading-modal-wrapper" @onclick="() => CloseModal()">
-            <div class="cascading-modal cascading-modal-center" @onclick:stopPropagation="true">
-                @ModalContent
-            </div>
-        </div>
+        @foreach (var modal in Modals)
+        {
+            <div class="cascading-modal-wrapper" @onclick="() => CloseModal(modal.Key)">
+                <div class="cascading-modal @SetupConfigurationModal(modal.Value.Configuration) cascading-modal-center" @onclick:stopPropagation="true">
+                        @modal.Value.Fragment
+                    </div>
+                </div>
+        }
     }
+
 </div>
 
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; }
-
-    protected bool IsVisible { get; set; }
-    protected RenderFragment ModalContent { get; set; }
 
     protected override void OnInitialized()
     {
@@ -35,26 +37,33 @@
         ModalService.OnClose += CloseModal;
     }
 
-    public void ShowModal(RenderFragment content)
+    private Dictionary<Guid, Modal> Modals = new Dictionary<Guid, Modal>();
+
+    public void ShowModal(Modal modal)
     {
-        ModalContent = content;
-        IsVisible = true;
+        Modals.Add(modal.Id, modal);
 
         StateHasChanged();
     }
 
-    public void CloseModal()
+    private void CloseModal(Guid key)
     {
-        ModalService.Close();
-        CloseModal(ActionType.None, null);
+        ModalService.Close(key);
     }
 
-    public void CloseModal(ActionType actionType, object response)
+    public void CloseModal(ActionType actionType, object response, Guid key)
     {
-        IsVisible = false;
-        ModalContent = null;
+        if (Modals.Any())
+        {
+                Modals.Remove(key);
+        }
 
         StateHasChanged();
+    }
+
+    private string SetupConfigurationModal(ModalConfiguration configuration)
+    {
+        return configuration.FullScreen ? "full-screen" : "pop-up-box";
     }
 
     public void Dispose()

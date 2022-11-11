@@ -1,6 +1,4 @@
-﻿@page "/ideas/{id:long}"
-
-@using DoIt.Client.Components.Buttons;
+﻿@using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Models.Loading
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
@@ -28,37 +26,12 @@
 @inject ICategoryService IdeaCategoryService;
 @inject ModalService ModalService;
 
-<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => ModalService.Close(ActionType.Cancel, Idea)" Options="Options">
+<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => CloseModal(ActionType.Cancel, Idea)" Options="Options">
     <Content>
         <DoIt.Client.Components.Loading.LoadingContainerComponent LoadingState="@LoadingState">
             <Rendered>
-                <section class="idea-detail @GetActive(SectionType.IdeaDetail)">
+                <section class="idea-detail">
                     <DoIt.Client.Components.Ideas.IdeaFormComponent Idea="Idea" IdeaCategories="IdeaCategories"></DoIt.Client.Components.Ideas.IdeaFormComponent>
-                </section>
-                <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
-                    <div class="description">
-                        <p>Are you sure you want to delete idea '@Idea.Title'</p>
-                    </div>
-                    <div class="actions confirm-modal-actions">
-                        <IconButton OnClick="() => GoIdeaDetailScreen()" Text="> Cancel" Color="AppColor.Gray" ButtonType="button">
-                        </IconButton>
-                        <IconButton OnClick="() => DeleteIdea()" Text="> Yes" Color="AppColor.White" ButtonType="button">
-                        </IconButton>
-                    </div>
-                </section>
-                <section class="promote-idea @GetActive(SectionType.UpgradeIdea)">
-                    <h2>Upgrade Idea to Goal</h2>
-                    <DoIt.Client.Components.Goals.GoalFormComponent Goal="UpgradedIdeaAsGoal">
-                        <Actions>
-                            <div class="actions">
-                                <IconButton Text="> Cancel" Color="AppColor.White" ButtonType="button" OnClick="() => ActiveSection = SectionType.IdeaDetail">
-                                </IconButton>
-                                <IconButton Text="> Create" Color="AppColor.White" ButtonType="button" OnClick="() => UpgradeIdea()" Icon="IconType.Goal" BackgroundColor="var(--accent)">
-                                </IconButton>
-                            </div>
-                        </Actions>
-                    </DoIt.Client.Components.Goals.GoalFormComponent>
-
                 </section>
             </Rendered>
         </DoIt.Client.Components.Loading.LoadingContainerComponent>

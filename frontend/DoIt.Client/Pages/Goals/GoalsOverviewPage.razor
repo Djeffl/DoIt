@@ -72,7 +72,7 @@ else
 		await SessionStorage.SetItemAsync<IdeaDto>(promotedIdea, null);
 	}
 
-	private void OnModalClose(ActionType actionType, object response)
+	private void OnModalClose(ActionType actionType, object response, Guid id)
 	{
 		if (actionType == ActionType.Create)
 		{

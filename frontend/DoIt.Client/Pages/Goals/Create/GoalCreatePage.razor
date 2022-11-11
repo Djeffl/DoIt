@@ -1,6 +1,4 @@
-﻿@page "/goals/create"
-
-@using DoIt.Client.Components.Loading
+﻿@using DoIt.Client.Components.Loading
 @using DoIt.Client.Models.Goals;
 @using DoIt.Client.Models.Menus
 @using DoIt.Client.Services.Goals;
@@ -18,7 +16,7 @@
 @inject ModalService ModalService;
 
 
-<DoIt.Client.Components.Modals.ModalComponent Title="Create Goal" CloseModal="() => ModalService.Close()" Options="Options">
+<DoIt.Client.Components.Modals.ModalComponent Title="Create Goal" CloseModal="() => CloseModal()" Options="Options">
     <Content>
         <LoadingContainerComponent LoadingState="LoadingState">
             <Rendered>

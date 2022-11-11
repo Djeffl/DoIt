@@ -69,38 +69,38 @@
         NavManager.NavigateTo($"/goals/{Goal.Id}", true);
     }
 
-    private void CompleteGoal()
-    {
-        ModalService.Show<ConfirmModalComponent>();
-        ModalService.OnClose += OnConfirmCompleteGoalModalClose;
-    }
+    //private void CompleteGoal()
+    //{
+    //    ModalService.Show<ConfirmModalComponent>();
+    //    ModalService.OnClose += OnConfirmCompleteGoalModalClose;
+    //}
 
-    private void RemoveGoal()
-    {
-        ModalService.Show<ConfirmModalComponent>();
-        ModalService.OnClose += OnConfirmRemoveGoalModalClose;
-    }
+    //private void RemoveGoal()
+    //{
+    //    ModalService.Show<ConfirmModalComponent>();
+    //    ModalService.OnClose += OnConfirmRemoveGoalModalClose;
+    //}
 
-    private void OnConfirmRemoveGoalModalClose(ActionType actionType, object response)
-    {
-        var isConfirmed = (bool?)response;
-        if (isConfirmed.HasValue && isConfirmed.Value)
-        {
-            Console.WriteLine("Deleting...");
-        }
+    //private void OnConfirmRemoveGoalModalClose(ActionType actionType, object response)
+    //{
+    //    var isConfirmed = (bool?)response;
+    //    if (isConfirmed.HasValue && isConfirmed.Value)
+    //    {
+    //        Console.WriteLine("Deleting...");
+    //    }
 
-        ModalService.OnClose -= OnConfirmRemoveGoalModalClose;
-    }
+    //    ModalService.OnClose -= OnConfirmRemoveGoalModalClose;
+    //}
 
-    private void OnConfirmCompleteGoalModalClose(ActionType actionType, object response)
-    {
-        var isConfirmed = (bool?)response;
-        if (isConfirmed.HasValue && isConfirmed.Value)
-        {
-            Console.WriteLine("Completing goal...");
-        }
+    //private void OnConfirmCompleteGoalModalClose(ActionType actionType, object response)
+    //{
+    //    var isConfirmed = (bool?)response;
+    //    if (isConfirmed.HasValue && isConfirmed.Value)
+    //    {
+    //        Console.WriteLine("Completing goal...");
+    //    }
 
-        ModalService.OnClose -= OnConfirmCompleteGoalModalClose;
-    }
+    //    ModalService.OnClose -= OnConfirmCompleteGoalModalClose;
+    //}
 
 }

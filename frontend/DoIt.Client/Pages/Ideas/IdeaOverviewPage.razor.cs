@@ -1,7 +1,9 @@
 ﻿using DoIt.Client.Components;
 using DoIt.Client.Models.General;
+using DoIt.Client.Models.Modals;
 using DoIt.Client.Pages.Ideas.Detail;
 using DoIt.Interface.Ideas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ namespace DoIt.Client.Pages.Ideas
 
         }
 
-        private void OnModalClose(ActionType actionType, object response)
+        private void OnModalClose(ActionType actionType, object response, Guid id)
         {
             switch (actionType)
             {
@@ -44,7 +46,10 @@ namespace DoIt.Client.Pages.Ideas
 
         private void OpenDetailGoal(long id)
         {
-            Modal.Show<IdeaDetailPage, IdeaDetailParameter>(new IdeaDetailParameter() { IdeaId = id });
+            Modal.Show(new ModalBuilder()
+                .AddComponent<IdeaDetailPage, IdeaDetailParameter>(new IdeaDetailParameter() { IdeaId = id })
+                .AddConfiguration(new ModalConfiguration() { FullScreen = true })
+                .Build());
         }
 
         private async void AddNewIdea(IdeaDto _)

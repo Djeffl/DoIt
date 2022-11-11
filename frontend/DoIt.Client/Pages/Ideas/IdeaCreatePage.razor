@@ -1,6 +1,4 @@
-﻿@page "/ideas/create"
-
-@using DoIt.Client.Components.Buttons;
+﻿@using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Components.Loading
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
@@ -16,9 +14,9 @@
 @inject IIdeaService IdeaService;
 @inject ICategoryService IdeaCategoryService;
 
-@inherits BaseComponent
+@inherits BaseModalComponent
 
-<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => ModalService.Close()" Options="Options">
+<DoIt.Client.Components.Modals.ModalComponent Title="Idea Detail" CloseModal="() => CloseModal()" Options="Options">
     <Content>
         <LoadingContainerComponent LoadingState="LoadingState">
             <Rendered>

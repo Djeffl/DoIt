@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas
 {
-    public partial class IdeaCreatePage
+    public partial class IdeaCreatePage : BaseModalComponent
     {
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         public Models.Ideas.IdeaFormDto NewIdea = new Models.Ideas.IdeaFormDto();
@@ -47,7 +47,9 @@ namespace DoIt.Client.Pages.Ideas
 
             var response = await IdeaService.CreateAsync(idea.ToService());
 
-            ModalService.Close(ActionType.Create, response);
+            CloseModal(ActionType.Create, response);
+
+            StateHasChanged();
         }
 
         private async Task<IEnumerable<CategoryDto>> GetIdeaCategoriesAsync()

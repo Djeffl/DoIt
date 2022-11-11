@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Components;
 
 using DoIt.Client.Services.Modals;
+using System;
 
 namespace DoIt.Client.Components.Modals
 {
@@ -17,14 +18,17 @@ namespace DoIt.Client.Components.Modals
         [Inject]
         private ModalService _modalService { get; set; }
 
+        [Parameter]
+        public Guid Id { get; set; }
+
         public void CloseModal()
         {
-            _modalService.Close();
+            _modalService.Close(Id);
         }
 
         public void CloseModal(ActionType actionType, object response)
         {
-            _modalService.Close(actionType, response);
+            _modalService.Close(actionType, response, Id);
         }
     }
 }

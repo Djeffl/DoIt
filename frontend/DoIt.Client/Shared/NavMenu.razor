@@ -1,5 +1,6 @@
 ﻿@inject IJSRuntime JSRuntime
 
+@using DoIt.Client.Models.Modals
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using DoIt.Client.Services.Modals;
@@ -83,17 +84,17 @@
             </button>
         </li>
         @* <li class="nav-item align-bottom order-last-2">
-            <AuthorizeView>
-                <Authorized>
-                    <button @onclick="(e) => SignOut(e)">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px"
-                             height="24px">
-                            <path d="M0 0h24v24H0z" fill="none" />
-                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-                        </svg>
-                    </button>
-                </Authorized>
-            </AuthorizeView>
+        <AuthorizeView>
+        <Authorized>
+        <button @onclick="(e) => SignOut(e)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px"
+        height="24px">
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
+        </svg>
+        </button>
+        </Authorized>
+        </AuthorizeView>
         </li> *@
         <li class="nav-item align-bottom order-last-1 nav-item-expand">
             <button @onclick="() => expand()">
@@ -193,12 +194,20 @@
 
     private void OpenAddNewGoal()
     {
-        Modal.Show<GoalCreatePage>();
+        Modal.Show(
+            new ModalBuilder()
+                .AddComponent<GoalCreatePage>()
+                .AddConfiguration(new ModalConfiguration() { FullScreen = true })
+                .Build());
     }
 
     private void OpenAddNewIdea()
     {
-        Modal.Show<IdeaCreatePage>();
+        Modal.Show(
+            new ModalBuilder()
+                .AddComponent<IdeaCreatePage>()
+                .AddConfiguration(new ModalConfiguration() { FullScreen = true })
+                .Build());
     }
 
 

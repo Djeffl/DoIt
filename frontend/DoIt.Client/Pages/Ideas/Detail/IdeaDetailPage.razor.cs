@@ -1,9 +1,14 @@
 ﻿using DoIt.Client.Components;
+using DoIt.Client.Components.Goals;
 using DoIt.Client.Components.Modals;
+using DoIt.Client.Components.Modals.Confirm;
 using DoIt.Client.Models.General;
+using DoIt.Client.Models.Goals;
 using DoIt.Client.Models.Ideas;
 using DoIt.Client.Models.Loading;
 using DoIt.Client.Models.Menus;
+using DoIt.Client.Models.Modals;
+using DoIt.Client.Pages.Goals.Create;
 using DoIt.Client.Services.Goals;
 using DoIt.Interface.Goals;
 using DoIt.Interface.IdeaCategory;
@@ -22,9 +27,7 @@ namespace DoIt.Client.Pages.Ideas.Detail
     public partial class IdeaDetailPage : BaseModalComponent<IdeaDetailParameter>
     {
         public IdeaFormDto Idea { get; set; } = new IdeaFormDto();
-        public DoIt.Client.Models.Goals.GoalFormDto UpgradedIdeaAsGoal { get; set; } = new Models.Goals.GoalFormDto();
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
-        private SectionType ActiveSection;
         private EditContext EditContext;
 
         public IEnumerable<MenuOption> Options { get; set; }
@@ -33,10 +36,7 @@ namespace DoIt.Client.Pages.Ideas.Detail
         {
             await base.OnInitializedAsync();
 
-            ActiveSection = SectionType.IdeaDetail;
-
             EditContext = new EditContext(Idea);
-            EditContext.OnFieldChanged += EditContext_OnFieldChanged;
 
             Options = new List<MenuOption>()
             {
@@ -59,6 +59,31 @@ namespace DoIt.Client.Pages.Ideas.Detail
                     DefaultActive = true
                 }
             };
+
+            ModalService.OnClose += OnModalClose;
+        }
+
+        private void OnModalClose(ActionType actionType, object response, Guid id)
+        {
+
+            if (actionType == ActionType.Confirm)
+            {
+                var confirmDelete = (bool)response;
+
+                if (confirmDelete)
+                {
+                    DeleteIdea();
+                }
+            }
+
+            if(actionType == ActionType.Create)
+            {
+                var newGoal = (GoalFormDto)response;
+
+                UpgradeIdea(newGoal);
+            }
+
+            
         }
 
         protected override async Task OnParametersSetAsync()
@@ -105,9 +130,9 @@ namespace DoIt.Client.Pages.Ideas.Detail
             CloseModal(ActionType.Update, Idea);
         }
 
-        private async void UpgradeIdea()
+        private async void UpgradeIdea(GoalFormDto goal)
         {
-            var response = await GoalService.CreateGoalAsync(UpgradedIdeaAsGoal.ToService());
+            var response = await GoalService.CreateGoalAsync(goal.ToService());
             CloseModal(ActionType.Create, response);
 
             NavigationManager.NavigateTo("/goals");
@@ -115,41 +140,32 @@ namespace DoIt.Client.Pages.Ideas.Detail
 
         private void StartUpgradeIdea()
         {
-            ActiveSection = SectionType.UpgradeIdea;
-            UpgradedIdeaAsGoal.Description = Idea.Description;
-            UpgradedIdeaAsGoal.Title = Idea.Title;
-            UpgradedIdeaAsGoal.CategoryNames = Idea.CategoryNames;
-            UpgradedIdeaAsGoal.DueAt = DateTime.Now;
-            UpgradedIdeaAsGoal.IdeaId = Idea.Id;
+            ModalService.Show(new ModalBuilder()
+            .AddComponent<GoalCreatePage, GoalFormDto>(new GoalFormDto()
+            {
+                Description = Idea.Description,
+                Title = Idea.Title,
+                CategoryNames = Idea.CategoryNames,
+                DueAt = DateTime.Now,
+                IdeaId = Idea.Id,
+            })
+            .AddConfiguration(new ModalConfiguration() { FullScreen = true })
+            .Build());
         }
 
         private void StartDeleteIdea()
         {
-            GoConfirmScreen();
-        }
-
-        private void GoConfirmScreen()
-        {
-            ActiveSection = SectionType.ConfirmDelete;
-            StateHasChanged();
-        }
-
-        private void GoIdeaDetailScreen()
-        {
-            ActiveSection = SectionType.IdeaDetail;
-            StateHasChanged();
+            ModalService.Show(new ModalBuilder()
+            .AddComponent<ConfirmModalComponent, ConfirmModalParameter>(new ConfirmModalParameter() { Description = "Are you sure you wish to delete this idea?" })
+            .AddConfiguration(new ModalConfiguration() { FullScreen = false })
+            .Build());
         }
 
         private async void DeleteIdea()
         {
             await IdeaService.DeleteAsync(Idea.Id.Value);
 
-            ModalService.Close(ActionType.Delete, Idea);
-        }
-
-        private string GetActive(SectionType sectionType)
-        {
-            return ActiveSection == sectionType ? "active" : "";
+            CloseModal(ActionType.Delete, Idea);
         }
 
         private async Task SetIdeaCategoryIdsAsync()
@@ -185,23 +201,6 @@ namespace DoIt.Client.Pages.Ideas.Detail
                     Name = name
                 })
             });
-        }
-
-        // Note: The OnFieldChanged event is raised for each field in the model
-        private async void EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
-        {
-            Console.WriteLine(JsonConvert.SerializeObject(e));
-            //if (e.FieldIdentifier.FieldName == "Description")
-            //{
-            //    await UpdateIdeaAsync();
-            //}
-        }
-
-        private enum SectionType
-        {
-            IdeaDetail,
-            ConfirmDelete,
-            UpgradeIdea
         }
     }
 }
