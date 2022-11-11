@@ -28,6 +28,20 @@ textarea {
     display: none;
 }
 
+.action-plan {
+    margin-top: 0.5rem;
+    border: 2px solid var(--bg-primary);
+    width: 100vw;
+    border-radius: 8px;
+    padding: 5px;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .action-plan-header {
     display: flex;
     align-items: center;
@@ -79,6 +93,6 @@ textarea {
 }
 
 .action-plan-content table tr {
-    /*display: flex;*/
+    display: flex;
     align-items: center;
 }

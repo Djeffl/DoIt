@@ -81,9 +81,7 @@ namespace DoIt.Client.Pages.Ideas.Detail
                 var newGoal = (GoalFormDto)response;
 
                 UpgradeIdea(newGoal);
-            }
-
-            
+            }            
         }
 
         protected override async Task OnParametersSetAsync()
@@ -141,13 +139,9 @@ namespace DoIt.Client.Pages.Ideas.Detail
         private void StartUpgradeIdea()
         {
             ModalService.Show(new ModalBuilder()
-            .AddComponent<GoalCreatePage, GoalFormDto>(new GoalFormDto()
+            .AddComponent<GoalCreatePage, GoalCreateParameter>(new GoalCreateParameter()
             {
-                Description = Idea.Description,
-                Title = Idea.Title,
-                CategoryNames = Idea.CategoryNames,
-                DueAt = DateTime.Now,
-                IdeaId = Idea.Id,
+                IdeaId = Idea.Id.Value,
             })
             .AddConfiguration(new ModalConfiguration() { FullScreen = true })
             .Build());

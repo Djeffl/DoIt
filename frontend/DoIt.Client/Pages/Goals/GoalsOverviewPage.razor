@@ -1,5 +1,6 @@
 ﻿@page "/goals"
 
+@using DoIt.Client.Components.Loading
 @using Services.Goals;
 @using DoIt.Client.Components.Goals;
 @using Blazored.SessionStorage;
@@ -9,104 +10,56 @@
 @using DoIt.Interface.Goals
 @using DoIt.Interface.Ideas
 
+@inherits BaseComponent;
+
 @inject IGoalService GoalService;
 @inject NavigationManager NavManager;
 @inject ISessionStorageService SessionStorage;
-@inject ModalService ModalService; 
+@inject ModalService ModalService;
 
 
-@if (Goals == null)
-{
-	// Spinner Loading
-}
-else
-{
-<section class="goals">
-	@foreach (var goal in Goals)
-	{
-		<GoalComponent Goal="goal"></GoalComponent>
-	}
+<LoadingContainerComponent LoadingState="LoadingState">
+    <Rendered>
+        <section class="goals">
+            @foreach (var goal in Goals)
+            {
+                <GoalComponent Goal="goal"></GoalComponent>
+            }
+        </section>
+    </Rendered>
+</LoadingContainerComponent>
 
-	@*<section class="goals-category">
-		<h2>Pinned</h2>
-		<div class="goal-category-list">
-
-			@foreach (var goal in Goals)
-			{
-				<GoalComponentTwo Goal="goal"></GoalComponentTwo>
-			}
-		</div>
-	</section>*@
-</section>
-}
 
 @code {
-	//private bool promoteIdea;
-	public List<GoalDto> Goals;
+    //private bool promoteIdea;
+    public List<GoalDto> Goals;
 
-	protected override async Task OnInitializedAsync()
-	{
-		ModalService.OnClose += OnModalClose;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        ModalService.OnClose += OnModalClose;
+    }
 
-		var getGoalsResponse = await GoalService.GetAllAsync();
-		Goals = getGoalsResponse.Data;
+    protected override async Task LoadDataAsync()
+    {
+        var getGoalsResponse = await GoalService.GetAllAsync();
+        Goals = getGoalsResponse.Data.ToList();
+        StateHasChanged();
+    }
 
-		await OpenCreateGoalModalIfIdeaWasPromotedAsync();
-	}
-
-	public async Task OpenCreateGoalModalIfIdeaWasPromotedAsync()
-	{
-		const string promotedIdea = "UpgradedIdea";
-		var ideaToBePromotedToGoal = await SessionStorage.GetItemAsync<IdeaDto>(promotedIdea);
-
-		if (ideaToBePromotedToGoal == null)
-		{
-			return;
-		}
-
-		//ModalService.Show<GoalCreatePage, GoalCreateParameter>("", new GoalCreateParameter()
-		//{
-		//	Idea = ideaToBePromotedToGoal
-		//});
-
-		await SessionStorage.SetItemAsync<IdeaDto>(promotedIdea, null);
-	}
-
-	private void OnModalClose(ActionType actionType, object response, Guid id)
-	{
-		if (actionType == ActionType.Create)
-		{
-			var newGoal = response as GoalDto;
-			Goals.Add(newGoal);
-			StateHasChanged();
-		}
-	    if (actionType is ActionType.Delete)
-	    {
-	        var goalId = long.Parse(response.ToString());
-	        var deletedGoal = Goals.FirstOrDefault(x => x.Id == goalId);
-	        if (deletedGoal is not null)
-	        {
-	            Goals.Remove(deletedGoal);
-	            StateHasChanged();
-	        }
-	    }
-	    //if (actionType == ActionType.Delete)
-	    //{
-	    //    Console.WriteLine("action delete");
-	    //    var goal = response as GoalDto;
-	    //    Console.WriteLine("hi");
-	    //    Console.WriteLine("d", goal);
-	    //    var deletedGoal = Goals.SingleOrDefault(x => x.Id == goal.Id);
-	    //    Console.WriteLine("delete  goal...");
-	    //    if (deletedGoal is not null)
-	    //    {
-	    //        Console.WriteLine("delete goal found.");
-	    //        Goals.Remove(deletedGoal);
-	    //    }
-	    //}
-	}
-
-	private void OpenDetailGoal(int id)
-	{
-	}
+    private async void OnModalClose(ActionType actionType, object response, Guid id)
+    {
+        switch (actionType)
+        {
+            case ActionType.Create:
+                await LoadDataAsync();
+                break;
+            case ActionType.Update:
+                await LoadDataAsync();
+                break;
+            case ActionType.Delete:
+                await LoadDataAsync();
+                break;
+        }
+    }
 }

@@ -1,9 +1,7 @@
-﻿using DoIt.Interface.Ideas;
-
-namespace DoIt.Client.Pages.Goals.Create
+﻿namespace DoIt.Client.Pages.Goals.Create
 {
 	public class GoalCreateParameter
 	{
-		public IdeaDto Idea { get; set; }
+		public long IdeaId { get; set; }
 	}
 }

@@ -6,6 +6,7 @@
 @using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Models.General
 @using DoIt.Client.Models.Icons
+@using DoIt.Client.Services.Ideas
 @using DoIt.Client.Services.Modals
 @using DoIt.Interface.Goals
 @using Microsoft.AspNetCore.Components
@@ -13,6 +14,7 @@
 @inherits BaseModalComponent<GoalCreateParameter>
 
 @inject IGoalService GoalService;
+@inject IIdeaService IdeaService;
 @inject ModalService ModalService;
 
 
@@ -37,9 +39,6 @@
 
     public IEnumerable<MenuOption> Options { get; set; }
 
-
-    //private List<string> options = ((GoalType[])Enum.GetValues(typeof(GoalType))).Select(t => t.ToString()).ToList();
-
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -54,14 +53,21 @@
                 DefaultActive = true
             },
         };
+    }
 
-        //Console.WriteLine(JsonConvert.SerializeObject(Parameter));
-        //if (Parameter != null && Parameter.Idea != null)
-        //{
-        //	this.NewGoal.IdeaId = Parameter.Idea.Id;
-        //	this.NewGoal.Title = Parameter.Idea.Title;
-        //	this.NewGoal.Description = Parameter.Idea.Description;
-        //}
+    protected override async Task LoadDataAsync()
+    {
+        if (Parameter != null)
+        {
+            var idea = await IdeaService.GetAsync(Parameter.IdeaId);
+
+            Goal.IdeaId = idea.Id;
+            Goal.Title = idea.Title;
+            Goal.Description = idea.Description;
+            Goal.CategoryIds = idea.Categories.Select(x => x.Id).ToList();
+        }
+
+        await base.LoadDataAsync();
     }
 
     private async Task CreateGoalAsync(GoalFormDto goal)

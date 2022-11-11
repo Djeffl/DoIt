@@ -1,8 +1,10 @@
 ﻿@page "/goals/{GoalId}"
 
 @using DoIt.Client.Components.Buttons;
+@using DoIt.Client.Components.Modals.Confirm
 @using DoIt.Client.Models.Loading
 @using DoIt.Client.Models.Menus
+@using DoIt.Client.Models.Modals
 @using DoIt.Client.Services.Ideas;
 @using DoIt.Client.Components.Fields;
 @using DoIt.Client.Models.Icons;
@@ -68,13 +70,6 @@
                                 @if (Goal.ActionPlan.Any())
                                 {
                                     <table class="action-plan-table-list">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Finished</th>
-                                                <th scope="col">Title</th>
-                                                <th scope="col">Due At</th>
-                                            </tr>
-                                        </thead>
                                         <tbody>
                                             @foreach (var task in Goal.ActionPlan)
                                             {
@@ -86,12 +81,17 @@
                                                     </td>
                                                     <td class="title data">
                                                         <div class="internal">
-                                                            <TextField @bind-Value="@task.Title" Multiline="false"></TextField>
+                                                            <TextField @bind-Value="@task.Title" Placeholder="Title" Multiline="false"></TextField>
                                                         </div>
                                                     </td>
                                                     <td class="due-at data">
                                                         <div class="internal">
                                                             @task.DueAt
+                                                        </div>
+                                                    </td>
+                                                    <td class="due-at data">
+                                                        <div class="internal">
+                                                            <IconButton Icon="IconType.Delete" OnClick="() => {}"></IconButton>
                                                         </div>
                                                     </td>
                                                     @*<td>
@@ -102,17 +102,6 @@
                                         </tbody>
                                     </table>
                                 }
-                                @* Possibility to add a new task *@
-                                @*<li class="new-action-plan-item">
-                                <div class="action-plan-item-form">
-                                <div class="action-plan-item-field-spacing">
-                                <TextField @bind-Value="ActionPlanItem.Title" IsMandatory="true" ValidationFor="() => ActionPlanItem.Title" InitialValue="ActionPlanItem.Title" />
-                                </div>
-                                <IconButton ButtonType="button" Height="2.5rem" width="2.5rem" Color="AppColor.Red" Icon="IconType.Check" OnClick="AddNewActionPlan">
-                                </IconButton>
-                                </div>
-                                </li>*@
-                                @*</>*@
                             </div>
                         </div>
                     </div>
@@ -122,46 +111,52 @@
     </Content>
 </DoIt.Client.Components.Modals.ModalComponent>
 
-@*@if (Goal != null)
-{
-    <section class="idea-detail @GetActive(SectionType.Detail)">
-        <div class="actions">
-            <IconButton OnClick="() => CloseModal()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
-            </IconButton>
-            <IconButton OnClick="StartDeleteGoal" Text="Delete" Color="AppColor.White" ButtonType="button" Icon="IconType.Delete">
-            </IconButton>
-            <IconButton Text="Update" Color="AppColor.Yellow" ButtonType="submit" Icon="IconType.Goal">
-            </IconButton>
-        </div>
-        </EditForm>
-    </section>
-    <section class="confirm-modal @GetActive(SectionType.ConfirmDelete)">
-        <div class="description">
-            <p>Are you sure you want to delete idea '@Goal.Title'</p>
-        </div>
-        <div class="actions confirm-modal-actions">
-            <IconButton OnClick="() => GoDetailScreen()" Text="Cancel" Color="AppColor.Gray" ButtonType="button" Icon="IconType.Cancel">
-            </IconButton>
-            <IconButton OnClick="() => DeleteGoal()" Text="Yes" Color="AppColor.White" ButtonType="button" Icon="IconType.Check">
-            </IconButton>
-        </div>
-    </section>
-}*@
-
 @code {
     public GoalDetail Goal { get; set; }
 
-    private SectionType ActiveSection;
-
     private readonly List<string> _actionTypes = new() { "Task" }; //"Routine"
-    public IEnumerable<MenuOption> Options { get; set; }
+    public IEnumerable<MenuOption> Options;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
+        ModalService.OnClose += OnModalClose;
+
+        Options = new List<MenuOption>()
+            {
+                new MenuOption()
+                {
+                    Title = "Delete",
+                    Icon = Models.Icons.IconType.Delete,
+                    OnClick = () => this.StartDeleteGoal()
+                },
+                new MenuOption()
+                {
+                    Title = "Save",
+                    OnClick= async () => await UpdateGoalAsync(),
+                    DefaultActive = true
+                }
+            };
+
         Goal = await GoalService.GetGoalByIdAsync(Parameter.GoalId);
         this.StateHasChanged();
+    }
+
+
+
+    private void OnModalClose(ActionType actionType, object response, Guid id)
+    {
+
+        if (actionType == ActionType.Confirm)
+        {
+            var confirmDelete = (bool)response;
+
+            if (confirmDelete)
+            {
+                DeleteGoal();
+            }
+        }
     }
 
     private Task ChangeTaskProgressAsync(ChangeEventArgs eventArgs)
@@ -173,21 +168,6 @@
 
     public async Task UpdateGoalAsync()
     {
-        Console.WriteLine(JsonConvert.SerializeObject(Goal));
-        Console.WriteLine(JsonConvert.SerializeObject(new UpdateGoalRequest()
-            {
-                Description = Goal.Description,
-                DueAt = Goal.DueAt,
-                Location = Goal.Location,
-                Reason = Goal.Reason,
-                Title = Goal.Title,
-                ActionPlan = Goal.ActionPlan.Select(item => new GoalTodoDto()
-                {
-                    IsFinished = item.IsFinished,
-                    Title = item.Title,
-                    DueAt = item.DueAt,
-                }),
-            }));
         await GoalService.UpdateGoalAsync(Goal.Id, new UpdateGoalRequest()
             {
                 Description = Goal.Description,
@@ -229,34 +209,15 @@
 
     private void StartDeleteGoal()
     {
-        GoConfirmScreen();
-    }
-
-    private void GoConfirmScreen()
-    {
-        ActiveSection = SectionType.ConfirmDelete;
-    }
-
-    private void GoDetailScreen()
-    {
-        ActiveSection = SectionType.Detail;
+        ModalService.Show(new ModalBuilder()
+            .AddComponent<ConfirmModalComponent, ConfirmModalParameter>(new ConfirmModalParameter() { Description = "Are you sure you wish to delete this idea?" })
+            .AddConfiguration(new ModalConfiguration() { FullScreen = false })
+            .Build());
     }
 
     private async void DeleteGoal()
     {
         await GoalService.DeleteGoalAsync(Goal.Id);
         CloseModal(ActionType.Delete, Goal.Id);
-    }
-
-    private string GetActive(SectionType sectionType)
-    {
-        return ActiveSection == sectionType ? "active" : "";
-    }
-
-    private enum SectionType
-    {
-        Detail,
-        ConfirmDelete,
-        Upgrade
     }
 }

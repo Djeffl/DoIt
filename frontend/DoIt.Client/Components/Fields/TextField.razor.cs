@@ -31,6 +31,9 @@ namespace DoIt.Client.Components.Fields
         [Parameter]
         public IEnumerable<string> AutocompleteOptions { get; set; } = new List<string>();
 
+        [Parameter]
+        public string Placeholder { get; set; }
+
         private IEnumerable<string> FilteredAutocompleteOptions
         {
             get
