@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using DoIt.Api.Services.Todo;
 using DoIt.Api.Services.Todo.Dto;
+using System.Collections.Generic;
 
 namespace DoIt.Api.Controllers
 {
@@ -59,14 +60,14 @@ namespace DoIt.Api.Controllers
 			return Ok(todo);
 		}
 
-		//[HttpGet]
-		//[Route("")]
-		//public async Task<IActionResult> GetTodos()
-		//{
-		//	var todos = await context.Todos.ToListAsync();
+		[HttpGet]
+		[Route("")]
+		public async Task<ActionResult<IEnumerable<GetTodoDto>>> GetTodos()
+		{
+			var todos = await _todoService.GetTodos();
 
-		//	return Ok(todos);
-		//}
+			return Ok(todos);
+		}
 
 		//[HttpPatch]
 		//[Route("{id}")]

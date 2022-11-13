@@ -1,0 +1,32 @@
+﻿.carousel {
+    height: 100%;
+    display: grid;
+    grid-template-rows: calc(100% - 35px) 35px;
+}
+
+.carousel-content {
+    border-radius: 12px;
+    overflow: overlay;
+}
+
+    .carousel-content::-webkit-scrollbar {
+        width: 0.25rem;
+    }
+
+    .carousel-content::-webkit-scrollbar-track {
+        background: #1e1e24;
+    }
+
+    .carousel-content::-webkit-scrollbar-thumb {
+        background: #6649b8;
+    }
+
+.carousel-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-option {
+    margin-right: 14px;
+}

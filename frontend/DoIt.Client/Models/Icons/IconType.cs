@@ -31,6 +31,8 @@ namespace DoIt.Client.Models.Icons
         Add,
         Alert,
         Info,
-        Bug
+        Bug,
+        CheckboxFull,
+        CheckboxBlank,
     }
 }

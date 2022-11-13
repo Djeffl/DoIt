@@ -33,6 +33,10 @@ namespace DoIt.Client.Services.Icons
                     return "svg/general/bug_black_24dp.svg";
                 case IconType.Info:
                     return "svg/general/information_black_24dp.svg";
+                case IconType.CheckboxBlank:
+                    return "svg/general/checkbox-blank-circle-outline_24dp.svg";
+                case IconType.CheckboxFull:
+                    return "svg/general/checkbox-blank-circle_24dp.svg";
                 default: return "favicon.ico";
             }
         }

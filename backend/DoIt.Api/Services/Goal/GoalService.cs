@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DoIt.Interface.Goals;
+using DoIt.Api.Domain;
 
 namespace DoIt.Api.Services.Goal
 {
@@ -65,7 +66,7 @@ namespace DoIt.Api.Services.Goal
         {
             // todo: Validation
 
-            var goal = await _ctx.Goals.FindAsync(id);
+            var goal = await _ctx.Goals.Include(x => x.Todos).FirstOrDefaultAsync(x => x.Id == id);
 
             if (goal is null)
             {
@@ -77,12 +78,36 @@ namespace DoIt.Api.Services.Goal
             goal.Location = request.Location;
             goal.Reason = request.Reason;
             goal.DueAt = request.DueAt;
-            goal.Todos = request.ActionPlan.Select(x => new Domain.Todo
+
+            // Delete children
+            foreach (var existingChild in goal.Todos.ToList())
             {
-                Title = x.Title,
-                IsFinished = x.IsFinished,
-                DueAt = x.DueAt
-            }).ToList();
+                if (!request.ActionPlan.Any(c => c.Id == existingChild.Id))
+                    _ctx.Todos.Remove(existingChild);
+            }
+
+            // Update and Insert children
+            foreach (var childModel in request.ActionPlan)
+            {
+                var existingChild = goal.Todos
+                    .Where(c => c.Id == childModel.Id && c.Id != default(int))
+                    .SingleOrDefault();
+
+                if (existingChild != null)
+                    // Update child
+                    _ctx.Entry(existingChild).CurrentValues.SetValues(childModel);
+                else
+                {
+                    // Insert child
+                    var newChild = new Domain.Todo
+                    {
+                        Title = childModel.Title,
+                        IsFinished = childModel.IsFinished,
+                        DueAt = childModel.DueAt,
+                    };
+                    goal.Todos.Add(newChild);
+                }
+            }
 
             await _ctx.SaveChangesAsync();
 
@@ -97,7 +122,6 @@ namespace DoIt.Api.Services.Goal
                 DueAt = goal.DueAt,
                 FinishedAt = goal.FinishedAt,
                 IsFinished = goal.IsFinished,
-
             };
         }
 

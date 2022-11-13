@@ -1,49 +1,68 @@
 ﻿@page "/todos"
 
+@using DoIt.Client.Components.Loading
+@using DoIt.Client.Extensions
 @using Models.Todos;
 @using Services.Todos;
 
 @inject ITodoService TodoService;
 
+@inherits BaseComponent
 
-
-<h3>Today</h3>
-
-@if (todos == null)
-{
-	// Spinner Loading
-}
-else
-{
-	<section class="todos">
-		@foreach (var todo in todos)
-		{
-        <article class="todo">
-            <input type="checkbox" @oninput="() => UpdateTodoIsFinished(todo.Id, !todo.IsFinished)" @bind="todo.IsFinished" class="is-finished" />
-            <p @onclick="() => OpenDetailTodo(todo.Id)">@todo.Title</p>
-        </article>
-		}
-	</section>
-}
-
+<LoadingContainerComponent LoadingState="LoadingState">
+    <Rendered>
+        <section class="ideas">
+            <div class="filter">
+            </div>
+            <ul class="ideas-list">
+                @if (_todos.Any())
+                {
+                    @foreach (var todo in _todos)
+                    {
+                        <li class="ideas-list-item" @onclick="() => OpenDetailTodo(todo.Id)">
+                            <article class="todo">
+                                <div class="todo-data">
+                                    <div class="todo-title">
+                                        @todo.Title
+                                    </div>
+                                    <div class="todo-description">
+                                        @todo.Description
+                                    </div>
+                                    <div class="idea-date">
+                                        @todo.DueAt.ToStringFormat()
+                                    </div>
+                                </div>
+                            </article>
+                        </li>
+                    }
+                }
+            </ul>
+        </section>
+    </Rendered>
+</LoadingContainerComponent>
 
 @code {
-	private List<TodoDto> todos;
+    private List<TodoDto> _todos;
 
-	protected override async Task OnInitializedAsync()
-	{
-		todos = await TodoService.GetAllAsync();
-	}
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
 
-	private Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
-	{
-		return Task.CompletedTask;
-    //Console.WriteLine($"Updating todo - Id: '{id}. Todo.IsFinished set to {updatedIsFinished}");
-    //await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
-	}
+    protected override async Task LoadDataAsync()
+    {
+        _todos = await TodoService.GetAllAsync();
+    }
 
-	private void OpenDetailTodo(int id)
-	{
-		//ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
-	}
+    private Task UpdateTodoIsFinished(int id, bool updatedIsFinished)
+    {
+        return Task.CompletedTask;
+        //Console.WriteLine($"Updating todo - Id: '{id}. Todo.IsFinished set to {updatedIsFinished}");
+        //await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
+    }
+
+    private void OpenDetailTodo(int id)
+    {
+        //ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
+    }
 }

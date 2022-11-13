@@ -1,9 +1,18 @@
-﻿.top-modal {
+﻿.modal {
+    display: grid;
+    grid-template-rows: 80px calc(100vh - 80px);
+}
+
+.top-modal {
     display: flex;
     align-content: center;
     align-items: center;
     border-bottom: 1px solid var(--bg-secondary);
     padding: 1rem 0px;
+}
+
+.content-modal {
+    padding: 1.5rem;
 }
 
 .title {

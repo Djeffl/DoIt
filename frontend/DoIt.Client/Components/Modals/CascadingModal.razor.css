@@ -9,7 +9,6 @@
 
 .cascading-modal {
     overflow: auto;
-    padding: 1.5rem;
     box-sizing: border-box;
     background-color: var(--bg-primary);
     display: grid;
@@ -66,4 +65,5 @@
     }
 
 .content-modal {
+    padding: 1.5rem;
 }

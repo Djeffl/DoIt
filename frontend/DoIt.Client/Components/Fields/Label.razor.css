@@ -1,0 +1,5 @@
+﻿.lbl {
+    color: var(--text-primary);
+    margin: 3px;
+    font-weight: 900;
+}

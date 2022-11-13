@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
@@ -44,6 +45,13 @@ namespace DoIt.Api.Services.Todo
             var newTodo = await _context.Todos.FindAsync(id);
 
             return newTodo.ToDto();
+        }
+
+        public async Task<IEnumerable<GetTodoDto>> GetTodos()
+        {
+            var todos = await _context.Todos.ToListAsync();
+
+            return todos.Select(x => x.ToDto());
         }
     }
 }

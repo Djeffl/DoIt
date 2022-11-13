@@ -1,0 +1,81 @@
+﻿@using DoIt.Client.Components.Buttons
+@using DoIt.Client.Components.Swipe
+@using DoIt.Client.Models.Icons
+<CascadingValue Value="this">
+    <SwipeArea OnSwipe="OnSwipe">
+        <div class="carousel">
+            <div class="carousel-content">
+                @ChildContent
+            </div>
+            <div class="carousel-options">
+                @for (var i = 0; i < Components.Count; i++)
+                {
+                    int current = i;
+                    <div class="icon-option">
+                        <IconButton Height="20px" Width="20px" Icon="GetIcon(i)" Background="false" OnClick="() => ChangeActiveComponent(current)">
+                        </IconButton>
+                    </div>
+                }
+            </div>
+        </div>
+    </SwipeArea>
+</CascadingValue>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private List<CarouselItemComponent> Components = new List<CarouselItemComponent>();
+
+    private int _activeIndex = 0;
+
+    private bool IsActive(int index)
+    {
+        return _activeIndex == index;
+    }
+
+    private IconType GetIcon(int index)
+    {
+        if (IsActive(index))
+        {
+            return IconType.CheckboxFull;
+        }
+        else
+        {
+            return IconType.CheckboxBlank;
+        }
+    }
+
+    private void ChangeActiveComponent(int index)
+    {
+        _activeIndex = index;
+        StateHasChanged();
+    }
+
+    public void AddComponent(CarouselItemComponent component)
+    {
+        Components.Add(component);
+    }
+
+    public bool IsChildActive(CarouselItemComponent item)
+    {
+        return Components.Any() && Components.IndexOf(item) == _activeIndex;
+    }
+
+    private SwipeDirection _swipeDirection = SwipeDirection.None;
+
+    private void OnSwipe(SwipeDirection swipeDirection)
+    {
+        _swipeDirection = swipeDirection;
+
+        // do stuff based on swipe direction
+        if (swipeDirection == SwipeDirection.RightToLeft && _activeIndex != Components.Count + 1)
+        {
+            ChangeActiveComponent(_activeIndex++);
+        }
+        if (swipeDirection == SwipeDirection.LeftToRight && _activeIndex != 0)
+        {
+            ChangeActiveComponent(_activeIndex--);
+        }
+    }
+}
