@@ -42,6 +42,9 @@
     public string BackgroundColor { get; set; }
 
     [Parameter]
+    public string Margin { get; set; }
+
+    [Parameter]
     public string Padding { get; set; }
 
     private string _style;
@@ -61,11 +64,16 @@
             style += $"width: {Width};";
         }
 
+        if (!string.IsNullOrEmpty(Margin))
+        {
+            style += $"margin: {Margin};";
+        }
+
         if (!Background)
         {
             style += $"background: none; box-shadow: none;";
         }
-        else if(!string.IsNullOrEmpty(BackgroundColor))
+        else if (!string.IsNullOrEmpty(BackgroundColor))
         {
             style += $"background-color: {BackgroundColor}";
         }

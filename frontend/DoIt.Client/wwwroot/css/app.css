@@ -57,6 +57,7 @@ main {
     height: 84vh;
     overflow-y: auto;
     height: calc(100vh - 80px);
+    box-sizing: border-box;
 }
 
 .active {

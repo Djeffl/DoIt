@@ -27,7 +27,7 @@
             </NavLink>
         </li>
         <li class="nav-item">
-            <NavLink AdditionalAttributes="_additionalTodosNavLinkCssAttributes">
+            <NavLink AdditionalAttributes="_additionalCalendarNavLinkCssAttributes">
                 <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24"
                      viewBox="0 0 24 24" width="24">
                     <g>
@@ -41,7 +41,7 @@
                         <g />
                     </g>
                 </svg>
-                <p class="nav-item-title">To-do</p>
+                <p class="nav-item-title">Calendar</p>
             </NavLink>
             <button class="sub-link" @onclick="() => OpenAddNewTodo()">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -138,11 +138,11 @@
         {"href", "/ideas"},
     };
 
-    IReadOnlyDictionary<string, object> _additionalTodosNavLinkCssAttributes = new Dictionary<string, object>()
+    IReadOnlyDictionary<string, object> _additionalCalendarNavLinkCssAttributes = new Dictionary<string, object>()
     {
         {"style", generalNavBarStyle},
         {"class", "nav-link"},
-        {"href", "/todos"},
+        {"href", "/calendar"},
     };
 
     IReadOnlyDictionary<string, object> _additionalHomeNavLinkCssAttributes = new Dictionary<string, object>()

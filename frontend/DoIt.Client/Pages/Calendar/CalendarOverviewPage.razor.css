@@ -1,0 +1,79 @@
+﻿.calendar-overview {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.calendar-nav {
+    padding: 3px;
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.calendar-day {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 0.5rem;
+}
+
+.selected-day {
+    color: var(--accent);
+}
+
+.calendar-day-name {
+    color: var(--text-accent);
+    padding-bottom: 4px;
+}
+
+calendar-day-number {
+}
+
+.calendar-day-detail {
+    display: flex;
+    align-items: center;
+}
+
+.calendar-is-done {
+    margin: 0 0 0 auto;
+}
+
+.calendar-data {
+    background-color: var(--bg-primary);
+    border-radius: 7px;
+    height: 100%;
+    padding: 14px;
+    margin: 3px 0;
+    overflow: overlay;
+}
+
+.calendar-data::-webkit-scrollbar-thumb {
+    background: #6649b8;
+}
+
+    .calendar-data::-webkit-scrollbar-track {
+        background: #1e1e24;
+    }
+
+    .calendar-data::-webkit-scrollbar {
+        width: 0.25rem;
+    }
+
+.calendar-task {
+    padding: 8px;
+    margin: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.circle {
+    border-radius: 50%;
+    width: 19px;
+    height: 19px;
+    padding: 10px;
+    background: var(--bg-primary);
+    text-align: center;
+}

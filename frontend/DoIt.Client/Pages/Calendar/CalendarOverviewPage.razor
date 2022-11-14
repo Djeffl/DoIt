@@ -1,0 +1,128 @@
+﻿@page "/calendar"
+@using DoIt.Client.Components.Loading
+@using DoIt.Client.Extensions
+@using DoIt.Client.Models.Menus
+@using DoIt.Client.Models.Todos
+@using DoIt.Client.Services.Todos
+
+@inject ITodoService TodoService;
+
+@inherits BaseComponent
+
+<div class="calendar-overview">
+    <div class="Calendar-title">
+        <h2>
+            @_selectedDay.ToDayOfMonthStringFormat() @_selectedDay.Year
+        </h2>
+    </div>
+    <div class="calendar-nav">
+        @foreach (var date in GetCurrentWeek())
+        {
+            <div class="calendar-day">
+                <div class="calendar-day-name">@date.DayOfWeek.ToStringFormat()</div>
+                <div class="calendar-day-number @IsSelectedDay(date) circle">@date.Day</div>
+            </div>
+        }
+    </div>
+    <div class="calendar-data">
+        <div class="calendar-open-tasks">
+            <div class="calendar-open-tasks-header">
+                <DoIt.Client.Components.Fields.Label Title="Open tasks">
+                </DoIt.Client.Components.Fields.Label>
+
+
+                <LoadingContainerComponent LoadingState="LoadingState">
+                    <Rendered>
+                        @foreach (var task in _todos)
+                        {
+                            <div class="calendar-task">
+                                <DoIt.Client.Components.Buttons.IconButton Text="Add" Padding="0px" Margin="0px 3px" Height="auto" Width="auto">
+                                </DoIt.Client.Components.Buttons.IconButton>
+                                @task.Title
+                                @task.Description
+                            </div>
+                        }
+                    </Rendered>
+                </LoadingContainerComponent>
+            </div>
+        </div>
+        <div class="calendar-open-day-schedule">
+            <DoIt.Client.Components.Fields.Label Title="To-do's">
+            </DoIt.Client.Components.Fields.Label>
+            <LoadingContainerComponent LoadingState="LoadingState">
+                <Rendered>
+                    @foreach (var task in _todos)
+                    {
+                        <div class="calendar-task">
+                            <DoIt.Client.Components.Fields.CheckboxField Checked="task.IsFinished"></DoIt.Client.Components.Fields.CheckboxField>
+                            @task.Title
+                            @task.Description
+                            <DoIt.Client.Components.Menus.MenuComponent MenuItems="menuOptions" Icon="Models.Icons.IconType.MoreOptions">
+
+                            </DoIt.Client.Components.Menus.MenuComponent>
+                        </div>
+                    }
+                </Rendered>
+            </LoadingContainerComponent>
+
+            @*@foreach (var hour in GetCurrentDayInHours())
+            {
+            <div class="calendar-day-detail">
+            <div class="calendar-hour">@hour</div>
+
+            <!--div class="calendar-task">Get Milk</div>
+            <div class="calendar-is-done">
+            <DoIt.Client.Components.Fields.CheckboxField>
+
+            </DoIt.Client.Components.Fields.CheckboxField>
+            </div>-->
+            </div>
+            }*@
+        </div>
+    </div>
+
+</div>
+
+@code {
+    DateTime _selectedDay = DateTime.Today;
+    IEnumerable<TodoDto> _todos = new List<TodoDto>();
+    IEnumerable<MenuOption> menuOptions = new List<MenuOption>()
+    {
+        new MenuOption(){
+            Title = "Remove from to-do list",
+            OnClick = () => {},
+            Icon = Models.Icons.IconType.Delete
+        }
+    };
+
+    private IEnumerable<DateTime> GetCurrentWeek()
+    {
+        DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+
+        return Enumerable.Range(0, 7)
+          .Select(offset => startOfWeek.AddDays(offset))
+          .ToArray();
+    }
+
+    protected override async Task LoadDataAsync()
+    {
+        _todos = await TodoService.GetAllAsync();
+    }
+
+    private IEnumerable<TimeOnly> GetCurrentDayInHours()
+    {
+        return Enumerable.Range(0, 24)
+          .Select(offset => new TimeOnly(offset, 0))
+          .ToArray();
+    }
+
+    private string IsSelectedDay(DateTime date)
+    {
+        if (date == _selectedDay)
+        {
+            return "selected-day";
+        }
+
+        return "";
+    }
+}
