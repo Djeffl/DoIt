@@ -14,7 +14,7 @@
 
         public IEnumerable<long> CategoryIds { get; set; } = new List<long>();
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public DateTime? FinishedAt { get; set; }
 

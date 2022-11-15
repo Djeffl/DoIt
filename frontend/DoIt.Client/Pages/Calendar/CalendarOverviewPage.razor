@@ -4,6 +4,7 @@
 @using DoIt.Client.Models.Menus
 @using DoIt.Client.Models.Todos
 @using DoIt.Client.Services.Todos
+@using DoIt.Interface.Todos
 
 @inject ITodoService TodoService;
 
@@ -20,26 +21,26 @@
         {
             <div class="calendar-day">
                 <div class="calendar-day-name">@date.DayOfWeek.ToStringFormat()</div>
-                <div class="calendar-day-number @IsSelectedDay(date) circle">@date.Day</div>
+                <div class="calendar-day-number @IsSelectedDay(date) circle" @onclick="()=> ChangeSelectedDay(date)">@date.Day</div>
             </div>
         }
     </div>
     <div class="calendar-data">
         <div class="calendar-open-tasks">
             <div class="calendar-open-tasks-header">
-                <DoIt.Client.Components.Fields.Label Title="Open tasks">
+                <DoIt.Client.Components.Fields.Label Title="Open To-do's'">
                 </DoIt.Client.Components.Fields.Label>
 
 
                 <LoadingContainerComponent LoadingState="LoadingState">
                     <Rendered>
-                        @foreach (var task in _todos)
+                        @foreach (var todo in _todosOpen)
                         {
                             <div class="calendar-task">
-                                <DoIt.Client.Components.Buttons.IconButton Text="Add" Padding="0px" Margin="0px 3px" Height="auto" Width="auto">
+                                <DoIt.Client.Components.Buttons.IconButton Text="Add" Padding="0px" Margin="0px 3px" Height="auto" Width="auto" OnClick="() => AddTodoToCurrentDay(todo)">
                                 </DoIt.Client.Components.Buttons.IconButton>
-                                @task.Title
-                                @task.Description
+                                @todo.Title
+                                @todo.Description
                             </div>
                         }
                     </Rendered>
@@ -51,12 +52,12 @@
             </DoIt.Client.Components.Fields.Label>
             <LoadingContainerComponent LoadingState="LoadingState">
                 <Rendered>
-                    @foreach (var task in _todos)
+                    @foreach (var todo in _todosSelectedDate)
                     {
                         <div class="calendar-task">
-                            <DoIt.Client.Components.Fields.CheckboxField Checked="task.IsFinished"></DoIt.Client.Components.Fields.CheckboxField>
-                            @task.Title
-                            @task.Description
+                            <DoIt.Client.Components.Fields.CheckboxField Checked="todo.IsFinished"></DoIt.Client.Components.Fields.CheckboxField>
+                            @todo.Title
+                            @todo.Description
                             <DoIt.Client.Components.Menus.MenuComponent MenuItems="menuOptions" Icon="Models.Icons.IconType.MoreOptions">
 
                             </DoIt.Client.Components.Menus.MenuComponent>
@@ -85,13 +86,15 @@
 
 @code {
     DateTime _selectedDay = DateTime.Today;
-    IEnumerable<TodoDto> _todos = new List<TodoDto>();
+
+    IEnumerable<TodoDto> _todosSelectedDate = new List<TodoDto>();
+    IEnumerable<TodoDto> _todosOpen = new List<TodoDto>();
     IEnumerable<MenuOption> menuOptions = new List<MenuOption>()
     {
         new MenuOption(){
             Title = "Remove from to-do list",
-            OnClick = () => {},
-            Icon = Models.Icons.IconType.Delete
+            Icon = Models.Icons.IconType.Delete,
+            OnClick = () => {}
         }
     };
 
@@ -106,7 +109,18 @@
 
     protected override async Task LoadDataAsync()
     {
-        _todos = await TodoService.GetAllAsync();
+        await LoadTodosOpen();
+        await LoadTodosForSelectedDay();
+    }
+
+    private async Task LoadTodosOpen()
+    {
+        _todosOpen = await TodoService.GetListAsync(new Interface.Todos.GetTodoListQueryDto() { PlannedAt = null });
+    }
+
+    private async Task LoadTodosForSelectedDay()
+    {
+        _todosSelectedDate = await TodoService.GetListAsync(new Interface.Todos.GetTodoListQueryDto() { PlannedAt = _selectedDay });
     }
 
     private IEnumerable<TimeOnly> GetCurrentDayInHours()
@@ -124,5 +138,46 @@
         }
 
         return "";
+    }
+
+    private async void ChangeSelectedDay(DateTime date)
+    {
+        _selectedDay = date;
+        await LoadDataAsync();
+        StateHasChanged();
+    }
+
+    private async void AddTodoToCurrentDay(TodoDto todo)
+    {
+        await TodoService.UpdateAsync(todo.Id, new Interface.Todos.UpdateTodoDto()
+            {
+                PlannedAt = _selectedDay,
+                DueAt = todo.DueAt,
+                Title = todo.Title,
+                Description = todo.Description,
+                GoalId = todo.GoalId
+            });
+
+        await LoadTodosOpen();
+        await LoadDataAsync();
+        StateHasChanged();
+    }
+
+    private async void RemoveTodoFromCurrentDay(object objectTodo)
+    {
+        var todo = (TodoDto)objectTodo;
+
+        await TodoService.UpdateAsync(todo.Id, new Interface.Todos.UpdateTodoDto()
+            {
+                PlannedAt = null,
+                DueAt = todo.DueAt,
+                Title = todo.Title,
+                Description = todo.Description,
+                GoalId = todo.GoalId
+            });
+
+        await LoadTodosOpen();
+        await LoadDataAsync();
+        StateHasChanged();
     }
 }

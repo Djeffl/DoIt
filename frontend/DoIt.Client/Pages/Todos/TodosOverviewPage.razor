@@ -2,6 +2,7 @@
 
 @using DoIt.Client.Components.Loading
 @using DoIt.Client.Extensions
+@using DoIt.Interface.Todos
 @using Models.Todos;
 @using Services.Todos;
 
@@ -29,7 +30,7 @@
                                         @todo.Description
                                     </div>
                                     <div class="idea-date">
-                                        @todo.DueAt.ToStringFormat()
+                                        @*@todo.DueAt.ToStringFormat()*@
                                     </div>
                                 </div>
                             </article>
@@ -61,7 +62,7 @@
         //await Http.PatchAsync($"api/todos/{id}", new StringContent(JsonConvert.SerializeObject(new UpdateTodo { IsFinished = updatedIsFinished }), System.Text.Encoding.UTF8, "application/json-patch+json"));
     }
 
-    private void OpenDetailTodo(int id)
+    private void OpenDetailTodo(long id)
     {
         //ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
     }

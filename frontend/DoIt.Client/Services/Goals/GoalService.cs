@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using DoIt.Client.Models.Todos;
 using DoIt.Interface.Goals;
-
+using DoIt.Interface.Todos;
 
 namespace DoIt.Client.Services.Goals
 {

@@ -41,6 +41,8 @@ namespace DoIt.Client.Services.Ideas
 			return await client.GetFromJsonAsync<IdeasDto>(baseUrl);
 		}
 
+		
+
 		public async Task<IdeaDto> GetAsync(long id)
 		{
 			return await client.GetFromJsonAsync<IdeaDto>($"{baseUrl}/{id}");

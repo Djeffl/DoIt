@@ -13,9 +13,11 @@ namespace DoIt.Api.Domain
 
 		public string Description { get; set; }
 
-		public DateTime? StartTime { get; set; }
+		public DateTime? PlannedAt { get; set; }
 
-		public DateTime? EndTime { get; set; }
+		//public DateTime? StartTime { get; set; }
+
+		//public DateTime? EndTime { get; set; }
 
 		public DateTime CreatedAt { get; set; }
 

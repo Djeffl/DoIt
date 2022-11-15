@@ -1,11 +1,7 @@
-﻿using System;
-
-namespace DoIt.Api.Services.Todo.Dto
+﻿namespace DoIt.Interface.Todos
 {
-    public class GetTodoDto
+    public class UpdateTodoDto
     {
-        public long Id { get; set; }
-
         public string Title { get; set; }
 
         public long? GoalId { get; set; }
@@ -13,5 +9,7 @@ namespace DoIt.Api.Services.Todo.Dto
         public DateTime? DueAt { get; set; }
 
         public DateTime? PlannedAt { get; set; }
+
+        public string Description { get; set; }
     }
 }

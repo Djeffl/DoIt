@@ -19,7 +19,9 @@ namespace DoIt.Api.Services.Todo
             {
                 Id = todo.Id,
                 Title = todo.Title,
-                GoalId = todo.GoalId
+                GoalId = todo.GoalId,
+                PlannedAt = todo.PlannedAt,
+                DueAt = todo.DueAt,
             };
         }
     }
