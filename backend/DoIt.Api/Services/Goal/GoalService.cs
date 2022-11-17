@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DoIt.Interface.Goals;
-using DoIt.Api.Domain;
+using DoIt.Api.Services.Todo;
 
 namespace DoIt.Api.Services.Goal
 {
@@ -20,34 +20,17 @@ namespace DoIt.Api.Services.Goal
             _ctx = context;
         }
 
-        public async Task<GoalDto> CreateGoalAsync(Interface.Goals.CreateGoalDto createGoalDto)
+        public async Task<GoalDto> CreateGoalAsync(CreateGoalDto createGoalDto)
         {
-            var newGoal = new Domain.Goal()
-            {
-                Title = createGoalDto.Title,
-                Description = createGoalDto.Description,
-                CreatedAt = DateTime.UtcNow,
-                Location = createGoalDto.Location,
-                Reason = createGoalDto.Reason,
-                DueAt = createGoalDto.DueAt,
-            };
+            var idea = createGoalDto.IdeaId.HasValue ? await _ctx.Ideas.FirstOrDefaultAsync(x => x.Id == createGoalDto.IdeaId) : null;
+            var categories = await _ctx.Categories.Where(x => createGoalDto.CategoryIds.Contains(x.Id)).ToListAsync();
+            var newGoal = createGoalDto.ToDomain(idea, categories);
 
             _ctx.Goals.Add(newGoal);
 
             await _ctx.SaveChangesAsync();
 
-            return new GoalDto
-            {
-                Id = newGoal.Id,
-                Title = newGoal.Title,
-                Description = newGoal.Description,
-                Location = newGoal.Location,
-                Reason = newGoal.Reason,
-                CreatedAt = newGoal.CreatedAt,
-                DueAt = newGoal.DueAt,
-                FinishedAt = newGoal.FinishedAt,
-                IsFinished = newGoal.IsFinished
-            };
+            return newGoal.ToDto();
         }
 
         public async Task DeleteGoalAsync(long id)
@@ -99,55 +82,21 @@ namespace DoIt.Api.Services.Goal
                 else
                 {
                     // Insert child
-                    var newChild = new Domain.Todo
-                    {
-                        Title = childModel.Title,
-                        IsFinished = childModel.IsFinished,
-                        DueAt = childModel.DueAt,
-                    };
+                    var newChild = childModel.ToDomain(null);
                     goal.Todos.Add(newChild);
                 }
             }
 
             await _ctx.SaveChangesAsync();
 
-            return new GoalDto
-            {
-                Id = goal.Id,
-                Title = goal.Title,
-                Description = goal.Description,
-                Location = goal.Location,
-                Reason = goal.Reason,
-                CreatedAt = goal.CreatedAt,
-                DueAt = goal.DueAt,
-                FinishedAt = goal.FinishedAt,
-                IsFinished = goal.IsFinished,
-            };
+            return goal.ToDto();
         }
 
         public async Task<GoalDto> GetGoalAsync(long id)
         {
             var goal = await _ctx.Goals.Include(x => x.Todos).FirstOrDefaultAsync(x => x.Id == id);
 
-            return new GoalDto
-            {
-                Id = goal.Id,
-                Title = goal.Title,
-                Description = goal.Description,
-                Location = goal.Location,
-                Reason = goal.Reason,
-                CreatedAt = goal.CreatedAt,
-                DueAt = goal.DueAt,
-                FinishedAt = goal.FinishedAt,
-                IsFinished = goal.IsFinished,
-                ActionPlan = goal.Todos.Select(x => new GoalTodoDto()
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    IsFinished = x.IsFinished,
-                    DueAt = x.DueAt
-                }),
-            };
+            return goal.ToDto();
         }
 
         public async Task<GoalsDto> GetGoalsAsync(GetGoalsDto _)
@@ -156,25 +105,7 @@ namespace DoIt.Api.Services.Goal
 
             return new GoalsDto()
             {
-                Data = response.Select(goal => new GoalDto
-                {
-                    Id = goal.Id,
-                    Title = goal.Title,
-                    Description = goal.Description,
-                    Location = goal.Location,
-                    Reason = goal.Reason,
-                    CreatedAt = goal.CreatedAt,
-                    DueAt = goal.DueAt,
-                    FinishedAt = goal.FinishedAt,
-                    IsFinished = goal.IsFinished,
-                    ActionPlan = goal.Todos.Select(x => new GoalTodoDto()
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        DueAt = x.DueAt,
-                        IsFinished = x.IsFinished,
-                    })
-                }).ToList()
+                Data = response.Select(x => x.ToDto()).ToList()
             };
         }
     }

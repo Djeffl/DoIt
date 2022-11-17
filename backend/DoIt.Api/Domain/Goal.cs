@@ -10,6 +10,7 @@ namespace DoIt.Api.Domain
 		public Goal()
 		{
 			this.Todos = new List<Todo>();
+			this.Categories = new List<Category>();
 		}
 
 		public long Id { get; set; }
@@ -31,5 +32,8 @@ namespace DoIt.Api.Domain
         public string Location { get; set; }
         
         public string Reason { get; set; }
-    }
+        public Idea Idea { get; set; }
+        public ICollection<Category> Categories { get; set; }
+		public long? IdeaId { get; set; }
+	}
 }

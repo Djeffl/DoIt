@@ -13,7 +13,7 @@
                 Reason = goal.Reason,
                 Location = goal.Location,
                 DueAt = goal.DueAt,
-                IdeaId = goal.IdeaId,
+                IdeaId = goal.IdeaId, 
             };
         }
     }

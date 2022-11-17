@@ -46,7 +46,8 @@ namespace DoIt.Api.Services.Idea
 
         public async Task<IdeaDto> UpdateIdeaAsync(long id, UpdateIdeaDto updateIdeaDto)
         {
-            var idea = await _ctx.Ideas.Include(x => x.IdeaCategories).FirstOrDefaultAsync(x => x.Id == id);
+            var idea = await _ctx.Ideas.Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == id);
+            var categories = await _ctx.Categories.Where(x => updateIdeaDto.CategoryIds.Contains(x.Id)).ToListAsync();
 
             if (idea is null)
             {
@@ -55,11 +56,7 @@ namespace DoIt.Api.Services.Idea
 
             idea.Description = updateIdeaDto.Description;
             idea.Title = updateIdeaDto.Title;
-            idea.IdeaCategories = updateIdeaDto.CategoryIds.Select(categoryId => new Domain.IdeaCategory
-            {
-                CategoryId = categoryId,
-                IdeaId = idea.Id,
-            }).ToList();
+            idea.Categories = categories;
 
             await _ctx.SaveChangesAsync();
 

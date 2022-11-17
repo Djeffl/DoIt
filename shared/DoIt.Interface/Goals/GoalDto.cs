@@ -1,4 +1,8 @@
-﻿namespace DoIt.Interface.Goals
+﻿using DoIt.Interface.IdeaCategory;
+using DoIt.Interface.Ideas;
+using DoIt.Interface.Todos;
+
+namespace DoIt.Interface.Goals
 {
     public class GoalDto
     {
@@ -20,6 +24,10 @@
 
         public string Reason { get; set; }
 
-        public IEnumerable<GoalTodoDto> ActionPlan { get; set; }
+        public IdeaDto Idea { get; set; }
+
+        public IEnumerable<CategoryDto> Categories { get; set; }
+
+        public IEnumerable<TodoDto> ActionPlan { get; set; }
     }
 }

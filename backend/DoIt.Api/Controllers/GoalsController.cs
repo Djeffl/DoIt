@@ -76,7 +76,8 @@ namespace DoIt.Api.Controllers
                     Location = request.Location,
                     Reason = request.Reason,
                     DueAt = request.DueAt,
-                    //Name = goalType
+                    CategoryIds = request.CategoryIds,
+                    IdeaId = request.IdeaId,
                 }
             );
 

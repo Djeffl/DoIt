@@ -25,13 +25,16 @@ namespace DoIt.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Todo>().ToTable("Todo", schema: "dbo");
-            modelBuilder.Entity<Goal>()
-                        .ToTable("Goals", schema: "dbo")
-                        .HasMany<Todo>(x => x.Todos).WithOne(x => x.Goal).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo")
-                .HasMany<Category>(c => c.Categories)
-                .WithMany(i => i.Ideas)
-                .UsingEntity<IdeaCategory>();
+            
+            var goalEntityBuilder = modelBuilder.Entity<Goal>()
+                        .ToTable("Goals", schema: "dbo");
+            //goalEntityBuilder.HasOne<Idea>(x => x.Idea).WithOne(x => x.Goal);
+            goalEntityBuilder.HasMany<Category>(c => c.Categories).WithMany(i => i.Goals); 
+            goalEntityBuilder.HasMany<Todo>(x => x.Todos).WithOne(x => x.Goal).OnDelete(DeleteBehavior.Cascade);
+
+            var ideaEntityBuilder = modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo");
+            ideaEntityBuilder.HasMany<Category>(c => c.Categories).WithMany(i => i.Ideas);
+            ideaEntityBuilder.HasOne<Goal>(x => x.Goal).WithOne(x => x.Idea).HasForeignKey<Goal>(x => x.IdeaId);
 
             modelBuilder.Entity<Category>().ToTable("Categories", "dbo");
         }

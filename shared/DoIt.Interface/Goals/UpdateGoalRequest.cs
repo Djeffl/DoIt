@@ -1,4 +1,6 @@
-﻿namespace DoIt.Interface.Goals
+﻿using DoIt.Interface.Todos;
+
+namespace DoIt.Interface.Goals
 {
     public class UpdateGoalRequest
     {
@@ -12,6 +14,6 @@
 
         public DateTime DueAt { get; set; }
 
-        public IEnumerable<GoalTodoDto> ActionPlan { get; set; }
+        public IEnumerable<TodoDto> ActionPlan { get; set; }
     }
 }

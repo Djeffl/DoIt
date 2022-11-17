@@ -21,9 +21,9 @@ namespace DoIt.Api.Services.Todo
             _context = context;
         }
 
-        public async Task<GetTodoDto> CreateTodoAsync(CreateTodoDto createTodoDto)
+        public async Task<TodoDto> CreateTodoAsync(CreateTodoDto createTodoDto)
         {
-            var newTodo = createTodoDto.ToData();
+            var newTodo = createTodoDto.ToDomain();
 
             if (newTodo.Goal is not null)
             {
@@ -40,28 +40,28 @@ namespace DoIt.Api.Services.Todo
             return newTodo.ToDto();
         }
 
-        public async Task<IEnumerable<GetTodoDto>> GetListAsync(GetTodoListQueryDto query)
+        public async Task<IEnumerable<TodoDto>> GetListAsync(GetTodoListQueryDto query)
         {
             var list = await _context.Todos.Where(x => x.PlannedAt == query.PlannedAt).ToListAsync();
 
             return list.Select(x => x.ToDto());
         }
 
-        public async Task<GetTodoDto> GetTodoById(long id)
+        public async Task<TodoDto> GetTodoById(long id)
         {
             var newTodo = await _context.Todos.FindAsync(id);
 
             return newTodo.ToDto();
         }
 
-        public async Task<IEnumerable<GetTodoDto>> GetTodos()
+        public async Task<IEnumerable<TodoDto>> GetTodos()
         {
             var todos = await _context.Todos.ToListAsync();
 
             return todos.Select(x => x.ToDto());
         }
 
-        public async Task<GetTodoDto> UpdateAsync(long id, UpdateTodoDto request)
+        public async Task<TodoDto> UpdateAsync(long id, UpdateTodoDto request)
         {
             var todo = await _context.Todos.FindAsync(id);
 

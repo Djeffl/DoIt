@@ -1,4 +1,6 @@
-﻿namespace DoIt.Interface.Todos
+﻿using DoIt.Interface.Goals;
+
+namespace DoIt.Interface.Todos
 {
     public class TodoDto
     {
@@ -15,5 +17,7 @@
         public DateTime? PlannedAt { get; set; }
 
         public long? GoalId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
     }
 }

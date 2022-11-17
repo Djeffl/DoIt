@@ -9,11 +9,11 @@ namespace DoIt.Api.Services.Todo
 {
     public interface ITodoService
     {
-        Task<GetTodoDto> CreateTodoAsync(CreateTodoDto createTodoDto);
-        Task<GetTodoDto> GetTodoById(long id);
-        Task<IEnumerable<GetTodoDto>> GetTodos();
-        Task<GetTodoDto> UpdateAsync(long id, UpdateTodoDto todo);
+        Task<TodoDto> CreateTodoAsync(CreateTodoDto createTodoDto);
+        Task<TodoDto> GetTodoById(long id);
+        Task<IEnumerable<TodoDto>> GetTodos();
+        Task<TodoDto> UpdateAsync(long id, UpdateTodoDto todo);
 
-        Task<IEnumerable<GetTodoDto>> GetListAsync(GetTodoListQueryDto query);
+        Task<IEnumerable<TodoDto>> GetListAsync(GetTodoListQueryDto query);
     }
 }

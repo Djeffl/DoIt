@@ -190,7 +190,7 @@
                 Location = Goal.Location,
                 Reason = Goal.Reason,
                 Title = Goal.Title,
-                ActionPlan = Goal.ActionPlan.Select(item => new GoalTodoDto()
+                ActionPlan = Goal.ActionPlan.Select(item => new TodoDto()
                 {
                     IsFinished = item.IsFinished,
                     Title = item.Title,

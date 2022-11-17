@@ -6,9 +6,12 @@
 @using DoIt.Client.Components.Buttons;
 @using DoIt.Client.Models.General
 @using DoIt.Client.Models.Icons
+@using DoIt.Client.Services.IdeaCategories
 @using DoIt.Client.Services.Ideas
 @using DoIt.Client.Services.Modals
 @using DoIt.Interface.Goals
+@using DoIt.Interface.IdeaCategory
+@using DoIt.Interface.Ideas
 @using Microsoft.AspNetCore.Components
 
 @inherits BaseModalComponent<GoalCreateParameter>
@@ -16,6 +19,8 @@
 @inject IGoalService GoalService;
 @inject IIdeaService IdeaService;
 @inject ModalService ModalService;
+@inject ICategoryService CategoryService;
+
 
 
 <DoIt.Client.Components.Modals.ModalComponent Title="Create Goal" CloseModal="() => CloseModal()" Options="Options">
@@ -36,6 +41,8 @@
         {
             DueAt = DateTime.Now
         };
+
+    public IEnumerable<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
 
     public IEnumerable<MenuOption> Options { get; set; }
 
@@ -65,9 +72,18 @@
             Goal.Title = idea.Title;
             Goal.Description = idea.Description;
             Goal.CategoryIds = idea.Categories.Select(x => x.Id).ToList();
+            Goal.CategoryNames = idea.Categories.Select(x => x.Name).ToList();
         }
 
+        Categories = await GetCategoriesAsync();
+
         await base.LoadDataAsync();
+    }
+
+    private async Task<IEnumerable<CategoryDto>> GetCategoriesAsync()
+    {
+        var categoriesDto = await CategoryService.GetListAsync();
+        return categoriesDto.Data;
     }
 
     private async Task CreateGoalAsync(GoalFormDto goal)
@@ -75,5 +91,40 @@
         var response = await GoalService.CreateGoalAsync(goal.ToService());
 
         CloseModal(ActionType.Create, response);
+    }
+
+    private async Task SetIdeaCategoryIdsAsync()
+    {
+        var categories = new List<CategoryDto>();
+
+        if (!Goal.CategoryNames.Any())
+        {
+            Goal.CategoryIds = new List<long>();
+            return;
+        }
+
+        var newCategories = Goal.CategoryNames.Where(categoryName => !Categories.Any(existingCategory => categoryName == existingCategory.Name));
+
+        if (newCategories.Any())
+        {
+            var bulkNewCategories = await AddNewIdeaCategoryBulkAsync(newCategories);
+            categories.AddRange(bulkNewCategories.Data);
+        }
+
+        categories.AddRange(Categories.Where(existingCategory => Goal.CategoryNames.Any(name => name == existingCategory.Name)));
+        Goal.CategoryIds = categories.Select(selectedCategory => selectedCategory.Id);
+
+        await LoadDataAsync();
+    }
+
+    private async Task<CategoriesDto> AddNewIdeaCategoryBulkAsync(IEnumerable<string> categoryNames)
+    {
+        return await CategoryService.CreateBulkAsync(new CreateCategoryBulkDto
+            {
+                Categories = categoryNames.Select(name => new CreateCategoryDto()
+                {
+                    Name = name
+                })
+            });
     }
 }
