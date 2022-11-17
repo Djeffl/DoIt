@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas.Detail
 {
-    public partial class IdeaDetailPage : BaseModalComponent<IdeaDetailParameter>
+    public partial class IdeaDetailPage : BaseModalComponent<IdeaDetailParameter>, IDisposable
     {
         public IdeaFormDto Idea { get; set; } = new IdeaFormDto();
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
@@ -195,6 +195,11 @@ namespace DoIt.Client.Pages.Ideas.Detail
                     Name = name
                 })
             });
+        }
+
+        public void Dispose()
+        {
+            ModalService.OnClose -= OnModalClose;
         }
     }
 }

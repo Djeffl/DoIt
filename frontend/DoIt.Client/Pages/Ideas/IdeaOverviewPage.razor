@@ -11,10 +11,11 @@
 @using DoIt.Client.Extensions
 
 @inherits BaseComponent
+@implements IDisposable
 
 @inject IIdeaService IdeaService;
 @inject IGoalService GoalService;
-@inject ModalService Modal;
+@inject ModalService ModalService;
 @inject NavigationManager NavigationManager;
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage;
 

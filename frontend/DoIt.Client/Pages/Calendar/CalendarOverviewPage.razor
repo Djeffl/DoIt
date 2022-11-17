@@ -9,6 +9,7 @@
 @inject ITodoService TodoService;
 
 @inherits BaseComponent
+@implements IDisposable;
 
 <div class="calendar-overview">
     <div class="Calendar-title">
@@ -179,5 +180,9 @@
         await LoadTodosOpen();
         await LoadDataAsync();
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
     }
 }

@@ -6,13 +6,14 @@ using DoIt.Client.Models.Menus;
 using DoIt.Client.Services.Ideas;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas
 {
-    public partial class IdeaCreatePage : BaseModalComponent
+    public partial class IdeaCreatePage : BaseModalComponent, IDisposable
     {
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         public Models.Ideas.IdeaFormDto NewIdea = new Models.Ideas.IdeaFormDto();
@@ -94,6 +95,10 @@ namespace DoIt.Client.Pages.Ideas
                     Name = name
                 })
             });
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -29,6 +29,7 @@
 
 
 @inherits BaseModalComponent<GoalDetailParameter>
+@implements IDisposable
 
 <DoIt.Client.Components.Modals.ModalComponent Title="Goal Detail" CloseModal="() => CloseModal(ActionType.Cancel, Goal)" Options="Options">
     <Content>
@@ -158,7 +159,10 @@
         this.StateHasChanged();
     }
 
-
+    public void Dispose()
+    {
+        ModalService.OnClose -= OnModalClose;
+    }
 
     private void OnModalClose(ActionType actionType, object response, Guid id)
     {

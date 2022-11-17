@@ -10,6 +10,8 @@
 
 @inherits BaseComponent
 
+@implements IDisposable
+
 <LoadingContainerComponent LoadingState="LoadingState">
     <Rendered>
         <section class="ideas">
@@ -65,5 +67,10 @@
     private void OpenDetailTodo(long id)
     {
         //ModalService.Show("Todo", typeof(DoIt.Client.Pages.TodoDetail));
+    }
+
+    public void Dispose()
+    {
+        
     }
 }

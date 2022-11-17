@@ -2,6 +2,7 @@
 using DoIt.Client.Models.General;
 using DoIt.Client.Models.Modals;
 using DoIt.Client.Pages.Ideas.Detail;
+using DoIt.Client.Services.Modals;
 using DoIt.Interface.Ideas;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas
 {
-    public partial class IdeaOverviewPage : BaseComponent
+    public partial class IdeaOverviewPage : BaseComponent, IDisposable
     {
         public List<IdeaDto> Ideas { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            Modal.OnClose += OnModalClose;
+            ModalService.OnClose += OnModalClose;
         }
 
         protected override async Task LoadDataAsync()
@@ -46,7 +47,7 @@ namespace DoIt.Client.Pages.Ideas
 
         private void OpenDetailGoal(long id)
         {
-            Modal.Show(new ModalBuilder()
+            ModalService.Show(new ModalBuilder()
                 .AddComponent<IdeaDetailPage, IdeaDetailParameter>(new IdeaDetailParameter() { IdeaId = id })
                 .AddConfiguration(new ModalConfiguration() { FullScreen = true })
                 .Build());
@@ -65,6 +66,11 @@ namespace DoIt.Client.Pages.Ideas
         private async void DeleteIdea(IdeaDto _)
         {
             await LoadDataAsync();
+        }
+
+        public void Dispose()
+        {
+            ModalService.OnClose -= OnModalClose;
         }
     }
 }
