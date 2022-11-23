@@ -14,5 +14,6 @@ namespace DoIt.Client.Models.Ideas
         public IEnumerable<long> CategoryIds { get; set; }
 
         public List<string> CategoryNames { get; set; } = new();
+        public long? GoalId { get; set; }
     }
 }

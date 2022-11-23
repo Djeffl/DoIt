@@ -67,6 +67,7 @@ namespace DoIt.Api.Services.Idea
         {
             var idea = await _ctx.Ideas
                 .Include(x => x.Categories)
+                .Include(i => i.Goal)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return idea.ToDto();
@@ -78,6 +79,7 @@ namespace DoIt.Api.Services.Idea
             {
                 Data = await _ctx.Ideas
                     .Include(i => i.Categories)
+                    .Include(i => i.Goal)
                     .Select(idea => idea.ToDto())
                     .ToListAsync()
             };

@@ -9,4 +9,5 @@ public class IdeaDto
     public string Description { get; set; }
     public DateTime CreatedAt { get; set; }
     public IEnumerable<CategoryDto> Categories { get; set; }
+    public long? GoalId { get; set; }
 }

@@ -11,7 +11,7 @@ namespace DoIt.Api.Services.Todo
             return new Domain.Todo()
             {
                 Title = todo.Title,
-                GoalId = todo.GoalId.Value,
+                GoalId = todo.GoalId,
                 DueAt = todo.DueAt,
                 IsFinished = todo.IsFinished
             };
@@ -22,7 +22,6 @@ namespace DoIt.Api.Services.Todo
             return new Domain.Todo()
             {
                 Title = todo.Title,
-                GoalId = todo.GoalId.Value,
                 DueAt = todo.DueAt,
                 IsFinished = todo.IsFinished,
                 PlannedAt = todo.PlannedAt,

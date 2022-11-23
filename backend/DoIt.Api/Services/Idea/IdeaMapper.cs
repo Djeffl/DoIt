@@ -32,7 +32,8 @@ namespace DoIt.Api.Services.Idea
                 Title = idea.Title,
                 Description = idea.Description,
                 CreatedAt = idea.CreatedAt,
-                Categories = idea.Categories.Select(category => category.ToDto())
+                Categories = idea.Categories.Select(category => category.ToDto()),
+                GoalId = idea.Goal?.Id,
             };
         }
 

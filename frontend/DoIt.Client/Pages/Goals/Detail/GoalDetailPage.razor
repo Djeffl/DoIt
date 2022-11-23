@@ -96,10 +96,10 @@
                                                             </div>
                                                         </td>
                                                         @*<td class="due-at data">
-                                                            <div class="internal">
-                                                                @task.DueAt.ToStringFormat()
-                                                            </div>
-                                                        </td>*@
+                                                <div class="internal">
+                                                @task.DueAt.ToStringFormat()
+                                                </div>
+                                                </td>*@
                                                         <td class="delete-action action data">
                                                             <div class="internal">
                                                                 <IconButton Width="7px" Height="7px" Icon="IconType.Delete" OnClick="() => DeleteActionPlanItem(task)"></IconButton>
@@ -155,8 +155,18 @@
                 }
             };
 
-        Goal = await GoalService.GetGoalByIdAsync(Parameter.GoalId);
-        this.StateHasChanged();
+
+    }
+
+    protected override async Task LoadDataAsync()
+    {
+        await base.LoadDataAsync();
+
+        if (Parameter != null)
+        {
+            Goal = await GoalService.GetGoalByIdAsync(Parameter.GoalId);
+            this.StateHasChanged();
+        }
     }
 
     public void Dispose()

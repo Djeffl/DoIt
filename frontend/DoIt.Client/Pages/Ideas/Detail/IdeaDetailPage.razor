@@ -33,6 +33,12 @@
                 <section class="idea-detail">
                     <DoIt.Client.Components.Ideas.IdeaFormComponent Idea="Idea" IdeaCategories="IdeaCategories"></DoIt.Client.Components.Ideas.IdeaFormComponent>
                 </section>
+                @if (Idea.GoalId.HasValue)
+                {
+                    <section class="idea-detail-goal">
+                        <IconButton OnClick="() => ToGoal()" Width="auto" ButtonType="button" Icon="IconType.Goal" Text="To Goal"></IconButton>
+                    </section>
+                }
             </Rendered>
         </DoIt.Client.Components.Loading.LoadingContainerComponent>
     </Content>

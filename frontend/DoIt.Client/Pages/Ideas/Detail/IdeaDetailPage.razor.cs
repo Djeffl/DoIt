@@ -1,25 +1,19 @@
-﻿using DoIt.Client.Components;
-using DoIt.Client.Components.Goals;
-using DoIt.Client.Components.Modals;
+﻿using DoIt.Client.Components.Modals;
 using DoIt.Client.Components.Modals.Confirm;
 using DoIt.Client.Models.General;
 using DoIt.Client.Models.Goals;
 using DoIt.Client.Models.Ideas;
-using DoIt.Client.Models.Loading;
 using DoIt.Client.Models.Menus;
 using DoIt.Client.Models.Modals;
 using DoIt.Client.Pages.Goals.Create;
 using DoIt.Client.Services.Goals;
-using DoIt.Interface.Goals;
 using DoIt.Interface.IdeaCategory;
 using DoIt.Interface.Ideas;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace DoIt.Client.Pages.Ideas.Detail
@@ -30,15 +24,18 @@ namespace DoIt.Client.Pages.Ideas.Detail
         public IEnumerable<CategoryDto> IdeaCategories { get; set; } = new List<CategoryDto>();
         private EditContext EditContext;
 
-        public IEnumerable<MenuOption> Options { get; set; }
+        public List<MenuOption> Options { get; set; } = new List<MenuOption>();
 
         protected async override Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
 
-            EditContext = new EditContext(Idea);
+            ModalService.OnClose += OnModalClose;
+        }
 
-            Options = new List<MenuOption>()
+        public IdeaDetailPage()
+        {
+            Options.AddRange(new List<MenuOption>()
             {
                 new MenuOption()
                 {
@@ -48,19 +45,11 @@ namespace DoIt.Client.Pages.Ideas.Detail
                 },
                 new MenuOption()
                 {
-                    Title = "As Goal",
-                    Icon = Models.Icons.IconType.Goal,
-                    OnClick = () => this.StartUpgradeIdea()
-                },
-                new MenuOption()
-                {
                     Title = "Save",
                     OnClick= async () => await UpdateIdeaAsync(),
                     DefaultActive = true
                 }
-            };
-
-            ModalService.OnClose += OnModalClose;
+            });
         }
 
         private void OnModalClose(ActionType actionType, object response, Guid id)
@@ -76,28 +65,17 @@ namespace DoIt.Client.Pages.Ideas.Detail
                 }
             }
 
-            if(actionType == ActionType.Create)
+            if (actionType == ActionType.Create)
             {
                 var newGoal = (GoalFormDto)response;
 
                 UpgradeIdea(newGoal);
-            }            
+            }
         }
 
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-
-            var idea = await IdeaService.GetAsync(Parameter.IdeaId);
-            Idea = new IdeaFormDto
-            {
-                Id = idea.Id,
-                Title = idea.Title,
-                Description = idea.Description,
-                CategoryNames = idea.Categories.Select(x => x.Name).ToList(),
-            };
-
-            StateHasChanged();
         }
 
         protected override async Task LoadDataAsync()
@@ -105,6 +83,33 @@ namespace DoIt.Client.Pages.Ideas.Detail
             await base.LoadDataAsync();
 
             IdeaCategories = await GetIdeaCategoriesAsync();
+
+            if (Parameter != null)
+            {
+                var idea = await IdeaService.GetAsync(Parameter.IdeaId);
+                Idea = new IdeaFormDto
+                {
+                    Id = idea.Id,
+                    Title = idea.Title,
+                    Description = idea.Description,
+                    CategoryNames = idea.Categories.Select(x => x.Name).ToList(),
+                    GoalId = idea.GoalId,
+                };
+
+                if (Idea.GoalId == null)
+                {
+                    Options.Add(
+                        new MenuOption()
+                        {
+                            Title = "As Goal",
+                            Icon = Models.Icons.IconType.Goal,
+                            OnClick = () => this.StartUpgradeIdea()
+                        }
+                    );
+                }
+
+                StateHasChanged();
+            }
         }
 
         private async Task<IEnumerable<CategoryDto>> GetIdeaCategoriesAsync()
@@ -134,6 +139,12 @@ namespace DoIt.Client.Pages.Ideas.Detail
             CloseModal(ActionType.Create, response);
 
             NavigationManager.NavigateTo("/goals");
+        }
+
+        private void ToGoal()
+        {
+            NavigationManager.NavigateTo($"/goals/{Idea.GoalId.Value}");
+            CloseModal(ActionType.None, null);
         }
 
         private void StartUpgradeIdea()
