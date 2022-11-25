@@ -19,6 +19,7 @@
 @using DoIt.Client.Services.Todos;
 @using DoIt.Client.Services.Modals;
 @using DoIt.Client.Components.Carousels;
+@using DoIt.Interface
 @using DoIt.Interface.Goals
 @using DoIt.Interface.Todos
 
@@ -87,7 +88,8 @@
                                                     <tr class="action-plan-table-item">
                                                         <td class="data is-finished">
                                                             <div class="internal">
-                                                                <CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(e)" />
+                                                                @*<CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(e)" />*@
+                                                                <CheckboxField Checked="@task.IsFinished" OnCheckChangedCallback="async (e) => await ChangeTaskProgressAsync(task, e)" />
                                                             </div>
                                                         </td>
                                                         <td class="title data">
@@ -138,8 +140,17 @@
         await base.OnInitializedAsync();
 
         ModalService.OnClose += OnModalClose;
+    }
 
-        Options = new List<MenuOption>()
+    protected override async Task LoadDataAsync()
+    {
+        await base.LoadDataAsync();
+
+        if (Parameter != null)
+        {
+            Goal = await GoalService.GetGoalByIdAsync(Parameter.GoalId);
+
+            var options = new List<MenuOption>()
             {
                 new MenuOption()
                 {
@@ -155,16 +166,25 @@
                 }
             };
 
+            if (Goal.State == State.Idle)
+            {
+                options.Add(new MenuOption()
+                    {
+                        Title = "Focus",
+                        OnClick = async () => await UpdateStateAsync(State.Focused),
+                    });
+            }
+            else if (Goal.State == State.Focused)
+            {
+                options.Add(new MenuOption()
+                    {
+                        Title = "Pauze",
+                        OnClick = async () => await UpdateStateAsync(State.Idle),
+                    });
+            }
 
-    }
+            Options = options;
 
-    protected override async Task LoadDataAsync()
-    {
-        await base.LoadDataAsync();
-
-        if (Parameter != null)
-        {
-            Goal = await GoalService.GetGoalByIdAsync(Parameter.GoalId);
             this.StateHasChanged();
         }
     }
@@ -188,14 +208,7 @@
         }
     }
 
-    private Task ChangeTaskProgressAsync(ChangeEventArgs eventArgs)
-    {
-        var isCompleted = (bool)eventArgs.Value;
-        Console.WriteLine($"Task is completed: {isCompleted}");
-        return Task.CompletedTask;
-    }
-
-    public async Task UpdateGoalAsync()
+    private async Task UpdateStateAsync(State state)
     {
         await GoalService.UpdateGoalAsync(Goal.Id, new UpdateGoalRequest()
             {
@@ -211,6 +224,38 @@
                     DueAt = item.DueAt,
                     Id = item.Id
                 }),
+                State = state,
+            });
+
+        CloseModal(ActionType.Update, Goal);
+    }
+
+    private Task ChangeTaskProgressAsync(Interface.Todos.TodoDto todo, ChangeEventArgs eventArgs)
+    {
+        var isCompleted = (bool)eventArgs.Value;
+        todo.IsFinished = isCompleted;
+        return Task.CompletedTask;
+    }
+
+    public async Task UpdateGoalAsync()
+    {
+        Console.WriteLine(JsonConvert.SerializeObject(Goal.ActionPlan));
+
+        await GoalService.UpdateGoalAsync(Goal.Id, new UpdateGoalRequest()
+            {
+                Description = Goal.Description,
+                DueAt = Goal.DueAt,
+                Location = Goal.Location,
+                Reason = Goal.Reason,
+                Title = Goal.Title,
+                ActionPlan = Goal.ActionPlan.Select(item => new TodoDto()
+                {
+                    IsFinished = item.IsFinished,
+                    Title = item.Title,
+                    DueAt = item.DueAt,
+                    Id = item.Id
+                }),
+                State = Goal.State
             });
 
         CloseModal(ActionType.Update, Goal);

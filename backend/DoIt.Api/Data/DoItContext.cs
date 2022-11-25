@@ -31,6 +31,7 @@ namespace DoIt.Api.Data
             //goalEntityBuilder.HasOne<Idea>(x => x.Idea).WithOne(x => x.Goal);
             goalEntityBuilder.HasMany<Category>(c => c.Categories).WithMany(i => i.Goals); 
             goalEntityBuilder.HasMany<Todo>(x => x.Todos).WithOne(x => x.Goal).OnDelete(DeleteBehavior.Cascade);
+            goalEntityBuilder.Ignore(x => x.CompletionPercentage);
 
             var ideaEntityBuilder = modelBuilder.Entity<Idea>().ToTable("Ideas", schema: "dbo");
             ideaEntityBuilder.HasMany<Category>(c => c.Categories).WithMany(i => i.Ideas);

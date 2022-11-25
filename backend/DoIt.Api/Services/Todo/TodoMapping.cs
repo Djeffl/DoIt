@@ -42,6 +42,10 @@ namespace DoIt.Api.Services.Todo
                 GoalId = todo.GoalId,
                 PlannedAt = todo.PlannedAt,
                 DueAt = todo.DueAt,
+                IsFinished = todo.IsFinished,
+                Description = todo.Description,
+                CreatedAt = todo.CreatedAt,
+                FinishedAt = todo.FinishedAt
             };
         }
     }

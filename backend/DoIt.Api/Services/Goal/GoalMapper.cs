@@ -27,6 +27,7 @@ namespace DoIt.Api.Services.Goal
                 DueAt = obj.DueAt,
                 Idea = idea,
                 Categories = categories.ToList(),
+                State = State.Idle,
             };
         }
 
@@ -49,6 +50,7 @@ namespace DoIt.Api.Services.Goal
                 FinishedAt = obj.FinishedAt,
                 IsFinished = obj.IsFinished,
                 Id = obj.Id,
+                State = obj.State.ToDomain(),
             };
         }
 
@@ -71,6 +73,8 @@ namespace DoIt.Api.Services.Goal
                 IsFinished = obj.IsFinished,
                 FinishedAt = obj.FinishedAt,
                 Id = obj.Id,
+                State = obj.State.ToDto(),
+                CompletionPercentage = obj.CompletionPercentage,
             };
         }
     }

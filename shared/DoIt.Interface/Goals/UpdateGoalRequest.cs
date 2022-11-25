@@ -14,6 +14,8 @@ namespace DoIt.Interface.Goals
 
         public DateTime DueAt { get; set; }
 
+        public State State { get; set; }
+
         public IEnumerable<TodoDto> ActionPlan { get; set; }
     }
 }

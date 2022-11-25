@@ -61,6 +61,7 @@ namespace DoIt.Api.Services.Goal
             goal.Location = request.Location;
             goal.Reason = request.Reason;
             goal.DueAt = request.DueAt;
+            goal.State = request.State.ToDomain();
 
             // Delete children
             foreach (var existingChild in goal.Todos.ToList())
@@ -77,8 +78,13 @@ namespace DoIt.Api.Services.Goal
                     .SingleOrDefault();
 
                 if (existingChild != null)
+                {
                     // Update child
-                    _ctx.Entry(existingChild).CurrentValues.SetValues(childModel);
+                    //_ctx.Entry(existingChild).CurrentValues.SetValues(childModel);
+                    existingChild.IsFinished = childModel.IsFinished;
+                    existingChild.Description = childModel.Description;
+                    existingChild.Title = childModel.Title;
+                }
                 else
                 {
                     // Insert child
@@ -102,6 +108,11 @@ namespace DoIt.Api.Services.Goal
         public async Task<GoalsDto> GetGoalsAsync(GetGoalsDto _)
         {
             var response = await _ctx.Goals.Include(x => x.Todos).ToListAsync();
+
+            response.ForEach(goal =>
+            {
+                goal.CompletionPercentage = goal.Todos.Any() ? (Double?)Math.Round(Decimal.Divide(goal.Todos.Count(x => x.IsFinished), goal.Todos.Count()), 2) : null;
+            });
 
             return new GoalsDto()
             {

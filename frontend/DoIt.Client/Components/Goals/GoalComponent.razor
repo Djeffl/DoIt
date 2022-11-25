@@ -9,7 +9,7 @@
 @inject NavigationManager NavManager;
 @inject ModalService Modal;
 
-<article class="goal" @onclick="() => OpenDetailGoal(Goal.Id)">
+<article class="goal @IsActive()" @onclick="() => OpenDetailGoal(Goal.Id)">
     <header>
         @Goal.Title
     </header>
@@ -19,7 +19,7 @@
     <section class="goal-progress">
         <span>Progress</span>
         <div class="goal-progress-bar">
-            <DoIt.Client.Components.Progress.ProgressBarComponent Completion="0.25" />
+            <DoIt.Client.Components.Progress.ProgressBarComponent Completion="@Goal.CompletionPercentage" />
         </div>
     </section>
     <section class="goal-details">
@@ -59,6 +59,16 @@
 
         daysLeftText = ((int)(Goal.DueAt - DateTime.UtcNow).TotalDays).ToString();
         dueDateText = Goal.DueAt.ToStringFormat();
+    }
+
+    private string IsActive()
+    {
+        if(Goal.State == Interface.State.Focused)
+        {
+            return "active";
+        }
+
+        return "";
     }
 
     private void OpenDetailGoal(long id)

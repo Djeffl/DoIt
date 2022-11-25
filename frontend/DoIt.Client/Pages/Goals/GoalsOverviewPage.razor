@@ -66,13 +66,13 @@
         switch (actionType)
         {
             case ActionType.Create:
-                await LoadDataAsync();
+                await LoadDataAndStateAsync();
                 break;
             case ActionType.Update:
-                await LoadDataAsync();
+                await LoadDataAndStateAsync();
                 break;
             case ActionType.Delete:
-                await LoadDataAsync();
+                await LoadDataAndStateAsync();
                 break;
         }
     }

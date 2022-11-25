@@ -1,18 +1,30 @@
 ﻿<div class="progress">
-	<div class="progress-bar" style="width: @progressBarWidth"></div>
+    @if (Completion.HasValue)
+    {
+        <div class="text">@completionText</div>
+        <div class="progress-bar" style="width: @progressBarWidth"></div>
+    }
+    else
+    {
+        <div class="inactive">-</div>
+    }
 </div>
 
 @code {
-	[Parameter]
-	public double Completion { get; set; }
+    [Parameter]
+    public double? Completion { get; set; }
 
-	private string completionText;
-	private string progressBarWidth;
+    private string completionText;
+    private string progressBarWidth;
 
-	protected override void OnInitialized() {
-		base.OnInitialized();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
 
-		completionText = $"{Completion * 100}%";
-		progressBarWidth = $"{Completion * 100}%";
-	}
+        if (Completion != null)
+        {
+            completionText = $"{Completion * 100}%";
+            progressBarWidth = $"{Completion * 100}%";
+        }
+    }
 }

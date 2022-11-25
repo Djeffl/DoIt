@@ -29,5 +29,9 @@ namespace DoIt.Interface.Goals
         public IEnumerable<CategoryDto> Categories { get; set; }
 
         public IEnumerable<TodoDto> ActionPlan { get; set; }
+
+        public State State { get; set; }
+
+        public double? CompletionPercentage { get; set; }
     }
 }

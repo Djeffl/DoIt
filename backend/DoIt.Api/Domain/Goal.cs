@@ -35,5 +35,9 @@ namespace DoIt.Api.Domain
         public Idea Idea { get; set; }
         public ICollection<Category> Categories { get; set; }
 		public long? IdeaId { get; set; }
+
+		public State State { get; set; }
+
+		public double? CompletionPercentage { get; set; }
 	}
 }

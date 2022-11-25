@@ -1,4 +1,5 @@
 ﻿using DoIt.Client.Models.Todos;
+using DoIt.Interface;
 using DoIt.Interface.Todos;
 using System;
 using System.Collections.Generic;
@@ -28,5 +29,7 @@ namespace DoIt.Client.Models.Goals
         public string Reason { get; set; }
 
         public GoalType Type { get; set; }
-    }
+
+		public State State { get; set; }
+	}
 }

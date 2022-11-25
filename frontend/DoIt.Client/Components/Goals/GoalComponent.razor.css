@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+.active {
+    box-shadow: 0px 0px 7px 1px wheat;
+}
+
 
     article.goal header {
         display: flex;
